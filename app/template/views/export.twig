@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="2.0">
+    <body>
+        {% for _cat in tree %}
+            <outline title="{{ _cat.name }}" text="{{ _cat.name }}">
+                {% for _sub in _cat.subs %}
+                    <outline text="{{ _sub.name }}" title="{{ _sub.name }}" type="rss" xmlUrl="{{ _sub.url }}" />
+                {% endfor %}
+            </outline>
+        {% endfor %}
+    </body>
+</opml>

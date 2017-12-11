@@ -1,0 +1,19 @@
+{
+  "name": "charly/badin",
+  "description": "RSS Feed client",
+  "minimum-stability": "stable",
+  "license": "opensource",
+  "authors": [
+    {
+      "name": "charlyecho",
+      "email": "charly@charlyecho.com"
+    }
+  ],
+  "require": {
+    "nikic/fast-route": "v1.2.0",
+    "symfony/polyfill-mbstring": "v1.6.0",
+    "simplepie/simplepie": "1.5.1",
+    "twig/twig": "1.6.5",
+    "charlyecho/romeo_sierra_sierra": "dev-develop"
+  }
+}

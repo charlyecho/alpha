@@ -1,0 +1,8 @@
+RewriteEngine on
+
+# Disable indexes repository
+Options -Indexes
+
+# all redirect
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ index.php [QSA,L]

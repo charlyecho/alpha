@@ -1,0 +1,32 @@
+<h2>{{ category.name ? "Edit category" : "New category" }}</h2>
+<form method="post" action="/config/category/edit">
+    <input type="hidden" name="id" value="{{ category.id }}" />
+    <input type="hidden" name="user_id" value="{{ category.user_id }}" />
+    <input type="hidden" name="del" value="0" />
+
+    <p>
+    <label>
+        Name
+        <input type="text" name="name" value="{{ category.name }}" class="uk-input" required="required" />
+    </label>
+    </p>
+
+    <p>
+        <label>
+            Color
+            <input type="color" name="color" value="{{ category.color }}" class="uk-input" required="required" />
+        </label>
+    </p>
+
+    <p>
+        <button class="uk-button uk-button-primary">Save</button>
+        {% if category.nb_subs == 0 and category.id %}
+            <button class="uk-button uk-button-default" onclick="$(this).closest('form').find('input[name=del]').val('1');"><i class="fa fa-trash"></i> Delete</button>
+        {%  endif %}
+    </p>
+</form>
+
+<script>
+    $('.cat').removeClass("uk-active");
+    $('.cat_{{ category.id }}').addClass("uk-active");
+</script>

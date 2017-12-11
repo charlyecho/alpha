@@ -1,0 +1,152 @@
+{% extends "base.twig" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <div uk-grid>
+        <div class="uk-width-1-4@s uk-visible@s" id="tree">
+            <div>
+                <p class="uk-text-center">
+                    <a onclick="prev();"><i class="icofont icofont-circled-left"></i></a>
+                    <a onclick="next();"><i class="icofont icofont-circled-right"></i></a>
+                </p>
+                <ul class="uk-nav-default uk-padding-small uk-nav-parent-icon" id="main-nav" uk-nav="multiple:true">
+                    <li data-id="" class="uk-parent cat cat_all"><a href="#">All <span class="cat-label"></span></a> <ul><li></li></ul></li>
+                    {% for _cat in tree %}
+                        {% if (_cat.subs|length > 0) %}
+                            <li class="uk-parent cat" data-cat_id="{{ _cat.id }}" {% if _cat.color %}style="background-color: {{ _cat.color }}"{% endif %}>
+                                <a href="#">{{ _cat.name }} <span class="cat-label"></span></a>
+
+                                {% if (_cat.subs|length) %}
+                                    <ul class="uk-nav-sub">
+                                        {% for _sub in _cat.subs %}
+                                            <li class="sub_{{ _sub.id }} sub draggable" data-cat_id="{{ _cat.id }}" data-sub_id="{{ _sub.id }}">
+                                                <a href="#{{ _sub.id }}"><i class="icofont icofont-rss-feed"></i> {{ _sub.name }} <span class="sub-label"></span></a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="uk-width-3-4@s uk-width-4-4 uk-padding-remove@s" uk-height-viewport="offset-top: true">
+            <div id="top-div"></div>
+            <div id="results" style="height:100%; overflow-y: auto; background-color: #f8f8f8"></div>
+        </div>
+    </div>
+
+    <form id="filters">
+        <input type="hidden" name="cat_id" id="filters_cat_id" value="" />
+        <input type="hidden" name="sub_id" id="filters_sub_id" value="" />
+        <input type="hidden" name="status" id="filters_status" value="waiting" />
+        <div id="status_filter"></div>
+    </form>
+
+    <style>
+        .cat-label, .sub-label {
+            font-weight: bold;
+        }
+
+        #tree > p a i.icofont {
+            font-size:2em;
+        }
+
+        #results article {
+            box-shadow: 0 0 5px grey;
+        }
+    </style>
+
+{% endblock %}
+
+{% block script %}
+    <script>
+        var loading = false;
+        var current_item = null;
+
+        var prev = function() {
+
+        };
+
+        var next = function() {
+
+        };
+
+        /**
+         * populate the count for subscription and categories
+         *
+         * @param data
+         */
+        var populateCount = function(data) {
+            // populate subscriptions
+            for (var _var in data) {
+                var value = parseInt(data[_var]);
+                $('.sub_'+_var).find('span').html(value ? value : null);
+            }
+
+            // populate categories
+            var total = 0;
+            $('#tree .cat').each(function() {
+                var sum = 0;
+                $(this).find(".sub-label").each(function() {
+                    var text = $(this).text();
+                    sum += parseInt(text ? text : 0);
+                });
+                total += sum;
+                $(this).find(".cat-label").html(sum > 0 ? sum : "");
+            });
+            $('.cat_all').find('.cat-label').html(total ? total : "");
+        };
+
+        $('#tree a').on('click', function() {
+            var li = $(this).parent();
+            var cat_id = li.data("cat_id");
+            var sub_id = li.data("sub_id");
+            $('#filters_cat_id').val(cat_id ? cat_id : null);
+            $('#filters_sub_id').val(sub_id ? sub_id : null);
+            refresh();
+        });
+
+        var refresh = function() {
+            var oform = $('#filters');
+            if (!loading) {
+                $.ajax({
+                    url: "/ajax_flow",
+                    method: "post",
+                    data: oform.serialize(),
+                    beforeSend: function() {
+                        loading = true;
+                    },
+                    success: function (data) {
+                        document.location.href="#top";
+                        $('#results').html(data);
+                        current_item = null;
+                        next();
+
+                        // load images when 'inview' is fired
+                        $('article').not(".loaded").on('inview', function () {
+                            $(this).find("img").each(function (it, elt) {
+                                var lazy = $(elt).data("lazy_src");
+                                var src = $(elt).attr("src");
+                                if (lazy && src) {
+                                    $(elt).attr("src", lazy);
+                                }
+                            });
+
+                            $(this).addClass("loaded");
+                        });
+                    },
+                    complete: function () {
+                        loading = false;
+                    }
+                });
+            }
+        };
+
+        $(document).ready(function() {
+           refresh();
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,28 @@
+<div id="#top_flow"></div>
+<div class="uk-container">
+    {% for _item in items %}
+        <article id="item_{{ _item.id }}" class="uk-article item_flow uk-padding-small" uk-scrollspy="cls:uk-animation-fade" style="background-color: white">
+            <p class="uk-text-lead"><a class="uk-link-reset" target="_blank" href="{{ _item.link }}">{{ _item.title }}</a></p>
+            <p class="uk-article-meta"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-lazy_src="{{ _item.favicon }}" alt="" /> <a href="#">{{ _item.sub_name }} - {{ _item.date_time|date("d/m/Y H:i", "Europe/Paris") }}</a></p>
+            <div>
+                {{ _item.content|raw|nl2br }}
+            </div>
+        </article>
+
+        <hr class="uk-divider-icon"/>
+
+    {% endfor %}
+</div>
+
+<script>
+    populateCount(JSON.parse('{{ count|raw }}'));
+
+    $('iframe').each(function(it, elt) {
+       $(elt).css({
+           width : '100%'
+       });
+       $(elt).css({
+          height: (56.5*$(elt).width()/100)+"px"
+       });
+    });
+</script>
