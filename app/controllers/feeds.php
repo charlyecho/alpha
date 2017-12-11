@@ -11,6 +11,13 @@ class ControllersFeeds {
         $user = HelpersUser::getCurrent();
 
         $tree = HelpersFeeds::getFeedTree($user->id);
+        $nb = 0;
+        foreach($tree as $t) {
+            $nb += count($t->subs);
+        }
+        if (!$nb) {
+            redirect("/config?empty=1");
+        }
 
         $template = ClassesTwig::getInstance();
         return $template->render("views/flow.twig", array(
@@ -75,7 +82,8 @@ class ControllersFeeds {
 
         $template = ClassesTwig::getInstance();
         return $template->render("views/config.twig", array(
-            "categories" => $categories
+            "categories" => $categories,
+            "msg" => get($_GET, "empty", 0)
         ));
     }
 

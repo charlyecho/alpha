@@ -1,0 +1,16 @@
+{% extends "base.twig" %}
+
+{% block title %}Feeds{% endblock %}
+
+{% block content %}
+    <div class="uk-container">
+        <h1>Install</h1>
+        <ul class="uk-list">
+            {% for _msg in report  %}
+                <li class="uk-text-{{ _msg.type }}">
+                    <i class="icofont icofont-{{ (_msg.type == "success") ? "check" : "close" }}"></i> {{ _msg.msg }}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

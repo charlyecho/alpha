@@ -12,6 +12,12 @@ class ControllersHome {
             return ControllersFeeds::home();
         }
 
+        $path_db = __DIR__."/../../app/db/db.sqlite";
+        if (!is_file($path_db)) {
+            redirect("/install");
+
+        }
+
         redirect("/login");
     }
 }

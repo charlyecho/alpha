@@ -117,6 +117,10 @@
                     }
                 });
             };
+
+            {% if (msg) %}
+            UIkit.notification('Vos flux sont vides, ajoutez-en un ! :)', {pos: "top-left"});
+            {% endif %}
         });
 
 

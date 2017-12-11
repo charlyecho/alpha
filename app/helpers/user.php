@@ -16,6 +16,11 @@ class HelpersUser {
     }
 
     public static function getCurrent() {
+        if (!is_file(__DIR__."/../db/db.sqlite")) {
+            ClassesSession::getInstance()->delete("user_id");
+            redirect("/install");
+        }
+
         // session
         $session = ClassesSession::getInstance();
         if (!$user_id = $session->get("user_id")) {
@@ -31,9 +36,15 @@ class HelpersUser {
     }
 
     public static function loadUser($user_id) {
-        $db = ClassesDb::getInstance();
-        $s = $db->prepare("SELECT * FROM user WHERE id = ".$db->quote($user_id));
-        $s->execute();
+        try {
+            $db = ClassesDb::getInstance();
+            $s = $db->prepare("SELECT * FROM user WHERE id = " . $db->quote($user_id));
+            $s->execute();
+        }
+        catch (Exception $e) {
+            ClassesSession::getInstance()->delete("user_id");
+            redirect("/install");
+        }
         return $s->fetch();
     }
 

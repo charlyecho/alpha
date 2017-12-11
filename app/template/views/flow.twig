@@ -10,7 +10,7 @@
                     <a onclick="prev();"><i class="icofont icofont-circled-left"></i></a>
                     <a onclick="next();"><i class="icofont icofont-circled-right"></i></a>
                 </p>
-                <ul class="uk-nav-default uk-padding-small uk-nav-parent-icon" id="main-nav" uk-nav="multiple:true">
+                <ul class="uk-nav-default uk-padding-small uk-nav-parent-icon" id="main-nav" uk-nav>
                     <li data-id="" class="uk-parent cat cat_all"><a href="#">All <span class="cat-label"></span></a> <ul><li></li></ul></li>
                     {% for _cat in tree %}
                         {% if (_cat.subs|length > 0) %}
