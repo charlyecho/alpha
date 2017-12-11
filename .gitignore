@@ -3,3 +3,4 @@
 /app/cache/icons/*.png
 /app/cache/rss/*.xml
 /composer.lock
+/app/db/db.sqlite
