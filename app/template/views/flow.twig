@@ -130,8 +130,15 @@
         });
 
         var update = function() {
-            $.get('/update').done(function() {
-               refresh();
+            $.ajax({
+                method: "get",
+                url: "/update",
+                beforeSend: function() {
+                    $('#empty_nav').html('<a>en cour ...</a>');
+                }
+            }).done(function() {
+                $('#empty_nav').html('');
+                refresh();
             });
         };
 
