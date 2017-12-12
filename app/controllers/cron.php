@@ -16,11 +16,10 @@ class ControllersCron {
      *
      * @return bool
      */
-    public static function update() {
+    public static function update($step = null) {
         HelpersCron::checkLastModification();
         HelpersCron::getData();
         HelpersCron::parse();
-
         return true;
     }
 
@@ -30,17 +29,18 @@ class ControllersCron {
      * @param int $step
      */
     public static function debug($step = 1) {
+        $sub_id = get($_GET, "id");
         $return = null;
         if ($step == 1) {
-            $return = HelpersCron::checkLastModification();
+            $return = HelpersCron::checkLastModification($sub_id);
         }
 
         if ($step == 2) {
-            $return = HelpersCron::getData();
+            $return = HelpersCron::getData($sub_id);
         }
 
         if ($step == 3) {
-            $return = HelpersCron::parse();
+            $return = HelpersCron::parse($sub_id);
         }
 
         return implode("<br/>", $return);

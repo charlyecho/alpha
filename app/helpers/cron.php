@@ -110,41 +110,62 @@ class HelpersCron {
     /**
      * get update for the subscription by getting the head (STEP 1)
      */
-    public static function checkLastModification() {
+    public static function checkLastModification($sub_id = null) {
         $report = array();
         $db = ClassesDb::getInstance();
         $today = ClassesDate::getInstance()->toSql();
 
-        $sql = "SELECT * FROM subscription WHERE is_valid = 1 ORDER BY name";
+        if ($sub_id) {
+            $sql = "SELECT * FROM subscription WHERE id = ".$db->quote($sub_id);
+        }
+        else {
+            $sql = "SELECT * FROM subscription ORDER BY last_check_datetime ASC LIMIT 0,30";
+        }
         $s = $db->prepare($sql);
         $s->execute();
         $feeds = $s->fetchAll();
 
         $multihandler = curl_multi_init();
-        $handlers = $result = array();
+        $handlers = $result = $status_co = array();
 
         foreach ($feeds as $key => $data) {
             $handlers[$key] = curl_init($data->url);
+            $status_co[(int) $handlers[$key]] = null;
+
             curl_setopt($handlers[$key], CURLOPT_RETURNTRANSFER, TRUE);
             curl_setopt($handlers[$key], CURLOPT_FILETIME, true);
             curl_setopt($handlers[$key], CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.7) Gecko/20070914 Firefox/2.1.0.7');
-            curl_setopt($handlers[$key], CURLOPT_CONNECTTIMEOUT, 5);
+            curl_setopt($handlers[$key], CURLOPT_CONNECTTIMEOUT, 40);
             curl_setopt($handlers[$key], CURLOPT_HEADER, TRUE);
             curl_setopt($handlers[$key], CURLOPT_NOBODY, true);
-            curl_setopt($handlers[$key], CURLOPT_TIMEOUT, 30);
+            curl_setopt($handlers[$key], CURLOPT_TIMEOUT, 55);
             curl_setopt($handlers[$key], CURLOPT_FOLLOWLOCATION, true);
             curl_setopt($handlers[$key], CURLOPT_COOKIESESSION, TRUE);
             curl_multi_add_handle($multihandler, $handlers[$key]);
         }
 
+        // init
         $pendingConnex = null;
         do {
             curl_multi_exec($multihandler, $pendingConnex);
+
+            if (($info = curl_multi_info_read($multihandler)) !== false) {
+                $status_co[(int) $info['handle']] = $info;
+            }
             usleep(10000); // 10 ms
         } while ($pendingConnex > 0);
 
+        // get content
         foreach ($feeds as $key => $data) {
             $content = curl_multi_getcontent($handlers[$key]);
+
+            // everything ok ? check status
+            $data->is_valid = 0;
+            $status = $status_co[(int) $handlers[$key]];
+            if ($status !== false) {
+                $data->status_code = $status["result"];
+            }
+
             $filetime = null;
 
             // ou essayer par last_modified
@@ -172,23 +193,28 @@ class HelpersCron {
             $filetime_dt = $filetime ? ClassesDate::getInstance($filetime)->toSql() : null;
             $data->filemtime = $filetime_dt;
 
+
+            $data->is_valid = ($data->status_code == CURLE_OK);
         }
 
+        // close connexion
         foreach ($feeds as $key => $i) {
             curl_multi_remove_handle($multihandler, $handlers[$key]);
         }
         curl_multi_close($multihandler);
 
+        // update
         foreach($feeds as $f) {
-            $need_update = (!$f->last_modification_datetime || $f->last_modification_datetime != $f->filemtime);
+            $need_update = $f->is_valid && (!$f->last_modification_datetime || $f->last_modification_datetime != $f->filemtime);
+            //$need_update = (!$f->last_modification_datetime || $f->last_modification_datetime != $f->filemtime);
 
-            $sql = "UPDATE subscription SET last_modification_datetime = ".$db->quote($f->filemtime).", last_check_datetime = ".$db->quote($today).", need_update = ".$db->quote($need_update ? "1" : "0")." WHERE id = ".$db->quote($f->id);
+            $sql = "UPDATE subscription SET last_modification_datetime = ".$db->quote($f->filemtime).", is_valid = ".$db->quote($f->is_valid).", last_check_datetime = ".$db->quote($today).", need_update = ".$db->quote($need_update ? "1" : "0")." WHERE id = ".$db->quote($f->id);
             $q = $db->prepare($sql);
             if (!$q->execute()) {
                 trace($q->errorInfo());
             }
 
-            $report[] = "Last-modified:  ".$f->filemtime." : need_update : ".(int) $need_update." , ".$f->url;
+            $report[] = "[".$f->id."] dt :  ".$f->filemtime." | valide : ".$f->is_valid." | need_update : ".(int) $need_update;
         }
         return $report;
     }
@@ -198,12 +224,17 @@ class HelpersCron {
      *
      * @return array messages
      */
-    public static function getData() {
+    public static function getData($sub_id = null) {
         $report = array();
         $db = ClassesDb::getInstance();
         $today = ClassesDate::getInstance()->toSql();
 
-        $sql = "SELECT id, url FROM subscription WHERE need_update = '1' ORDER BY id";
+        if ($sub_id) {
+            $sql = "SELECT id, url FROM subscription WHERE id = ".$db->quote($sub_id);
+        }
+        else {
+            $sql = "SELECT id, url FROM subscription WHERE is_valid = '1' AND need_update = '1' ORDER BY id";
+        }
         $s = $db->prepare($sql);
         $s->execute();
         $feeds = $s->fetchAll(PDO::FETCH_KEY_PAIR);
@@ -268,9 +299,15 @@ class HelpersCron {
         return $report;
     }
 
-    public static function parse() {
+    /**
+     * parse data
+     *
+     * @param null $sub_id
+     * @return array
+     */
+    public static function parse($sub_id = null) {
         $report = array();
-        $feed_id = get($_GET, "id");
+        $feed_id = $sub_id;
 
         $date_month = ClassesDate::getInstance()->modify('-40 DAYS')->toSql();
 
@@ -312,6 +349,7 @@ class HelpersCron {
             }
 
             $feed = FeedParser::parseFile($f);
+            $nb_new_item = 0;
             // items
             foreach ($feed->feed_items as $key => $_item) {
 
@@ -320,7 +358,12 @@ class HelpersCron {
                     continue;
                 }
 
-                $_date = ClassesDate::getInstance($_item->date_modification)->setTimezone(new DateTimeZone('UTC'))->toSql();
+                try {
+                    $_date = ClassesDate::getInstance($_item->date_modification)->setTimezone(new DateTimeZone('UTC'))->toSql();
+                }
+                catch (Exception $e) {
+                    continue;
+                }
 
                 // too old (40 days)
                 if ($_date <= $date_month) {
@@ -331,6 +374,8 @@ class HelpersCron {
                 if (count($_item->enclosures)) {
                     $thumbnail = reset($_item->enclosures);
                 }
+
+                $nb_new_item++;
 
                 // fill the items
                 foreach($url_to_id[$url] as $id) {
@@ -351,6 +396,8 @@ class HelpersCron {
                 }
 
             }
+
+            $report[] = "New items : ".$nb_new_item;
 
             // update website url
             if ($feed->feed_link) {

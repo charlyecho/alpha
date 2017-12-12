@@ -14,7 +14,7 @@
     <p>
         <label>
             Color
-            <input type="color" name="color" value="{{ category.color }}" class="uk-input" required="required" />
+            <input type="color" name="color" value="{{ category.color ? category.color : "#ffffff" }}" class="uk-input" required="required" />
         </label>
     </p>
 

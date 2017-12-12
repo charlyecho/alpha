@@ -51,7 +51,9 @@
                             <ul>
                                 {% for _sub in _cat.subs %}
                                     <li class="sub draggable" data-id="{{ _sub.id }}">
-                                        <a href="#{{ _sub.id }}"><i class="fa fa-feed"></i> {{ _sub.name }}</a>
+                                        <a href="#{{ _sub.id }}">
+                                            <i class="icofont icofont-{{ _sub.is_valid ? "check" : "broken" }}" style="color : {{ _sub.is_valid ? "green" : "red" }}"></i> {{ _sub.name }}
+                                        </a>
                                     </li>
                                 {% endfor %}
                             </ul>
