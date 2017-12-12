@@ -12,7 +12,7 @@ class ControllersCron {
     /**
      * update all in one shot
      *
-     * @todo optimize this following DB datetime
+     * @todo too heavy : optimize this by using DB datetime
      *
      * @return bool
      */
@@ -30,16 +30,19 @@ class ControllersCron {
      * @param int $step
      */
     public static function debug($step = 1) {
+        $return = null;
         if ($step == 1) {
-            return HelpersCron::checkLastModification();
+            $return = HelpersCron::checkLastModification();
         }
 
         if ($step == 2) {
-            return HelpersCron::getData();
+            $return = HelpersCron::getData();
         }
 
         if ($step == 3) {
-            return HelpersCron::parse();
+            $return = HelpersCron::parse();
         }
+
+        return implode("<br/>", $return);
     }
 }

@@ -49,13 +49,13 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     }
 });
 
+// find a route
 $httpMethod = $_SERVER['REQUEST_METHOD'];
 $uri = $_SERVER['REQUEST_URI'];
 if (false !== $pos = strpos($uri, '?')) {
     $uri = substr($uri, 0, $pos);
 }
 $uri = rawurldecode($uri);
-
 try {
     $routeInfo = $dispatcher->dispatch($httpMethod, $uri);
     if ($routeInfo[0] == FastRoute\Dispatcher::FOUND) {
