@@ -24,7 +24,8 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
         $r->addRoute("GET", "/cron/step1", array("HelpersCron", "checkLastModification"));
         $r->addRoute("GET", "/cron/step2", array("HelpersCron", "getData"));
         $r->addRoute("GET", "/cron/step3", array("HelpersCron", "parse"));
-        $r->addRoute("GET", "/cron/test", array("HelpersCron", "test"));
+        $r->addRoute("GET", "/debug/{id:\d+}", array("ControllersCron", "debug"));
+        $r->addRoute("GET", "/update", array("ControllersCron", "update"));
 
         if (HelpersUser::getCurrent()) {
             $r->addRoute("GET", "/feeds", array("ControllersFeeds", "home"));
@@ -62,7 +63,7 @@ try {
         echo call_user_func_array($routeInfo[1], $routeInfo[2]);
     }
     else {
-        throw new Exception("Page introuvable", 404);
+        throw new Exception("Page '".$uri."' introuvable", 404);
     }
 }
 catch (Exception $e) {

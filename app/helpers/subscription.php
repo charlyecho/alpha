@@ -54,7 +54,6 @@ class HelpersSubscription {
             }
         }
         else {
-            //@TODO : get title
             $sql = "INSERT INTO subscription (name, user_id, category_id, url, url_site) VALUES (".$db->quote($name ? $name : $url).", ".$db->quote($user_id).", ".$db->quote($category_id).", ".$db->quote($url).", ".$db->quote($url_site).")";
         }
         $q = $db->prepare($sql);

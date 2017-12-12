@@ -78,10 +78,14 @@ class HelpersFeeds {
                 $explode = explode(" ", $_img);
                 foreach($explode as $_data) {
                     if (substr(trim($_data), 0, 4) == "src=") {
+                        $attr = "";
+
                         $_data = str_replace("src=", "", $_data);
                         $_data = trim($_data, "\"'<>");
-                        //trace($_data);
-                        $new_string = "<img data-lazy_src=\"$_data\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" alt=\"\" />";
+                        if (strpos($_data, ".gif") !== false) {
+                            $attr .= " uk-gif";
+                        }
+                        $new_string = "<img data-lazy_src=\"$_data\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" alt=\"\" $attr />";
 
                         $data->content = str_replace($_old_image, $new_string, $data->content);
                     }
@@ -113,7 +117,7 @@ class HelpersFeeds {
         $unknown = new stdClass();
         $unknown->id = 0;
         $unknown->user_id = $user_id;
-        $unknown->name = "*";
+        $unknown->name = "- Uncategorized";
         $unknown->color = "#ffffff";
         $unknown->subs = array();
         $categories["unknown"] = $unknown;

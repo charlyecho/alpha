@@ -5,10 +5,10 @@
 {% block content %}
     <div uk-grid>
         <div class="uk-width-1-4@s uk-visible@s" id="tree">
-            <div>
+            <div uk-sticky="offset:100">
                 <p class="uk-text-center">
-                    <a onclick="prev();"><i class="icofont icofont-circled-left"></i></a>
-                    <a onclick="next();"><i class="icofont icofont-circled-right"></i></a>
+                    <a onclick="return prev();"><i class="icofont icofont-circled-left"></i></a>
+                    <a onclick="return next();"><i class="icofont icofont-circled-right"></i></a>
                 </p>
                 <ul class="uk-nav-default uk-padding-small uk-nav-parent-icon" id="main-nav" uk-nav>
                     <li data-id="" class="uk-parent cat cat_all"><a href="#">All <span class="cat-label"></span></a> <ul><li></li></ul></li>
@@ -34,7 +34,7 @@
         </div>
         <div class="uk-width-3-4@s uk-width-4-4 uk-padding-remove@s" uk-height-viewport="offset-top: true">
             <div id="top-div"></div>
-            <div id="results" style="height:100%; overflow-y: auto; background-color: #f8f8f8"></div>
+            <div id="results" style="height:100%; overflow-y: auto; background-color: #f7f7f7"></div>
         </div>
     </div>
 
@@ -57,6 +57,25 @@
         #results article {
             box-shadow: 0 0 5px grey;
         }
+
+        .uk-article-meta.footer i {
+            font-size:2em;
+            color: #eeeeee;
+        }
+
+        .uk-article-meta.footer .active i.icofont-check {
+            color: #94ff80;
+        }
+
+        .uk-article-meta.footer .active i.icofont-star {
+            color: #ffed4c;
+        }
+
+        #results > div.uk-container {
+            max-width:800px;
+        }
+
+
     </style>
 
 {% endblock %}
@@ -67,11 +86,11 @@
         var current_item = null;
 
         var prev = function() {
-
+            return false;
         };
 
         var next = function() {
-
+            return false;
         };
 
         /**
@@ -100,7 +119,8 @@
             $('.cat_all').find('.cat-label').html(total ? total : "");
         };
 
-        $('#tree a').on('click', function() {
+        // on click on categories
+        $('#tree #main-nav a').on('click', function() {
             var li = $(this).parent();
             var cat_id = li.data("cat_id");
             var sub_id = li.data("sub_id");
@@ -109,13 +129,19 @@
             refresh();
         });
 
+        var update = function() {
+            $.get('/update').done(function() {
+               refresh();
+            });
+        };
+
         var refresh = function() {
             var oform = $('#filters');
             if (!loading) {
                 $.ajax({
                     url: "/ajax_flow",
                     method: "post",
-                    data: oform.serialize(),
+                    data: oform.serialize(), {# @TODO : separate : all from null cat_id #}
                     beforeSend: function() {
                         loading = true;
                     },
@@ -147,6 +173,11 @@
 
         $(document).ready(function() {
            refresh();
+
+           $('#all_update').click(function (e) {
+               e.preventDefault();
+               update();
+           });
         });
     </script>
 {% endblock %}

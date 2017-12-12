@@ -111,6 +111,7 @@ class HelpersCron {
      * get update for the subscription by getting the head (STEP 1)
      */
     public static function checkLastModification() {
+        $report = array();
         $db = ClassesDb::getInstance();
         $today = ClassesDate::getInstance()->toSql();
 
@@ -187,15 +188,18 @@ class HelpersCron {
                 trace($q->errorInfo());
             }
 
-            trace("Last-modified:  ".$f->filemtime." : need_update : ".(int) $need_update." , ".$f->url);
+            $report[] = "Last-modified:  ".$f->filemtime." : need_update : ".(int) $need_update." , ".$f->url;
         }
+        return $report;
     }
 
     /**
      * get rss feed data from websites (if need update)
+     *
+     * @return array messages
      */
     public static function getData() {
-        trace("cron de récupération des flux");
+        $report = array();
         $db = ClassesDb::getInstance();
         $today = ClassesDate::getInstance()->toSql();
 
@@ -235,19 +239,19 @@ class HelpersCron {
             if ($content) {
                 if (strpos($content, "xml") !== false) {
                     $sql .= "is_valid = '1', need_parse = '1'";
-                    trace("flux $key ($url), OK");
+                    $report[] = "flux $key ($url), OK";
                     if (!file_put_contents("app/cache/rss/" . $md5 . ".xml", $content)) {
                         continue;
                     }
                 }
                 else {
                     $sql .= "is_valid = '0', need_parse = '0'";
-                    trace("flux $key ($url) pas RSS, désactivé");
+                    $report[] = "flux $key ($url) pas RSS, désactivé";
                 }
             }
             else {
                 $sql .= "is_valid = '0', need_parse = '0'";
-                trace("flux $key ($url) vide, désactivé");
+                $report[] = "flux $key ($url) vide, désactivé";
                 continue;
             }
             $sql .= ", need_update= '0', recuperation_data_datetime = ".$db->quote($today);
@@ -261,9 +265,11 @@ class HelpersCron {
         }
         curl_multi_close($multihandler);
 
+        return $report;
     }
 
     public static function parse() {
+        $report = array();
         $feed_id = get($_GET, "id");
 
         $date_month = ClassesDate::getInstance()->modify('-40 DAYS')->toSql();
@@ -298,8 +304,10 @@ class HelpersCron {
             $url = str_replace(".xml", "", end($ids));
             $id = isset($url_to_id[$url]) ? $url_to_id[$url][0] : null;
 
+            // not found
             if (!$id || !isset($feeds[$id])) {
                 unlink($f);
+                $report[] = "Flux supprimé du cache (non trouvé)";
                 continue;
             }
 
@@ -307,14 +315,14 @@ class HelpersCron {
             // items
             foreach ($feed->feed_items as $key => $_item) {
 
-                // déjà en base
+                // already stored
                 if (in_array($_item->guid, $existing_items)) {
                     continue;
                 }
 
                 $_date = ClassesDate::getInstance($_item->date_modification)->setTimezone(new DateTimeZone('UTC'))->toSql();
 
-                // trop vieux de 40 jours
+                // too old (40 days)
                 if ($_date <= $date_month) {
                     continue;
                 }
@@ -353,5 +361,7 @@ class HelpersCron {
                 }
             }
         }
+
+        return $report;
     }
 }

@@ -64,11 +64,13 @@ class ControllersFeeds {
 
         $nstd = new stdClass();
         $nstd->id = null;
-        $nstd->name = "sans categorie";
+        $nstd->name = "uncategorized";
         $nstd->subs = array();
         $categories["nocat"] = $nstd;
         foreach($_categories as $c) {
-            $c->subs = array();
+            if (!isset($c->subs)) {
+                $c->subs = array();
+            }
             $categories[$c->id] = $c;
         }
         foreach($subs as $_sub) {
@@ -76,7 +78,7 @@ class ControllersFeeds {
                 $categories[$_sub->category_id]->subs[$_sub->id] = $_sub;
             }
             else {
-                $categories["nocat"]->subs[0] = $_sub;
+                $categories["nocat"]->subs[$_sub->id] = $_sub;
             }
         }
 

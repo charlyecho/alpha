@@ -1,44 +1,58 @@
-<h2>{{ subscription.id ? "Edit Subscription" : "New Subscription" }}</h2>
-<form method="post" action="/config/subscription/edit">
-    <input type="hidden" name="id" value="{{ subscription.id }}" />
-    <input type="hidden" name="user_id" value="{{ subscription.user_id }}" />
-    <input type="hidden" name="del" value="0" />
+<div uk-grid>
+    <div>
+        <h2>{{ subscription.id ? "Edit Subscription" : "New Subscription" }}</h2>
+        <form method="post" action="/config/subscription/edit">
+            <input type="hidden" name="id" value="{{ subscription.id }}" />
+            <input type="hidden" name="user_id" value="{{ subscription.user_id }}" />
+            <input type="hidden" name="del" value="0" />
 
-    <p>
-        <label>
-            Name
-            <input type="text" name="name" value="{{ subscription.name }}" class="uk-input" required="required" />
-        </label>
-    </p>
+            <p>
+                <label>
+                    Name
+                    <input type="text" name="name" value="{{ subscription.name }}" class="uk-input" required="required" />
+                </label>
+            </p>
 
-    <p>
-        <label>
-            Url
-            <input type="text" name="url" value="{{ subscription.url }}" class="uk-input" required="required" />
-        </label>
-    </p>
+            <p>
+                <label>
+                    Url
+                    <input type="text" name="url" value="{{ subscription.url }}" class="uk-input" required="required" />
+                </label>
+            </p>
 
-    <p>
-        <label>
-            Url du site d'origine
-            <input type="text" name="url_site" value="{{ subscription.url_site }}" class="uk-input" />
-        </label>
-    </p>
+            <p>
+                <label>
+                    Url du site d'origine
+                    <input type="text" name="url_site" value="{{ subscription.url_site }}" class="uk-input" />
+                </label>
+            </p>
 
-    <p>
-        <label>
-            Category
-            <select name="category_id" class="uk-select">
-                {% for cat in categories %}
-                    <option value="{{ cat.id }}" {{ cat.id == subscription.category_id ? "selected=\"selected\"" : null }}>{{ cat.name }}</option>
-                {% endfor %}
-            </select>
-        </label>
-    </p>
+            <p>
+                <label>
+                    Category
+                    <select name="category_id" class="uk-select">
+                        {% for cat in categories %}
+                            <option value="{{ cat.id }}" {{ cat.id == subscription.category_id ? "selected=\"selected\"" : null }}>{{ cat.name }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+            </p>
 
-    <p>
-        <button class="uk-button uk-button-primary">Save</button>
-        <button class="uk-button uk-button-default" onclick="$(this).closest('form').find('input[name=del]').val('1');"><i class="fa fa-trash"></i> Delete</button>
-        <a class="uk-button uk-button-link" href="/cron/step3?id={{ subscription.id }}">Parse</a>
-    </p>
-</form>
+            <p>
+                <button class="uk-button uk-button-primary">Save</button>
+                <button class="uk-button uk-button-default" onclick="$(this).closest('form').find('input[name=del]').val('1');"><i class="fa fa-trash"></i> Delete</button>
+            </p>
+        </form>
+    </div>
+    <div>
+        {% if (subscription.id) %}
+            <hr/>
+            <h3>Debug</h3>
+            <a href="/debug/1" onclick="return ajaxTest(this);" class="uk-button uk-button-primary">Need update ?</a>
+            <a href="/debug/2" onclick="return ajaxTest(this);" class="uk-button uk-button-primary">get Data</a>
+            <a href="/debug/3" onclick="return ajaxTest(this);" class="uk-button uk-button-primary">Parse</a>
+
+            <div id="result_ajax_sub"></div>
+        {% endif %}
+    </div>
+</div>

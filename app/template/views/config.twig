@@ -4,12 +4,11 @@
 
 {% block content %}
     <div class="uk-padding">
-        <h3>Ajouter flux</h3>
         <form method="post" action="/config/subscription/edit">
             <input type="hidden" name="user_id" value="{{ user.id }}"/>
             <div uk-grid>
                 <div>
-                    <label><input type="text" name="url" value="" placeholder="Url du flux" class="uk-input"/></label>
+                    <label><input type="text" required="required" name="url" value="" placeholder="Url du flux" class="uk-input"/></label>
                 </div>
                 <div>
                     <select name="category_id" class="uk-select">
@@ -19,12 +18,12 @@
                     </select>
                 </div>
                 <div>
-                    <button class="uk-button uk-button-primary">Ajouter</button>
+                    <button class="uk-button uk-button-primary">Add Feed subscription</button>
                 </div>
             </div>
         </form>
+        <hr/>
 
-        <h3>Import / Export</h3>
         <form method="post" name="import" action="/config/import" enctype="multipart/form-data">
             <input type="hidden" name="MAX_FILE_SIZE" value="30000" />
             <div uk-form-custom>
@@ -34,6 +33,7 @@
             <button class="uk-button uk-button-primary" ><i class="icofont icofont-upload"></i> Import</button>
             <a class="uk-button uk-button-primary" href="/config/export.opml"><i class="icofont icofont-download"></i> Export</a>
         </form>
+        <hr/>
 
         <div uk-grid>
             <div>
@@ -98,31 +98,41 @@
                 ajaxSubscription(id);
             });
 
-            var ajaxCategory = function(id) {
-                $.ajax({
-                    url: "/config/category/edit/"+id+"?ajax=1",
-                    method: 'get',
-                    success: function(data) {
-                        $('#ajax_area').html(data);
-                    }
-                });
-            };
-
-            var ajaxSubscription = function(id) {
-                $.ajax({
-                    url: "/config/subscription/edit/"+id+"?ajax=1",
-                    method: 'get',
-                    success: function(data) {
-                        $('#ajax_area').html(data);
-                    }
-                });
-            };
-
             {% if (msg) %}
             UIkit.notification('Vos flux sont vides, ajoutez-en un ! :)', {pos: "top-left"});
             {% endif %}
         });
 
+        var ajaxTest = function(elt) {
+            $.ajax({
+                url: $(elt).prop("href"),
+                method: 'get',
+                success: function(data) {
+                    $('#result_ajax_sub').html(data);
+                }
+            });
 
+            return false;
+        };
+
+        var ajaxCategory = function(id) {
+            $.ajax({
+                url: "/config/category/edit/"+id+"?ajax=1",
+                method: 'get',
+                success: function(data) {
+                    $('#ajax_area').html(data);
+                }
+            });
+        };
+
+        var ajaxSubscription = function(id) {
+            $.ajax({
+                url: "/config/subscription/edit/"+id+"?ajax=1",
+                method: 'get',
+                success: function(data) {
+                    $('#ajax_area').html(data);
+                }
+            });
+        };
     </script>
 {% endblock %}
