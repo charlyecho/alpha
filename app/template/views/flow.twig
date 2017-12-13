@@ -134,10 +134,12 @@
                 method: "get",
                 url: "/update",
                 beforeSend: function() {
-                    $('#empty_nav').html('<a>en cour ...</a>');
+                    showAction('<a><div uk-spinner></div> Updating ...</a>');
+                },
+                complete: function() {
+                    cleanAction();
                 }
             }).done(function() {
-                $('#empty_nav').html('');
                 refresh();
             });
         };
@@ -151,6 +153,7 @@
                     data: oform.serialize(), {# @TODO : separate : all from null cat_id #}
                     beforeSend: function() {
                         loading = true;
+                        showAction('<a><div uk-spinner></div> Loading feed flow</a>');
                     },
                     success: function (data) {
                         document.location.href="#top";
@@ -173,6 +176,7 @@
                     },
                     complete: function () {
                         loading = false;
+                        cleanAction();
                     }
                 });
             }
