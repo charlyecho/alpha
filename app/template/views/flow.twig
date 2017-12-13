@@ -134,13 +134,16 @@
                 method: "get",
                 url: "/update",
                 beforeSend: function() {
-                    showAction('<a><div uk-spinner></div> Updating ...</a>');
+                    showAction('<a><div uk-spinner></div>&nbsp;Updating ...</a>');
                 },
                 complete: function() {
                     cleanAction();
                 }
-            }).done(function() {
-                refresh();
+            }).done(function(data) {
+                var nb = parseInt(data);
+                if (nb) {
+                    UIkit.notification(nb+' nouveaux items');
+                }
             });
         };
 
@@ -189,6 +192,14 @@
                e.preventDefault();
                update();
            });
+
+
+           // javascript cron every 2 minutes
+           setInterval(function(){
+               update();
+           }, 120000);
+
+
         });
     </script>
 {% endblock %}

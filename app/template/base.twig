@@ -12,10 +12,10 @@
                 <a class="uk-navbar-item uk-logo" href="/"><i style="color:#688bb9; text-shadow: 0 0 10px white;" class="icofont icofont-rss-feed"></i></a>
                 <ul class="uk-navbar-nav">
                     {% if user %}
-                        <li><a href="/config"><i class="icofont icofont-gear"></i>&nbsp;Config</a></li>
+                        <li><a href="/config"><i class="icofont icofont-gear"></i><span class="uk-visible@s">&nbsp;Config</span></a></li>
                     {% endif %}
                     {% if user and user.id == 1 %}
-                        <li><a href="/update" id="all_update"><i class="icofont icofont-refresh"></i>&nbsp;update</a></li>
+                        <li><a href="/update" id="all_update"><i class="icofont icofont-refresh"></i><span class="uk-visible@s">&nbsp;update</span></a></li>
                     {% endif %}
                     <li id="empty_nav"></li>
                 </ul>
@@ -24,7 +24,7 @@
             <div class="uk-navbar-right">
                 <ul class="uk-navbar-nav">
                     {% if user %}
-                        <li><a>{{ user.name }}</a></li>
+                        <li><a><i class="icofont icofont-user"></i><span class="uk-visible@s">&nbsp;{{ user.name }}</span></a></li>
                         <li><a href="/logout">&nbsp;<i class="icofont icofont-logout"></i></a></li>
                     {% endif %}
                 </ul>

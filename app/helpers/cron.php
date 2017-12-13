@@ -303,10 +303,14 @@ class HelpersCron {
      * parse data
      *
      * @param null $sub_id
-     * @return array
+     * @return stdClass report
      */
     public static function parse($sub_id = null) {
-        $report = array();
+        $report = new stdClass();
+        $report->log = array();
+        $report->nb_new = 0;
+
+
         $feed_id = $sub_id;
 
         $date_month = ClassesDate::getInstance()->modify('-40 DAYS')->toSql();
@@ -349,7 +353,6 @@ class HelpersCron {
             }
 
             $feed = FeedParser::parseFile($f);
-            $nb_new_item = 0;
             // items
             foreach ($feed->feed_items as $key => $_item) {
 
@@ -375,7 +378,7 @@ class HelpersCron {
                     $thumbnail = reset($_item->enclosures);
                 }
 
-                $nb_new_item++;
+                $report->nb_new ++;
 
                 // fill the items
                 foreach($url_to_id[$url] as $id) {
@@ -397,7 +400,7 @@ class HelpersCron {
 
             }
 
-            $report[] = "New items : ".$nb_new_item;
+            $report->log[] = "New items : ".$report->nb_new;
 
             // update website url
             if ($feed->feed_link) {
