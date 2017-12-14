@@ -8,8 +8,6 @@ class ClassesSession
     static $config = array(
         "lifetime" => 31536000,
         "path" => "/",
-        "domain" => ".domain.tld",
-        "secure" => false,
         "secret" => "bJfYz2yi2byRbNEHWPXVFNapaze48&etspj1f34?bp)CsFwhUndoJA"
     );
 
@@ -44,8 +42,11 @@ class ClassesSession
         // Get the classname to create a singleton
         $c = get_called_class();
 
+        $domain = $_SERVER["SERVER_NAME"];
+        $secure = ((isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] !== 'off') || $_SERVER['SERVER_PORT'] == 443);
+
         // Set session cookie
-        session_set_cookie_params(self::$config["lifetime"], self::$config["path"], self::$config["domain"], self::$config["secure"], true);
+        session_set_cookie_params(self::$config["lifetime"], self::$config["path"], $domain, $secure, true);
         // set the current session name
         session_name($this->getCookieName('session'));
         // set the current session id

@@ -61,6 +61,11 @@ class HelpersSubscription {
             if (!$q->execute()) {
                 return $q->errorInfo();
             }
+
+            if (!$id && !$del) {
+                $_id = $db->lastInsertId();
+                ControllersCron::update($_id);
+            }
             return null;
         }
         catch (Exception $e) {

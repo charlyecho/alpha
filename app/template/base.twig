@@ -52,6 +52,13 @@
             var cleanAction = function() {
                 $('#empty_nav').html('');
             };
+
+            // notification
+            Notification.requestPermission(function (permission) {
+                if(!('permission' in Notification)) {
+                    Notification.permission = permission;
+                }
+            });
         </script>
         {% block script %}{% endblock %}
     </body>

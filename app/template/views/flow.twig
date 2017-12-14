@@ -11,17 +11,27 @@
                     <a onclick="return next();"><i class="icofont icofont-circled-right"></i></a>
                 </p>
                 <ul class="uk-nav-default uk-padding-small uk-nav-parent-icon" id="main-nav" uk-nav>
-                    <li data-id="" class="uk-parent cat cat_all"><a href="#">All <span class="cat-label"></span></a> <ul><li></li></ul></li>
+                    <li data-cat_id="" class="cat cat_all">
+                        <a href="#">
+                            <i class="icofont icofont-rss-feed"></i>&nbsp;
+                            All <span class="cat-label"></span>
+                        </a>
+                    </li>
+                    <li class="cat" data-starred="1" data-cat_id="">
+                        <a id="starred"><i class="icofont icofont-star"></i>&nbsp;Starred</a>
+                    </li>
                     {% for _cat in tree %}
                         {% if (_cat.subs|length > 0) %}
-                            <li class="uk-parent cat" data-cat_id="{{ _cat.id }}" {% if _cat.color %}style="background-color: {{ _cat.color }}"{% endif %}>
-                                <a href="#">{{ _cat.name }} <span class="cat-label"></span></a>
+                            <li class="uk-parent cat" data-cat_id="{{ _cat.id }}">
+                                <a href="#">
+                                    <i class="icofont icofont-folder" {% if _cat.color %}style="text-shadow:0 0 5px black; color: {{ _cat.color }}"{% endif %}></i>&nbsp;{{ _cat.name }} <span class="cat-label"></span>
+                                </a>
 
                                 {% if (_cat.subs|length) %}
                                     <ul class="uk-nav-sub">
                                         {% for _sub in _cat.subs %}
                                             <li class="sub_{{ _sub.id }} sub draggable" data-cat_id="{{ _cat.id }}" data-sub_id="{{ _sub.id }}">
-                                                <a href="#{{ _sub.id }}"><i class="icofont icofont-rss-feed"></i> {{ _sub.name }} <span class="sub-label"></span></a>
+                                                <a href="#{{ _sub.id }}"><i class="icofont icofont-rss-feed"></i>&nbsp;{{ _sub.name }} <span class="sub-label"></span></a>
                                             </li>
                                         {% endfor %}
                                     </ul>
@@ -41,8 +51,8 @@
     <form id="filters">
         <input type="hidden" name="cat_id" id="filters_cat_id" value="" />
         <input type="hidden" name="sub_id" id="filters_sub_id" value="" />
-        <input type="hidden" name="status" id="filters_status" value="waiting" />
-        <div id="status_filter"></div>
+        <input type="hidden" name="starred" id="filters_starred" value="0" />
+        <input type="hidden" name="read" id="filters_read" value="0" />
     </form>
 
     <style>
@@ -84,14 +94,97 @@
     <script>
         var loading = false;
         var current_item = null;
+        var auto_update = null;
+        var current_list = {};
 
         var prev = function() {
-            return false;
+            if (current_item) {
+                var _current_id = $('#item_'+current_item);
+                var next_items = $(_current_id).prevAll("article").first();
+                if (next_items.length) {
+                    current_item = $(next_items).data("id");
+                }
+            }
+            else {
+                current_item = $('#results article').first().data("id");
+            }
+
+            // scroll to
+            if (current_item) {
+                var element_offset = $("#item_" + current_item).offset().top;
+                $(document).scrollTop(element_offset - 100);
+            }
+
+            return current_item;
         };
 
         var next = function() {
-            return false;
+            if (current_item) {
+
+                // change status before finding the next
+                updateCurrentItem();
+
+                // find next
+                var _current_id = $('#item_'+current_item);
+                var next_items = $(_current_id).nextAll("article").first();
+                if (next_items.length) {
+                    current_item = $(next_items).data("id");
+                }
+                else {
+                    refresh();
+                }
+            }
+            else {
+                current_item = $('#results article').first().data("id");
+            }
+
+            // scroll to
+            if (current_item) {
+                var element_offset = $("#item_" + current_item).offset().top;
+                $(document).scrollTop(element_offset - 100);
+            }
+
+            return current_item;
         };
+
+        var openLink = function() {
+            if (current_item) {
+                $("#item_"+current_item).find(".uk-text-lead a").click();
+            }
+            else {
+                console.log("toto");
+            }
+        };
+
+        var star = function() {
+            var _current_item = current_list[current_item];
+            if(_current_item.starred === '1') {
+                _current_item.starred = '0';
+            }
+            else {
+                _current_item.starred = '1';
+            }
+            next();
+        };
+
+        var allread = function() {
+            for(_id in current_list) {
+                current_list[_id].read = '1';
+            }
+            refresh();
+        };
+
+        var updateCurrentItem = function() {
+            var _current_item = current_list[current_item];
+            if (_current_item.read === '0') {
+                _current_item.read = '1';
+            }
+        };
+
+        var prepareItem = function(data) {
+            current_list = data;
+        };
+
 
         /**
          * populate the count for subscription and categories
@@ -99,10 +192,15 @@
          * @param data
          */
         var populateCount = function(data) {
+
+            $('.cat-label, .sub-label').removeClass('uk-label');
             // populate subscriptions
             for (var _var in data) {
                 var value = parseInt(data[_var]);
                 $('.sub_'+_var).find('span').html(value ? value : null);
+                if (value) {
+                    $('.sub_'+_var).find('span').addClass("uk-label");
+                }
             }
 
             // populate categories
@@ -114,18 +212,25 @@
                     sum += parseInt(text ? text : 0);
                 });
                 total += sum;
-                $(this).find(".cat-label").html(sum > 0 ? sum : "");
+                if (sum > 0) {
+                    $(this).find(".cat-label").html(sum).addClass("uk-label");
+                }
+                else {
+                    $(this).find(".cat-label").html('');
+                }
             });
             $('.cat_all').find('.cat-label').html(total ? total : "");
         };
 
         // on click on categories
-        $('#tree #main-nav a').on('click', function() {
+        $('#tree #main-nav .cat a').on('click', function() {
             var li = $(this).parent();
             var cat_id = li.data("cat_id");
             var sub_id = li.data("sub_id");
-            $('#filters_cat_id').val(cat_id ? cat_id : null);
+            var starred = li.data("starred");
+            $('#filters_cat_id').val(cat_id);
             $('#filters_sub_id').val(sub_id ? sub_id : null);
+            $('#filters_starred').val(starred ? 1 : null);
             refresh();
         });
 
@@ -135,14 +240,20 @@
                 url: "/update",
                 beforeSend: function() {
                     showAction('<a><div uk-spinner></div>&nbsp;Updating ...</a>');
+                    if (auto_update) {
+                        clearInterval(auto_update);
+                    }
                 },
                 complete: function() {
                     cleanAction();
+                    initAutoUpdate();
                 }
             }).done(function(data) {
                 var nb = parseInt(data);
                 if (nb) {
-                    UIkit.notification(nb+' nouveaux items');
+                    if (Notification.permission === "granted") {
+                        var notification = new Notification(nb+' nouveaux items');
+                    }
                 }
             });
         };
@@ -150,10 +261,15 @@
         var refresh = function() {
             var oform = $('#filters');
             if (!loading) {
+                var params = oform.serialize();
+                for (_id in current_list) {
+                    params = params+"&status["+_id+"][read]="+current_list[_id].read;
+                    params = params+"&status["+_id+"][starred]="+current_list[_id].starred;
+                }
                 $.ajax({
                     url: "/ajax_flow",
                     method: "post",
-                    data: oform.serialize(), {# @TODO : separate : all from null cat_id #}
+                    data: params,
                     beforeSend: function() {
                         loading = true;
                         showAction('<a><div uk-spinner></div> Loading feed flow</a>');
@@ -185,6 +301,12 @@
             }
         };
 
+        var initAutoUpdate = function() {
+            auto_update = setInterval(function(){
+                update();
+            }, 120000)
+        };
+
         $(document).ready(function() {
            refresh();
 
@@ -193,13 +315,29 @@
                update();
            });
 
+        });
 
-           // javascript cron every 2 minutes
-           setInterval(function(){
-               update();
-           }, 120000);
-
-
+        $(document).on('keyup', function(event) {
+            event.preventDefault();
+            console.log(event.which);
+            if ( event.which === 32 ) { // space : open link
+                openLink();
+            }
+            if ( event.which === 74 ) { // J
+                next();
+            }
+            if ( event.which === 75 ) { // K
+                prev();
+            }
+            if ( event.which === 82 ) { // R
+                refresh();
+            }
+            if ( event.which === 76 ) { // L
+                star();
+            }
+            if ( event.which === 72 ) { // H : all current page read
+                allread();
+            }
         });
     </script>
 {% endblock %}

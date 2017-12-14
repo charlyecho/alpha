@@ -31,20 +31,32 @@ class ControllersFeeds {
 
         $cat_id = get($_POST, "cat_id");
         $sub_id = get($_POST, "sub_id");
+        $read = get($_POST, "read", 0);
+        $starred = get($_POST, "starred", 0);
         $status = get($_POST, "status", array());   // status to update (read, starred)
+
+        HelpersItems::updateStatus($status);
 
         // subscriptions count unread
         $nb = json_encode(HelpersFeeds::getNbSub($user->id), JSON_OBJECT_AS_ARRAY);
 
-        $items = HelpersFeeds::getSubItems($user->id, $cat_id, $sub_id);
-
-
-        //@tODO : ajouter les status dans le formulaire via l'ajax
+        // items
+        $items = HelpersFeeds::getSubItems($user->id, $cat_id, $sub_id, $read, $starred);
+        $_items_json = array();
+        foreach($items as $i) {
+            $_item = new stdClass();
+            $_item->id = $i->id;
+            $_item->read = $i->read;
+            $_item->starred = $i->starred;
+            $_items_json[$i->id] = $_item;
+        }
+        $items_json = json_encode($_items_json);
 
         $template = ClassesTwig::getInstance();
         return $template->render("views/ajax.twig", array(
             "count" => $nb,
-            "items" => $items
+            "items" => $items,
+            "items_json" => $items_json
         ));
     }
 
@@ -163,7 +175,6 @@ class ControllersFeeds {
 
         $subscription = HelpersSubscription::getItem($id);
         $categories = HelpersFeeds::getCategoryList($user->id);
-
 
         $template = ClassesTwig::getInstance();
         return $template->render("views/ajax_subscription.twig", array(

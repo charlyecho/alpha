@@ -28,16 +28,23 @@ class HelpersFeeds {
         return $s->fetchAll(PDO::FETCH_KEY_PAIR);
     }
 
-    public static function getSubItems($user_id, $cat_id = null, $sub_id = null, $type = "unread") {
+    public static function getSubItems($user_id, $cat_id = null, $sub_id = null, $read = 0, $starred = 0) {
         $db = ClassesDb::getInstance();
         $sql = "SELECT si.*, s.name as sub_name, s.url_site FROM subscription_item AS si INNER JOIN subscription s ON s.id = si.subscription_id ";
         $sql .= "WHERE s.user_id = ".$db->quote($user_id);
-        if ($cat_id) {
-            $sql.= " AND s.category_id = ".$db->quote($cat_id);
+        if ($cat_id !== "") {
+            if ($cat_id == 0) {
+                $sql.= " AND s.category_id IS NULL";
+            }
+            else {
+                $sql.= " AND s.category_id = ".$db->quote($cat_id);
+            }
         }
         if ($sub_id) {
             $sql.= " AND s.id = ".$db->quote($sub_id);
         }
+        $sql.= " AND si.read = ".$db->quote((int) $read);
+        $sql.= " AND si.starred = ".$db->quote((int) $starred);
         $sql .= " ORDER BY date_time DESC";
         $sql .= " LIMIT 0, 10";
         $s = $db->prepare($sql);
@@ -53,8 +60,6 @@ class HelpersFeeds {
 
 
     public static function cleanSub($data) {
-
-
         // favicon
         $path = "app/cache/icons/".$data->subscription_id.".png";
         if (is_file($path)) {
@@ -101,6 +106,10 @@ class HelpersFeeds {
         if ($data->thumbnail && strpos($data->content, $data->thumbnail) === false) {
             $data->content = "<p><img data-lazy_src='".$data->thumbnail."' alt='' src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==' /></p>".$data->content;
         }
+
+        // title
+        $data->title = html_entity_decode($data->title);
+
         return $data;
     }
 

@@ -15,12 +15,15 @@
         </article>
 
         <hr class="uk-divider-icon"/>
-
+    {% else %}
+        <div class="uk-card">Nothing ...</div>
     {% endfor %}
 </div>
 
 <script>
     populateCount(JSON.parse('{{ count|raw }}'));
+
+    prepareItem(JSON.parse('{{ items_json|raw }}'));
 
     {# @TODO : cleanup this ... #}
     $('iframe').each(function(it, elt) {

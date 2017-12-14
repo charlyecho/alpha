@@ -12,14 +12,12 @@ class ControllersCron {
     /**
      * update all in one shot
      *
-     * @todo too heavy : optimize this by using DB datetime
-     *
-     * @return bool
+     * @return int
      */
-    public static function update($step = null) {
-        HelpersCron::checkLastModification();
-        HelpersCron::getData();
-        $report_parse = HelpersCron::parse();
+    public static function update($id = null) {
+        HelpersCron::checkLastModification($id);
+        HelpersCron::getData($id);
+        $report_parse = HelpersCron::parse($id);
         $nb_new = $report_parse->nb_new;
         return $nb_new;
     }
