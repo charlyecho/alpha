@@ -1,6 +1,27 @@
-# Romeo Sierra Sierra
+# Alpha
 
-RSS / Atom parser (KISS)
+Alpha is a web-based RSS reader
 
-Require SimpleXml Lib
+## Features
+- self hosted
+- responsive (mobile, tablet, desktop)
+- sqlite
+- keyboard shortcuts
+- groups for categorization of feeds
+- starred items
+- ajax loading
+- cron or ajax update
+- enclosure support
+- import/export OPML
+- multiple users
+- lazy load images
+- noreferrer, noopenern, nofollow for article links
 
+## todo
+- https proxy
+
+## Licence
+- MIT
+
+## Author
+- charlyecho

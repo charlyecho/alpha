@@ -7,8 +7,9 @@
         <div class="uk-width-1-4@s uk-visible@s" id="tree">
             <div uk-sticky="offset:100">
                 <p class="uk-text-center">
-                    <a onclick="return prev();"><i class="icofont icofont-circled-left"></i></a>
-                    <a onclick="return next();"><i class="icofont icofont-circled-right"></i></a>
+                    <a onclick="prev();"><i class="icofont icofont-circled-left"></i></a>
+                    <a onclick="next();"><i class="icofont icofont-circled-right"></i></a>
+                    <a onclick="toggleRead();"><i class="icofont icofont-eye"></i></a>
                 </p>
                 <ul class="uk-nav-default uk-padding-small uk-nav-parent-icon" id="main-nav" uk-nav>
                     <li data-cat_id="" class="cat cat_all">
@@ -17,14 +18,17 @@
                             All <span class="cat-label"></span>
                         </a>
                     </li>
-                    <li class="cat" data-starred="1" data-cat_id="">
-                        <a id="starred"><i class="icofont icofont-star"></i>&nbsp;Starred</a>
+                    <li class="cat cat_starred" data-starred="1" data-cat_id="">
+                        <a id="starred">
+                            <i class="icofont icofont-star"></i>&nbsp;
+                            Starred <span class="cat-label"></span>
+                        </a>
                     </li>
                     {% for _cat in tree %}
                         {% if (_cat.subs|length > 0) %}
                             <li class="uk-parent cat" data-cat_id="{{ _cat.id }}">
                                 <a href="#">
-                                    <i class="icofont icofont-folder" {% if _cat.color %}style="text-shadow:0 0 5px black; color: {{ _cat.color }}"{% endif %}></i>&nbsp;{{ _cat.name }} <span class="cat-label"></span>
+                                    <i class="icofont icofont-folder" {% if _cat.color %}style="color: {{ _cat.color }}"{% endif %}></i>&nbsp;{{ _cat.name }} <span class="cat-label"></span>
                                 </a>
 
                                 {% if (_cat.subs|length) %}
@@ -149,11 +153,13 @@
 
         var openLink = function() {
             if (current_item) {
-                $("#item_"+current_item).find(".uk-text-lead a").click();
+                var href = $("#item_"+current_item+" .uk-text-lead a").prop("href");
+                if (href) {
+                    var tab = window.open(href, '_blank');
+                    //window.focus();
+                }
             }
-            else {
-                console.log("toto");
-            }
+            return false;
         };
 
         var star = function() {
@@ -183,6 +189,11 @@
 
         var prepareItem = function(data) {
             current_list = data;
+        };
+
+        var toggleRead = function() {
+            $('#filters_read').val(Math.abs($('#filters_read').val()-1));
+            refresh();
         };
 
 
@@ -220,11 +231,17 @@
                 }
             });
             $('.cat_all').find('.cat-label').html(total ? total : "");
+            $('.cat_starred').find(".cat-label").html(data['starred']);
         };
 
         // on click on categories
         $('#tree #main-nav .cat a').on('click', function() {
             var li = $(this).parent();
+
+            // avoid cats opened
+            if ($(li).hasClass("uk-open")) {
+                return;
+            }
             var cat_id = li.data("cat_id");
             var sub_id = li.data("sub_id");
             var starred = li.data("starred");
@@ -318,7 +335,6 @@
         });
 
         $(document).on('keyup', function(event) {
-            event.preventDefault();
             console.log(event.which);
             if ( event.which === 32 ) { // space : open link
                 openLink();
@@ -338,6 +354,8 @@
             if ( event.which === 72 ) { // H : all current page read
                 allread();
             }
+            event.preventDefault();
+            event.stopImmediatePropagation();
         });
     </script>
 {% endblock %}

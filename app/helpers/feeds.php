@@ -25,7 +25,13 @@ class HelpersFeeds {
         $db = ClassesDb::getInstance();
         $s = $db->prepare("SELECT s.id, count(si.id) as nb FROM subscription s LEFT JOIN subscription_item si ON (si.subscription_id = s.id AND si.read = 0) WHERE s.user_id = ".$db->quote($user_id)." GROUP BY s.id");
         $s->execute();
-        return $s->fetchAll(PDO::FETCH_KEY_PAIR);
+        $list = $s->fetchAll(PDO::FETCH_KEY_PAIR);
+
+        $sql = "SELECT count(si.id) FROM subscription_item si WHERE si.starred = 1";
+        $s = $db->prepare($sql);
+        $s->execute();
+        $list["starred"] = $s->fetch(PDO::FETCH_COLUMN);
+        return $list;
     }
 
     public static function getSubItems($user_id, $cat_id = null, $sub_id = null, $read = 0, $starred = 0) {
@@ -43,7 +49,9 @@ class HelpersFeeds {
         if ($sub_id) {
             $sql.= " AND s.id = ".$db->quote($sub_id);
         }
-        $sql.= " AND si.read = ".$db->quote((int) $read);
+        if (!$starred) {
+            $sql .= " AND si.read = " . $db->quote((int)$read);
+        }
         $sql.= " AND si.starred = ".$db->quote((int) $starred);
         $sql .= " ORDER BY date_time DESC";
         $sql .= " LIMIT 0, 10";
