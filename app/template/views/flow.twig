@@ -52,6 +52,13 @@
         </div>
     </div>
 
+    <div id="footer_mobile" class="uk-child-width-expand uk-hidden@s uk-position-fixed uk-position-bottom" uk-grid>
+        <div><a onclick="prev();"><i class="icofont icofont-circled-left"></i></a></div>
+        <div><a href="#"><i class="icofont icofont-gear"></i></a></a></div>
+        <div><a onclick="star();"><i class="icofont icofont-star"></i></a></div>
+        <div><a onclick="next();"><i class="icofont icofont-circled-right"></i></a></div>
+    </div>
+
     <form id="filters">
         <input type="hidden" name="cat_id" id="filters_cat_id" value="" />
         <input type="hidden" name="sub_id" id="filters_sub_id" value="" />
@@ -72,23 +79,39 @@
             box-shadow: 0 0 5px grey;
         }
 
-        .uk-article-meta.footer i {
+        .status_read i, .status_favorite i {
             font-size:2em;
             color: #eeeeee;
         }
 
-        .uk-article-meta.footer .active i.icofont-check {
+        .status_read.active i.icofont-check {
             color: #94ff80;
         }
 
-        .uk-article-meta.footer .active i.icofont-star {
-            color: #ffed4c;
+        .status_favorite.active i.icofont-star {
+            color: #ffa037;
         }
 
         #results > div.uk-container {
             max-width:800px;
         }
 
+        #footer_mobile {
+            height:50px;
+            background-color: white;
+        }
+
+        #footer_mobile a {
+            text-decoration: none;
+            text-align: center;
+            display: block;
+            width:100%;
+            height:100%;
+        }
+
+        #footer_mobile a i {
+            font-size:3em;
+        }
 
     </style>
 
@@ -256,7 +279,7 @@
                 method: "get",
                 url: "/update",
                 beforeSend: function() {
-                    showAction('<a><div uk-spinner></div>&nbsp;Updating ...</a>');
+                    showAction('<a><div uk-spinner></div></a>');
                     if (auto_update) {
                         clearInterval(auto_update);
                     }
@@ -270,6 +293,15 @@
                 if (nb) {
                     if (Notification.permission === "granted") {
                         var notification = new Notification(nb+' nouveaux items');
+                    }
+
+                    var _nb_item = 0;
+                    for(_i in _nb_item) {
+                        nb = nb+1;
+                    }
+
+                    if (!_nb_item) {
+                        refresh();
                     }
                 }
             });
@@ -289,7 +321,7 @@
                     data: params,
                     beforeSend: function() {
                         loading = true;
-                        showAction('<a><div uk-spinner></div> Loading feed flow</a>');
+                        showAction('<a><div uk-spinner></div>Loading...</a>');
                     },
                     success: function (data) {
                         document.location.href="#top";
@@ -335,7 +367,6 @@
         });
 
         $(document).on('keyup', function(event) {
-            console.log(event.which);
             if ( event.which === 32 ) { // space : open link
                 openLink();
             }

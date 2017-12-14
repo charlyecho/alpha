@@ -119,7 +119,7 @@ class HelpersCron {
             $sql = "SELECT * FROM subscription WHERE id = ".$db->quote($sub_id);
         }
         else {
-            $sql = "SELECT * FROM subscription ORDER BY last_check_datetime AND is_valid = 1 ASC LIMIT 0,30";
+            $sql = "SELECT * FROM subscription WHERE is_valid = 1 ORDER BY last_check_datetime  ASC LIMIT 0,30";
         }
         $s = $db->prepare($sql);
         $s->execute();

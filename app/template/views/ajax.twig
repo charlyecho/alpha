@@ -2,15 +2,22 @@
 <div class="uk-container">
     {% for _item in items %}
         <article id="item_{{ _item.id }}" data-id="{{ _item.id }}" class="uk-article item_flow uk-padding-small" uk-scrollspy="cls:uk-animation-fade" style="background-color: white">
-            <p class="uk-text-lead"><a class="uk-link-reset" rel="nofollow noreferrer noopener" target="_blank" href="{{ _item.link }}">{{ _item.title }}</a></p>
-            <p class="uk-article-meta"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-lazy_src="{{ _item.favicon }}" alt="" /> <a href="#">{{ _item.sub_name }} - {{ _item.date_time|date("d/m/Y H:i", "Europe/Paris") }}</a></p>
+            <p class="uk-text-lead">
+                <a class="uk-link-reset" rel="nofollow noreferrer noopener" target="_blank" href="{{ _item.link }}">{{ _item.title }}</a>
+            </p>
+            <p class="uk-article-meta">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-lazy_src="{{ _item.favicon }}" alt="" />
+                <a href="#">{{ _item.sub_name }} - {{ _item.date_time|date("d/m/Y H:i", "Europe/Paris") }}</a>
+                <span class="uk-visible@m status_read {{ _item.read ? "active" : null }}"><i class="icofont icofont-check"></i></span>
+                <span class="uk-visible@m status_favorite {{ _item.starred ? "active" : null }}"><i class="icofont icofont-star"></i></span>
+            </p>
             <div>
                 {{ _item.content|raw|nl2br }}
             </div>
 
             <p class="uk-article-meta footer">
-                <span class="status_read"><i class="icofont icofont-check"></i></span>
-                <span class="status_favorite"><i class="icofont icofont-star"></i></span>
+                <span class="status_read {{ _item.read ? "active" : null }}"><i class="icofont icofont-check"></i></span>
+                <span class="status_favorite {{ _item.starred ? "active" : null }}"><i class="icofont icofont-star"></i></span>
             </p>
         </article>
 
