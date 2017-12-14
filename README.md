@@ -19,6 +19,7 @@ Alpha is a web-based RSS reader
 
 ## todo
 - https proxy
+- main feed / secondary feed (ie. nsfw, mature, sensible feed)
 
 ## Licence
 - MIT
