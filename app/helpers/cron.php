@@ -119,7 +119,7 @@ class HelpersCron {
             $sql = "SELECT * FROM subscription WHERE id = ".$db->quote($sub_id);
         }
         else {
-            $sql = "SELECT * FROM subscription ORDER BY last_check_datetime ASC LIMIT 0,30";
+            $sql = "SELECT * FROM subscription ORDER BY last_check_datetime AND is_valid = 1 ASC LIMIT 0,30";
         }
         $s = $db->prepare($sql);
         $s->execute();
@@ -194,7 +194,7 @@ class HelpersCron {
             $data->filemtime = $filetime_dt;
 
 
-            $data->is_valid = ($data->status_code == CURLE_OK);
+            $data->is_valid = (int) ($data->status_code == CURLE_OK);
         }
 
         // close connexion

@@ -69,9 +69,7 @@ class ControllersInstall {
             }
 
             // subscription item
-            $sql = "CREATE TABLE subscription_item
-(
-    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, subscription_id INTEGER CONSTRAINT subscription_item_subscription_id_fk REFERENCES subscription (id) ON UPDATE CASCADE ON DELETE CASCADE, local_id VARCHAR, title VARCHAR, thumbnail VARCHAR, content TEXT, link TEXT, date_time DATETIME, read ENUM(0, 1) DEFAULT 0);";
+            $sql = "CREATE TABLE subscription_item (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, subscription_id INTEGER CONSTRAINT subscription_item_subscription_id_fk REFERENCES subscription (id) ON UPDATE CASCADE ON DELETE CASCADE, local_id VARCHAR, title VARCHAR, thumbnail VARCHAR, content TEXT, link TEXT, date_time DATETIME, read ENUM(0, 1) DEFAULT 0, starred ENUM(0,1) DEFAULT 0);";
             if ($db->exec($sql)) {
                 $report[] = array(
                     "type" => "success",
