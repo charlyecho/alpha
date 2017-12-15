@@ -68,7 +68,6 @@ class HelpersCron {
                 $content = curl_exec($mh);
                 $httpCode = curl_getinfo($mh, CURLINFO_HTTP_CODE);
                 curl_close($mh);
-                trace($content);
             }
 
             if ($step == 2) {
@@ -115,15 +114,19 @@ class HelpersCron {
         $db = ClassesDb::getInstance();
         $today = ClassesDate::getInstance()->toSql();
 
+        // limit date to check 20 minutes !
+        $a = ClassesDate::getInstance()->modify("-20 MINUTES")->toSql();
+
         if ($sub_id) {
             $sql = "SELECT * FROM subscription WHERE id = ".$db->quote($sub_id);
         }
         else {
-            $sql = "SELECT * FROM subscription WHERE is_valid = 1 ORDER BY last_check_datetime  ASC LIMIT 0,30";
+            $sql = "SELECT * FROM subscription WHERE is_valid = 1 AND last_check_datetime <= ".$db->quote($a)." ORDER BY last_check_datetime  ASC LIMIT 0,40";
         }
         $s = $db->prepare($sql);
         $s->execute();
         $feeds = $s->fetchAll();
+        $report[] = count($feeds)." subscriptions found";
 
         $multihandler = curl_multi_init();
         $handlers = $result = $status_co = array();
@@ -238,6 +241,9 @@ class HelpersCron {
         $s = $db->prepare($sql);
         $s->execute();
         $feeds = $s->fetchAll(PDO::FETCH_KEY_PAIR);
+
+        $report[] = count($feeds)." subscriptions needed to get data";
+
 
         $multihandler = curl_multi_init();
         $handlers = $result = array();

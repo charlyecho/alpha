@@ -43,11 +43,11 @@
 
         <div>
             {% for _cat in categories  %}
-                <div class="cat droppable cat_{{ _cat.id }}" data-id="{{ _cat.id }}" style="{% if _cat.color %}background-color: {{ _cat.color }}{% endif %}; ">
+                <div class="cat droppable cat_{{ _cat.id }}" data-id="{{ _cat.id }}">
                     {% if _cat.id %}
                     <a>
                         {% endif %}
-                        <span style="font-size:1.3em;">{{ _cat.name }}</span>
+                        <i class="icofont icofont-folder" style="{% if _cat.color %}color: {{ _cat.color }}{% endif %}; "></i>&nbsp;<span style="font-size:1.3em;">{{ _cat.name }}</span>
                         {% if _cat.id %}
                     </a>
                     {% endif %}
