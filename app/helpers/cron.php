@@ -431,4 +431,89 @@ class HelpersCron {
 
         return $report;
     }
+
+    public static function parse2($id = null) {
+        $date_month = ClassesDate::getInstance()->modify('-40 DAYS')->toSql();
+        $report = array();
+        $db = ClassesDb::getInstance();
+
+        // get all subscriptions to parse
+        if ($id) {
+            $sql = "SELECT * FROM subscription WHERE id = ".$db->quote($id);
+        }
+        else {
+            $sql = "SELECT * FROM subscription WHERE need_parse = '1'";
+        }
+        $s = $db->prepare($sql);
+        $s->execute();
+        $feeds = $s->fetchAll();
+        $_ids = array();
+        foreach($feeds as $f) {
+            $_ids[] = $f->id;
+        }
+        $report[] = count($feeds)." subscriptions to parse";
+
+        // items already stored for those subscriptions
+        $sql = "SELECT local_id FROM subscription_item WHERE subscription_id IN ('".implode("','", $_ids)."')";
+        $s = $db->prepare($sql);
+        $s->execute();
+        $existing_items = $s->fetchAll(PDO::FETCH_COLUMN);
+
+        foreach($feeds as $f) {
+            $id = $f->id;
+            $md5_link = md5($f->url);
+            $file = "app/cache/rss/$md5_link.xml";
+
+            $feed = FeedParser::parseFile($file);
+            foreach ($feed->feed_items as $key => $_item) {
+
+                // already stored
+                if (in_array($_item->guid, $existing_items)) {
+                    continue;
+                }
+
+                try {
+                    $_date = ClassesDate::getInstance($_item->date_modification)->setTimezone(new DateTimeZone('UTC'))->toSql();
+                }
+                catch (Exception $e) {
+                    continue;
+                }
+
+                // too old (40 days)
+                if ($_date <= $date_month) {
+                    continue;
+                }
+
+                $thumbnail = null;
+                if (count($_item->enclosures)) {
+                    $thumbnail = reset($_item->enclosures);
+                }
+
+                // fill the items
+                $sql = "INSERT INTO subscription_item (local_id, subscription_id, title, thumbnail, content, link, date_time) ";
+                $sql .= "VALUES (".$db->quote($_item->guid).", ".$db->quote($id).",".$db->quote($_item->title).", ".$db->quote($thumbnail).", ".$db->quote($_item->text).", ".$db->quote($_item->link).", ".$db->quote($_date).")";
+                try {
+                    $s = $db->prepare($sql);
+                    if (!$s->execute()) {
+                        trace($s->errorInfo());
+                        trace($_item);
+                    }
+                }
+                catch (Exception $e) {
+                    trace($e->getMessage());
+                    trace($_item);
+                    continue;
+                }
+            }
+
+            // disable parsing
+            $sql = "UPDATE subscription SET need_parse = '0' WHERE id =".$db->quote($id);
+            $s = $db->prepare($sql);
+            $s->execute();
+
+            $report[] = $file;
+        }
+
+        return $report;
+    }
 }

@@ -6,7 +6,7 @@
     <div uk-grid>
         <div class="uk-width-1-4@s uk-visible@s" id="tree">
             <div uk-sticky="offset:100">
-                <p class="uk-text-center">
+                <p class="uk-text-center" id="fast_menu">
                     <a onclick="prev();"><i class="icofont icofont-circled-left"></i></a>
                     <a onclick="config();"><i class="icofont icofont-gear"></i></a>
                     <a onclick="star();"><i class="icofont icofont-star"></i></a>
@@ -60,17 +60,31 @@
         <div><a onclick="next();"><i class="icofont icofont-circled-right"></i></a></div>
     </div>
 
-    <form id="filters">
-        <input type="hidden" name="cat_id" id="filters_cat_id" value="" />
-        <input type="hidden" name="sub_id" id="filters_sub_id" value="" />
-        <input type="hidden" name="starred" id="filters_starred" value="0" />
-        <input type="hidden" name="read" id="filters_read" value="0" />
-    </form>
 
     <div id="modal_flow" uk-modal>
         <div class="uk-modal-dialog uk-modal-body">
-            <h2 class="uk-modal-title">Parameters</h2>
 
+            <h2 class="uk-modal-title">Parameters</h2>
+            <form id="filters">
+                <input type="hidden" name="cat_id" id="filters_cat_id" value="" />
+                <input type="hidden" name="sub_id" id="filters_sub_id" value="" />
+
+                <div class="uk-margin">
+                    <h3><i class="icofont icofont-eye"></i> Type</h3>
+                    <label><input class="uk-radio" type="radio" name="read" value="0" id="read_0" checked>Unread only</label>
+                    <label><input class="uk-radio" type="radio" name="read" value="1" id="read_1">Read only</label>
+                </div>
+
+                <div class="uk-margin">
+                    <h3><i class="icofont icofont-star"></i> Starred</h3>
+                    <label><input class="uk-radio" type="radio" name="starred" value="0" id="starred_0" checked>Unstarred</label>
+                    <label><input class="uk-radio" type="radio" name="starred" value="1" id="starred_1">Starred only</label>
+                </div>
+            </form>
+
+            <p class="uk-text-center">
+                <button class="uk-button uk-button-primary uk-modal-close" type="button">OK</button>
+            </p>
         </div>
     </div>
 
@@ -117,8 +131,12 @@
             height:100%;
         }
 
-        #footer_mobile a i {
-            font-size:3em;
+        #fast_menu a {
+            text-decoration: none;
+        }
+
+        #footer_mobile a i, #fast_menu i {
+            font-size:2em;
         }
 
     </style>
@@ -198,7 +216,7 @@
         };
 
         var star = function() {
-            if (_current_item) {
+            if (current_item) {
                 var _current_item = current_list[current_item];
                 if (_current_item.starred === '1') {
                     _current_item.starred = '0';
@@ -229,7 +247,8 @@
         };
 
         var toggleRead = function() {
-            $('#filters_read').val(Math.abs($('#filters_read').val()-1));
+            var _val = Math.abs($('input[name="read"]:checked').val()-1);
+            $('#read_'+_val).prop("checked", true);
             refresh();
         };
 
@@ -284,7 +303,7 @@
             var starred = li.data("starred");
             $('#filters_cat_id').val(cat_id);
             $('#filters_sub_id').val(sub_id ? sub_id : null);
-            $('#filters_starred').val(starred ? 1 : null);
+            $('#starred_'+(starred ? "1" : "0")).prop('checked', true);
             refresh();
         });
 
@@ -376,6 +395,10 @@
            $('#all_update').click(function (e) {
                e.preventDefault();
                update();
+           });
+
+           $('#modal_flow').on('hide', function() {
+               refresh();
            });
 
         });

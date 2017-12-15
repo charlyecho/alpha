@@ -33,8 +33,8 @@ class ControllersCron {
             echo $_line."\n";
         }
         echo "-------\n";
-        $report_parse = HelpersCron::parse();
-        foreach($report_parse->log as $_line) {
+        $report_parse = HelpersCron::parse2();
+        foreach($report_parse as $_line) {
             echo $_line."\n";
         }
     }
