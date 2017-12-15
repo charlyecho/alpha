@@ -19,7 +19,24 @@ class ControllersCron {
         HelpersCron::getData($id);
         $report_parse = HelpersCron::parse($id);
         $nb_new = $report_parse->nb_new;
-        return $nb_new;
+        return $nb_new."\n";
+    }
+
+    public static function cliUpdate() {
+        $report_check = HelpersCron::checkLastModification();
+        foreach($report_check as $_line) {
+            echo $_line."\n";
+        }
+        echo "-------\n";
+        $report_get_data = HelpersCron::getData();
+        foreach($report_get_data as $_line) {
+            echo $_line."\n";
+        }
+        echo "-------\n";
+        $report_parse = HelpersCron::parse();
+        foreach($report_parse->log as $_line) {
+            echo $_line."\n";
+        }
     }
 
     /**

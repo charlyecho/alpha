@@ -55,7 +55,7 @@
 
     <div id="footer_mobile" class="uk-child-width-expand uk-hidden@s uk-position-fixed uk-position-bottom" uk-grid>
         <div><a onclick="prev();"><i class="icofont icofont-circled-left"></i></a></div>
-        <div><a href="#"><i class="icofont icofont-gear"></i></a></a></div>
+        <div><a onclick="config();"><i class="icofont icofont-gear"></i></a></div>
         <div><a onclick="star();"><i class="icofont icofont-star"></i></a></div>
         <div><a onclick="next();"><i class="icofont icofont-circled-right"></i></a></div>
     </div>
@@ -66,6 +66,13 @@
         <input type="hidden" name="starred" id="filters_starred" value="0" />
         <input type="hidden" name="read" id="filters_read" value="0" />
     </form>
+
+    <div id="modal_flow" uk-modal>
+        <div class="uk-modal-dialog uk-modal-body">
+            <h2 class="uk-modal-title">Parameters</h2>
+
+        </div>
+    </div>
 
     <style>
         .cat-label, .sub-label {
@@ -115,7 +122,6 @@
         }
 
     </style>
-
 {% endblock %}
 
 {% block script %}
@@ -124,6 +130,11 @@
         var current_item = null;
         var auto_update = null;
         var current_list = {};
+
+
+        var config = function() {
+            UIkit.modal('#modal_flow').show();
+        };
 
         var prev = function() {
             if (current_item) {
@@ -187,14 +198,16 @@
         };
 
         var star = function() {
-            var _current_item = current_list[current_item];
-            if(_current_item.starred === '1') {
-                _current_item.starred = '0';
+            if (_current_item) {
+                var _current_item = current_list[current_item];
+                if (_current_item.starred === '1') {
+                    _current_item.starred = '0';
+                }
+                else {
+                    _current_item.starred = '1';
+                }
+                next();
             }
-            else {
-                _current_item.starred = '1';
-            }
-            next();
         };
 
         var allread = function() {

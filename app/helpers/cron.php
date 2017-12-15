@@ -206,9 +206,14 @@ class HelpersCron {
         }
         curl_multi_close($multihandler);
 
+        $nb = 0;
+
         // update
         foreach($feeds as $f) {
             $need_update = $f->is_valid && (!$f->last_modification_datetime || $f->last_modification_datetime != $f->filemtime);
+            if ($need_update) {
+                $nb++;
+            }
             //$need_update = (!$f->last_modification_datetime || $f->last_modification_datetime != $f->filemtime);
 
             $sql = "UPDATE subscription SET last_modification_datetime = ".$db->quote($f->filemtime).", is_valid = ".$db->quote($f->is_valid).", last_check_datetime = ".$db->quote($today).", need_update = ".$db->quote($need_update ? "1" : "0")." WHERE id = ".$db->quote($f->id);
@@ -317,6 +322,8 @@ class HelpersCron {
         $report->nb_new = 0;
 
 
+        // @TODO : use the feeds with filter 'to_parse' only
+
         $feed_id = $sub_id;
 
         $date_month = ClassesDate::getInstance()->modify('-40 DAYS')->toSql();
@@ -347,6 +354,7 @@ class HelpersCron {
         }
         $files = glob($pattern);
         foreach($files as $f) {
+            $nb_new_item = 0;
             $ids = explode("/", $f);
             $url = str_replace(".xml", "", end($ids));
             $id = isset($url_to_id[$url]) ? $url_to_id[$url][0] : null;
@@ -384,6 +392,7 @@ class HelpersCron {
                     $thumbnail = reset($_item->enclosures);
                 }
 
+                $nb_new_item++;
                 $report->nb_new ++;
 
                 // fill the items
@@ -406,7 +415,9 @@ class HelpersCron {
 
             }
 
-            $report->log[] = "New items : ".$report->nb_new;
+            if ($nb_new_item) {
+                $report->log[] = $feeds[$id] . " => " . $nb_new_item;
+            }
 
             // update website url
             if ($feed->feed_link) {
