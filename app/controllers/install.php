@@ -85,7 +85,19 @@ class ControllersInstall {
             }
 
             // subscription
-            $sql ="CREATE TABLE subscription(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, name VARCHAR, url TEXT, user_id INTEGER NOT NULL CONSTRAINT subscription_user_id_fk REFERENCES user (id) ON UPDATE CASCADE ON DELETE CASCADE,  category_id INTEGER CONSTRAINT subscription_category_id_fk REFERENCES category (id), last_modification_datetime DATETIME, need_update                ENUM(0, 1) DEFAULT 0, last_check_datetime        DATETIME, recuperation_data_datetime DATETIME, is_valid ENUM(0, 1) DEFAULT 1, url_site TEXT,  need_parse ENUM(0, 1) DEFAULT 0 NOT NULL, login VARCHAR, password VARCHAR);";
+            $sql ="CREATE TABLE subscription(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
+              name VARCHAR, 
+              url TEXT, 
+              user_id INTEGER NOT NULL CONSTRAINT subscription_user_id_fk REFERENCES user (id) ON UPDATE CASCADE ON DELETE CASCADE,  
+              category_id INTEGER CONSTRAINT subscription_category_id_fk REFERENCES category (id), 
+              last_modification_datetime DATETIME, 
+              need_update ENUM(0, 1) DEFAULT 0, 
+              last_check_datetime DATETIME, 
+              recuperation_data_datetime DATETIME, 
+              is_valid ENUM(0, 1) DEFAULT 1, 
+              url_site TEXT,  
+              need_parse ENUM(0, 1) DEFAULT 0 NOT NULL, 
+              is_mature ENUM(0, 1) DEFAULT 0 NOT NULL;";
             if ($db->exec($sql)) {
                 $report[] = array(
                     "type" => "success",

@@ -29,6 +29,13 @@
 
             <p>
                 <label>
+                    Mature
+                    <input type="checkbox" name="is_mature" value="1" {{ subscription.is_mature ? 'checked="checked"' : null }} class="uk-checkbox" />
+                </label>
+            </p>
+
+            <p>
+                <label>
                     Category
                     <select name="category_id" class="uk-select">
                         {% for cat in categories %}

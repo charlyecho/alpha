@@ -24,8 +24,12 @@
         <hr class="uk-divider-icon"/>
     {% else %}
         <div class="uk-card " style="background-color: white">
-            <p class="uk-text-center uk-padding">
-                <i class="icofont icofont-rss-feed" style="font-size:3em;"></i><br/>
+            <p class="uk-text-center uk-padding fast_options">
+                <a onclick="config()">
+                    <i class="icofont icofont-favourite {{ starred ? "active" : null }}"></i>
+                    <i class="icofont icofont-key {{ nsfw ? "active" : null }}"></i>
+                    <i class="icofont icofont-eye {{ read ? "active" : null }}"></i>
+                </a><br/>
                 <span class="uk-text-bold">empty <br/><i style="font-size:2em" class="icofont icofont-emo-simple-smile"></i>
                 </span>
             </p>

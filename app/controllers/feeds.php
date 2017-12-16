@@ -33,6 +33,7 @@ class ControllersFeeds {
         $sub_id = get($_POST, "sub_id");
         $read = get($_POST, "read", 0);
         $starred = get($_POST, "starred", 0);
+        $nsfw = get($_POST, "nsfw", 0);
         $status = get($_POST, "status", array());   // status to update (read, starred)
 
         HelpersItems::updateStatus($status);
@@ -41,7 +42,7 @@ class ControllersFeeds {
         $nb = json_encode(HelpersFeeds::getNbSub($user->id), JSON_OBJECT_AS_ARRAY);
 
         // items
-        $items = HelpersFeeds::getSubItems($user->id, $cat_id, $sub_id, $read, $starred);
+        $items = HelpersFeeds::getSubItems($user->id, $cat_id, $sub_id, $read, $starred, $nsfw);
         $_items_json = array();
         foreach($items as $i) {
             $_item = new stdClass();
@@ -56,6 +57,9 @@ class ControllersFeeds {
         return $template->render("views/ajax.twig", array(
             "count" => $nb,
             "items" => $items,
+            "nsfw" => $nsfw,
+            "starred" => $starred,
+            "read" => $read,
             "items_json" => $items_json
         ));
     }

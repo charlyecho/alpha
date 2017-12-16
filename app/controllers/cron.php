@@ -59,7 +59,7 @@ class ControllersCron {
         }
 
         if ($step == 3) {
-            $return = HelpersCron::parse($sub_id);
+            $return = HelpersCron::parse2($sub_id);
             return implode("<br/>", $return->log);
         }
 

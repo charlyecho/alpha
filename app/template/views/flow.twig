@@ -6,28 +6,28 @@
     <div uk-grid>
         <div class="uk-width-1-4@s uk-visible@s" id="tree">
             <div uk-sticky="offset:100">
-                <p class="uk-text-center" id="fast_menu">
-                    <a onclick="prev();"><i class="icofont icofont-circled-left"></i></a>
-                    <a onclick="config();"><i class="icofont icofont-gear"></i></a>
-                    <a onclick="star();"><i class="icofont icofont-star"></i></a>
-                    <a onclick="next();"><i class="icofont icofont-circled-right"></i></a>
+                <p class="uk-text-center fast_options">
+                    <a onclick="config();"><i class="icofont icofont-filter"></i></a>
+                    <a onclick="toggleStarred();"><i class="icofont icofont-favourite"></i></a>
+                    <a onclick="toggleNsfw();"><i class="icofont icofont-key"></i></a>
+                    <a onclick="toggleRead();"><i class="icofont icofont-eye"></i></a>
                 </p>
                 <ul class="uk-nav-default uk-padding-small uk-nav-parent-icon" id="main-nav" uk-nav>
-                    <li data-cat_id="" class="cat cat_all">
+                    <li data-cat_id="" class="cat cat_all" data-starred="0">
                         <a href="#">
                             <i class="icofont icofont-rss-feed"></i>&nbsp;
                             All <span class="cat-label"></span>
                         </a>
                     </li>
                     <li class="cat cat_starred" data-starred="1" data-cat_id="">
-                        <a id="starred">
+                        <a>
                             <i class="icofont icofont-star"></i>&nbsp;
                             Starred <span class="cat-label"></span>
                         </a>
                     </li>
                     {% for _cat in tree %}
                         {% if (_cat.subs|length > 0) %}
-                            <li class="uk-parent cat" data-cat_id="{{ _cat.id }}">
+                            <li class="uk-parent cat" data-starred="0" data-cat_id="{{ _cat.id }}">
                                 <a href="#">
                                     <i class="icofont icofont-folder" {% if _cat.color %}style="color: {{ _cat.color }}"{% endif %}></i>&nbsp;{{ _cat.name }} <span class="cat-label"></span>
                                 </a>
@@ -55,8 +55,8 @@
 
     <div id="footer_mobile" class="uk-child-width-expand uk-hidden@s uk-position-fixed uk-position-bottom" uk-grid>
         <div><a onclick="prev();"><i class="icofont icofont-circled-left"></i></a></div>
-        <div><a onclick="config();"><i class="icofont icofont-gear"></i></a></div>
-        <div><a onclick="star();"><i class="icofont icofont-star"></i></a></div>
+        <div><a onclick="config();"><i class="icofont icofont-filter"></i></a></div>
+        <div><a onclick="star();"><i class="icofont icofont-favourite"></i></a></div>
         <div><a onclick="next();"><i class="icofont icofont-circled-right"></i></a></div>
     </div>
 
@@ -70,15 +70,19 @@
                 <input type="hidden" name="sub_id" id="filters_sub_id" value="" />
 
                 <div class="uk-margin">
+                    <h3><i class="icofont icofont-key"></i> Mature</h3>
+                    <label><input class="uk-checkbox" type="checkbox" name="nsfw" value="1" id="nsfw">Include/Show Mature</label>
+                </div>
+
+                <div class="uk-margin">
                     <h3><i class="icofont icofont-eye"></i> Type</h3>
                     <label><input class="uk-radio" type="radio" name="read" value="0" id="read_0" checked>Unread only</label>
                     <label><input class="uk-radio" type="radio" name="read" value="1" id="read_1">Read only</label>
                 </div>
 
                 <div class="uk-margin">
-                    <h3><i class="icofont icofont-star"></i> Starred</h3>
-                    <label><input class="uk-radio" type="radio" name="starred" value="0" id="starred_0" checked>Unstarred</label>
-                    <label><input class="uk-radio" type="radio" name="starred" value="1" id="starred_1">Starred only</label>
+                    <h3><i class="icofont icofont-favourite"></i> Starred</h3>
+                    <label><input class="uk-checkbox" type="checkbox" name="starred" value="1" id="starred">Starred</label>
                 </div>
             </form>
 
@@ -110,7 +114,7 @@
             color: #94ff80;
         }
 
-        .status_favorite.active i.icofont-star {
+        .status_favorite.active i.icofont-favourite {
             color: #ffa037;
         }
 
@@ -139,6 +143,18 @@
             font-size:2em;
         }
 
+        .fast_options a, .fast_options a:hover {
+            text-decoration: none;
+            font-size:2em;
+        }
+
+        .fast_options a i {
+            color: #dddddd;
+        }
+
+        .fast_options a i.active {
+            color: #404040;
+        }
     </style>
 {% endblock %}
 
@@ -246,12 +262,26 @@
             current_list = data;
         };
 
-        var toggleRead = function() {
-            var _val = Math.abs($('input[name="read"]:checked').val()-1);
-            $('#read_'+_val).prop("checked", true);
+        var toggleStarred = function() {
+            var _val = Math.abs($('#starred').is(':checked')-1);
+            $('#starred').prop("checked", !!_val);
+            $('.fast_options i.icofont-favourite').toggleClass('active');
             refresh();
         };
 
+        var toggleNsfw = function() {
+            var _val = Math.abs($('#nsfw').is(':checked')-1);
+            $('#nsfw').prop("checked", !!_val);
+            $('.fast_options i.icofont-key').toggleClass('active');
+            refresh();
+        };
+
+        var toggleRead = function() {
+            var _val = Math.abs($('input[name="read"]:checked').val()-1);
+            $('#read_'+_val).prop("checked", true);
+            $('.fast_options i.icofont-eye').toggleClass('active');
+            refresh();
+        };
 
         /**
          * populate the count for subscription and categories
@@ -301,9 +331,11 @@
             var cat_id = li.data("cat_id");
             var sub_id = li.data("sub_id");
             var starred = li.data("starred");
+            console.log(parseInt(starred));
             $('#filters_cat_id').val(cat_id);
             $('#filters_sub_id').val(sub_id ? sub_id : null);
-            $('#starred_'+(starred ? "1" : "0")).prop('checked', true);
+            $('#starred').prop('checked', !!parseInt(starred));
+            console.log($('#starred'));
             refresh();
         });
 

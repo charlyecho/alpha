@@ -17,6 +17,7 @@ class HelpersSubscription {
             $sub->url = null;
             $sub->user_id = $user->id;
             $sub->category_id = null;
+            $sub->is_mature = 0;
             return $sub;
         }
         else {
@@ -36,6 +37,7 @@ class HelpersSubscription {
         $url_site = get($post, "url_site");
         $name = get($post, "name");
         $url = get($post, "url");
+        $is_mature = get($post, "is_mature", 0);
 
         if ($url_site && $id) {
             $_url = "https://www.google.com/s2/favicons?domain=".urlencode($url_site);
@@ -50,11 +52,11 @@ class HelpersSubscription {
                 $sql = "DELETE FROM subscription WHERE id = ".$db->quote($id)." AND user_id = ".$db->quote($user_id);
             }
             else {
-                $sql = "UPDATE subscription SET url_site = ".$db->quote($url_site).", category_id=".$db->quote($category_id).", name = ".$db->quote($name)." WHERE id = ".$db->quote($id)." AND user_id = ".$db->quote($user_id);
+                $sql = "UPDATE subscription SET url_site = ".$db->quote($url_site).", category_id=".$db->quote($category_id).", name = ".$db->quote($name).", is_mature = ".$db->quote($is_mature)." WHERE id = ".$db->quote($id)." AND user_id = ".$db->quote($user_id);
             }
         }
         else {
-            $sql = "INSERT INTO subscription (name, user_id, category_id, url, url_site) VALUES (".$db->quote($name ? $name : $url).", ".$db->quote($user_id).", ".$db->quote($category_id).", ".$db->quote($url).", ".$db->quote($url_site).")";
+            $sql = "INSERT INTO subscription (name, user_id, category_id, url, url_site, is_mature) VALUES (".$db->quote($name ? $name : $url).", ".$db->quote($user_id).", ".$db->quote($category_id).", ".$db->quote($url).", ".$db->quote($url_site).", ".$db->quote($is_mature).")";
         }
         $q = $db->prepare($sql);
         try {

@@ -34,7 +34,7 @@ class HelpersFeeds {
         return $list;
     }
 
-    public static function getSubItems($user_id, $cat_id = null, $sub_id = null, $read = 0, $starred = 0) {
+    public static function getSubItems($user_id, $cat_id = null, $sub_id = null, $read = 0, $starred = 0, $nsfw = 0) {
         $db = ClassesDb::getInstance();
         $sql = "SELECT si.*, s.name as sub_name, s.url_site FROM subscription_item AS si INNER JOIN subscription s ON s.id = si.subscription_id ";
         $sql .= "WHERE s.user_id = ".$db->quote($user_id);
@@ -51,6 +51,9 @@ class HelpersFeeds {
         }
         if (!$starred) {
             $sql .= " AND si.read = " . $db->quote((int)$read);
+        }
+        if (!$nsfw) {
+            $sql .= " AND s.is_mature = '0'";
         }
         $sql.= " AND si.starred = ".$db->quote((int) $starred);
         $sql .= " ORDER BY date_time DESC";
