@@ -262,24 +262,45 @@
             current_list = data;
         };
 
+        var updateIcons = function(starred, nsfw, read) {
+            if (starred) {
+                $('.fast_options i.icofont-favourite').addClass('active');
+            }
+            else {
+                $('.fast_options i.icofont-favourite').removeClass('active');
+            }
+
+            if (nsfw) {
+                $('.fast_options i.icofont-key').addClass('active');
+            }
+            else {
+                $('.fast_options i.icofont-key').removeClass('active');
+            }
+
+            if (read) {
+                $('.fast_options i.icofont-eye').addClass('active');
+            }
+            else {
+                $('.fast_options i.icofont-eye').removeClass('active');
+            }
+
+        };
+
         var toggleStarred = function() {
             var _val = Math.abs($('#starred').is(':checked')-1);
             $('#starred').prop("checked", !!_val);
-            $('.fast_options i.icofont-favourite').toggleClass('active');
             refresh();
         };
 
         var toggleNsfw = function() {
             var _val = Math.abs($('#nsfw').is(':checked')-1);
             $('#nsfw').prop("checked", !!_val);
-            $('.fast_options i.icofont-key').toggleClass('active');
             refresh();
         };
 
         var toggleRead = function() {
             var _val = Math.abs($('input[name="read"]:checked').val()-1);
             $('#read_'+_val).prop("checked", true);
-            $('.fast_options i.icofont-eye').toggleClass('active');
             refresh();
         };
 

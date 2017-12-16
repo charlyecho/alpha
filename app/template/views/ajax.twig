@@ -9,7 +9,7 @@
                 <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-lazy_src="{{ _item.favicon }}" alt="" />
                 <a href="#">{{ _item.sub_name }} - {{ _item.date_time|date("d/m/Y H:i", "Europe/Paris") }}</a>
                 <span class="uk-visible@m status_read {{ _item.read ? "active" : null }}"><i class="icofont icofont-check"></i></span>
-                <span class="uk-visible@m status_favorite {{ _item.starred ? "active" : null }}"><i class="icofont icofont-star"></i></span>
+                <span class="uk-visible@m status_favourite {{ _item.starred ? "active" : null }}"><i class="icofont icofont-favourite"></i></span>
             </p>
             <div>
                 {{ _item.content|raw|nl2br }}
@@ -17,7 +17,7 @@
 
             <p class="uk-article-meta footer">
                 <span class="status_read {{ _item.read ? "active" : null }}"><i class="icofont icofont-check"></i></span>
-                <span class="status_favorite {{ _item.starred ? "active" : null }}"><i class="icofont icofont-star"></i></span>
+                <span class="status_favorite {{ _item.starred ? "active" : null }}"><i class="icofont icofont-favourite"></i></span>
             </p>
         </article>
 
@@ -41,6 +41,8 @@
     populateCount(JSON.parse('{{ count|raw }}'));
 
     prepareItem(JSON.parse('{{ items_json|raw }}'));
+
+    updateIcons({{ starred }}, {{ nsfw }}, {{ read}});
 
     {# @TODO : cleanup this ... #}
     $('iframe').each(function(it, elt) {
