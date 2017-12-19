@@ -8,7 +8,10 @@
 
 $config = array(
     "base_url" => "badin.dev",
-
+    "auth_type" => "sso",
+    "ldap" => array(
+        "host" => ""
+    )
 );
 
 return $config;

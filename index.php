@@ -4,6 +4,7 @@
  */
 ob_start();
 ini_set('default_charset', 'UTF-8');
+ini_set("display_errors", 1);
 date_default_timezone_set("UTC");
 
 require_once __DIR__.'/app/functions.php';
