@@ -15,9 +15,9 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
 
     $r->addRoute("GET", "/", array("ControllersHome", "home"));
     $r->addRoute("GET", "/install", array("ControllersInstall", "home"));
+    $r->addRoute(array("GET", "POST"), "/login", array("ControllersLogin", "home"));
 
     if (is_file($path_db)) {
-        $r->addRoute(array("GET", "POST"), "/login", array("ControllersLogin", "home"));
         $r->addRoute("GET", "/logout", array("ControllersLogin", "logout"));
         $r->addRoute("GET", "/session/{id:\d+}", array("HelpersUser", "session"));//@TODO DELETE THIS !
 

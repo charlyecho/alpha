@@ -436,7 +436,7 @@ class HelpersCron {
         $date_month = ClassesDate::getInstance()->modify('-40 DAYS')->toSql();
         $report = array();
         $db = ClassesDb::getInstance();
-
+        $nb = 0;
         // get all subscriptions to parse
         if ($id) {
             $sql = "SELECT * FROM subscription WHERE id = ".$db->quote($id);
@@ -510,6 +510,7 @@ class HelpersCron {
                         trace($s->errorInfo());
                         trace($_item);
                     }
+                    $nb++;
                 }
                 catch (Exception $e) {
                     trace($e->getMessage());
@@ -526,6 +527,6 @@ class HelpersCron {
             $report[] = $file;
         }
 
-        return $report;
+        return $nb;
     }
 }

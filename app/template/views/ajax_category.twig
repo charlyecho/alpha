@@ -1,5 +1,5 @@
 <h2>{{ category.name ? "Edit category" : "New category" }}</h2>
-<form method="post" action="/config/category/edit">
+<form method="post" action="{{ prefix }}/config/category/edit">
     <input type="hidden" name="id" value="{{ category.id }}" />
     <input type="hidden" name="user_id" value="{{ category.user_id }}" />
     <input type="hidden" name="del" value="0" />

@@ -1,7 +1,7 @@
 <div uk-grid>
     <div>
         <h2>{{ subscription.id ? "Edit Subscription" : "New Subscription" }}</h2>
-        <form method="post" action="/config/subscription/edit">
+        <form method="post" action="{{ prefix }}/config/subscription/edit">
             <input type="hidden" name="id" value="{{ subscription.id }}" />
             <input type="hidden" name="user_id" value="{{ subscription.user_id }}" />
             <input type="hidden" name="del" value="0" />
@@ -56,9 +56,9 @@
         {% if (subscription.id) %}
             <hr/>
             <h3>Debug</h3>
-            <a href="/debug/1?id={{ subscription.id }}" onclick="return ajaxTest(this);" class="uk-button uk-button-primary">Need update ?</a>
-            <a href="/debug/2?id={{ subscription.id }}" onclick="return ajaxTest(this);" class="uk-button uk-button-primary">get Data</a>
-            <a href="/debug/3?id={{ subscription.id }}" onclick="return ajaxTest(this);" class="uk-button uk-button-primary">Parse</a>
+            <a href="{{ prefix }}/debug/1?id={{ subscription.id }}" onclick="return ajaxTest(this);" class="uk-button uk-button-primary">Need update ?</a>
+            <a href="{{ prefix }}/debug/2?id={{ subscription.id }}" onclick="return ajaxTest(this);" class="uk-button uk-button-primary">get Data</a>
+            <a href="{{ prefix }}/debug/3?id={{ subscription.id }}" onclick="return ajaxTest(this);" class="uk-button uk-button-primary">Parse</a>
 
             <div id="result_ajax_sub"></div>
         {% endif %}

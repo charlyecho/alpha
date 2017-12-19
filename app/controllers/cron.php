@@ -15,11 +15,10 @@ class ControllersCron {
      * @return int
      */
     public static function update($id = null) {
-        HelpersCron::checkLastModification($id);
-        HelpersCron::getData($id);
-        $report_parse = HelpersCron::parse($id);
-        $nb_new = $report_parse->nb_new;
-        return $nb_new."\n";
+        $report_1 = HelpersCron::checkLastModification($id);
+        $report_2 = HelpersCron::getData($id);
+        $report_parse = HelpersCron::parse2($id);
+        return $report_parse."\n";
     }
 
     public static function cliUpdate() {
@@ -34,9 +33,8 @@ class ControllersCron {
         }
         echo "-------\n";
         $report_parse = HelpersCron::parse2();
-        foreach($report_parse as $_line) {
-            echo $_line."\n";
-        }
+        echo $report_parse."\n";
+
     }
 
     /**
