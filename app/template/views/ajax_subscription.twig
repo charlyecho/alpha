@@ -38,6 +38,7 @@
                 <label>
                     Category
                     <select name="category_id" class="uk-select">
+                        <option value="">- Uncategorized</option>
                         {% for cat in categories %}
                             <option value="{{ cat.id }}" {{ cat.id == subscription.category_id ? "selected=\"selected\"" : null }}>{{ cat.name }}</option>
                         {% endfor %}

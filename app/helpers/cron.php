@@ -466,7 +466,6 @@ class HelpersCron {
 
             $feed = FeedParser::parseFile($file);
             foreach ($feed->feed_items as $key => $_item) {
-
                 // already stored
                 if (in_array($_item->guid, $existing_items)) {
                     continue;
@@ -484,9 +483,22 @@ class HelpersCron {
                     continue;
                 }
 
+                if (!trim($_item->link) && $_item->guid) {
+                    $_item->link = filter_var($_item->guid, FILTER_VALIDATE_URL);
+                }
+
                 $thumbnail = null;
                 if (count($_item->enclosures)) {
-                    $thumbnail = reset($_item->enclosures);
+                    foreach($_item->enclosures as $_enc) {
+                        $ext = explode(".", $_enc);
+                        if (count($ext)) {
+                            $ext = end($ext);
+                            if (in_array($ext, array("jpg", "jpeg", "png", "gif", "svg"))) {
+                                $thumbnail = $_enc;
+                                break;
+                            }
+                        }
+                    }
                 }
 
                 // fill the items

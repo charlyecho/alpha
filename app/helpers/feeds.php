@@ -118,6 +118,11 @@ class HelpersFeeds {
             $data->content = "<p><img data-lazy_src='".$data->thumbnail."' alt='' src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==' /></p>".$data->content;
         }
 
+        // audio ?
+        if ($data->link && (strpos($data->content, $data->link) === false) && (strpos($data->link, ".mp3") !== false)) {
+            $data->content .= "<audio style='width:100%;' controls src='".$data->link."'></audio>";
+        }
+
         // title
         $data->title = html_entity_decode($data->title);
 
