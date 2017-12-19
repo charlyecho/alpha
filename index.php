@@ -4,7 +4,6 @@
  */
 ob_start();
 ini_set('default_charset', 'UTF-8');
-ini_set("display_errors", 1);
 date_default_timezone_set("UTC");
 
 require_once __DIR__.'/app/functions.php';
@@ -53,6 +52,11 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
 // find a route
 $httpMethod = $_SERVER['REQUEST_METHOD'];
 $uri = $_SERVER['REQUEST_URI'];
+
+$prefix = isset($_SERVER["DOCUMENT_URI"]) ? str_replace("/index.php", "", $_SERVER["DOCUMENT_URI"]) : null;
+$pos = strpos($uri, $prefix);
+$uri =  ($pos === 0) ? substr($uri, strlen($prefix)) : $uri;
+
 if (false !== $pos = strpos($uri, '?')) {
     $uri = substr($uri, 0, $pos);
 }

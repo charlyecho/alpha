@@ -363,7 +363,7 @@
         var update = function() {
             $.ajax({
                 method: "get",
-                url: "/update",
+                url: "{{ prefix }}/update",
                 beforeSend: function() {
                     showAction('<a><div uk-spinner></div></a>');
                     if (auto_update) {
@@ -402,7 +402,7 @@
                     params = params+"&status["+_id+"][starred]="+current_list[_id].starred;
                 }
                 $.ajax({
-                    url: "/ajax_flow",
+                    url: "{{ prefix }}/ajax_flow",
                     method: "post",
                     data: params,
                     beforeSend: function() {

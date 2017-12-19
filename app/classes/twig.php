@@ -14,11 +14,13 @@ class ClassesTwig {
 
     public function __construct()
     {
-        $loader = new Twig_Loader_Filesystem('app/template');
+        $path = dirname(__DIR__)."/template";
+        $loader = new Twig_Loader_Filesystem($path);
         $twig = new Twig_Environment($loader, array(
             'cache' => false //'app/cache',
         ));
         $twig->addGlobal('user', HelpersUser::getCurrent());
+        $twig->addGlobal('prefix', isset($_SERVER["DOCUMENT_URI"]) ? str_replace("/index.php", "", $_SERVER["DOCUMENT_URI"]) : null);
         return self::$template = $twig;
     }
 

@@ -18,7 +18,10 @@ function trace($data) {
 
 
 function redirect($target) {
-    header("Location: ".$target);
+    $server = $_SERVER["SERVER_NAME"];
+    $prefix = isset($_SERVER["DOCUMENT_URI"]) ? str_replace("/index.php", "", $_SERVER["DOCUMENT_URI"]) : null;
+    $uri = $prefix.$target;
+    header("Location: ".$uri);
     exit();
 }
 
@@ -55,7 +58,7 @@ function createDb() {
 function autoload($path) {
     $list = preg_split('/(?=[A-Z])/', $path, -1, PREG_SPLIT_NO_EMPTY);
     $_path = implode(DIRECTORY_SEPARATOR, $list);
-    $_path = strtolower("app".DIRECTORY_SEPARATOR.$_path).".php";
+    $_path = strtolower(__DIR__."/".$_path).".php";
     if (is_file($_path)) {
         include_once $_path;
         return;
