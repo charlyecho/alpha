@@ -282,7 +282,7 @@ class HelpersCron {
                 if (strpos($content, "xml") !== false) {
                     $sql .= "is_valid = '1', need_parse = '1'";
                     $report[] = "flux $key ($url), OK";
-                    if (!file_put_contents("app/cache/rss/" . $md5 . ".xml", $content)) {
+                    if (!file_put_contents(__DIR__."/../cache/rss/" . $md5 . ".xml", $content)) {
                         continue;
                     }
                 }
@@ -350,7 +350,7 @@ class HelpersCron {
         $pattern = "app/cache/rss/*.xml";
         if ($feed_id) {
             $_url = $feeds[$feed_id];
-            $pattern = "app/cache/rss/".md5($_url).".xml";
+            $pattern = __DIR__."/../../app/cache/rss/".md5($_url).".xml";
         }
         $files = glob($pattern);
         foreach($files as $f) {

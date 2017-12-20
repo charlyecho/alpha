@@ -16,7 +16,7 @@ class ClassesDb extends PDO {
     {
         $c = get_called_class();
 
-        parent::__construct("sqlite:app/db/db.sqlite");
+        parent::__construct("sqlite:".__DIR__."/../db/db.sqlite");
         $this->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
         self::$instances[$c][$name] = $this;
     }
