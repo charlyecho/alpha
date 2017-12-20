@@ -13,6 +13,7 @@
     "nikic/fast-route": "v1.2.0",
     "symfony/polyfill-mbstring": "v1.6.0",
     "twig/twig": "1.6.5",
-    "charlyecho/romeo_sierra_sierra": "dev-develop"
+    "charlyecho/romeo_sierra_sierra": "dev-develop",
+    "adldap2/adldap2": "v8.0.7"
   }
 }

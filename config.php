@@ -10,7 +10,10 @@ $config = array(
     "base_url" => "badin.dev",
     "auth_type" => "sso",
     "ldap" => array(
-        "host" => ""
+        "domain" => [],
+        "base_dn" => '',
+        "user" => [],
+        "password" => []
     )
 );
 
