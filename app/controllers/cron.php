@@ -22,6 +22,7 @@ class ControllersCron {
     }
 
     public static function cliUpdate() {
+        echo ClassesDate::getInstance()->toSql()."\n";
         $report_check = HelpersCron::checkLastModification();
         foreach($report_check as $_line) {
             echo $_line."\n";
