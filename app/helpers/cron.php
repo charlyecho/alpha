@@ -462,7 +462,7 @@ class HelpersCron {
         foreach($feeds as $f) {
             $id = $f->id;
             $md5_link = md5($f->url);
-            $file = "app/cache/rss/$md5_link.xml";
+            $file = __DIR__."/../../app/cache/rss/$md5_link.xml";
 
             $feed = FeedParser::parseFile($file);
             foreach ($feed->feed_items as $key => $_item) {
