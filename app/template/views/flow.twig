@@ -353,7 +353,6 @@
             $('#filters_cat_id').val(cat_id);
             $('#filters_sub_id').val(sub_id ? sub_id : null);
             $('#starred').prop('checked', !!parseInt(starred));
-            console.log($('#starred'));
             refresh();
         });
 
@@ -369,7 +368,9 @@
                 },
                 complete: function() {
                     cleanAction();
-                    initAutoUpdate();
+                    {% if cron == false %}
+                        initAutoUpdate();
+                    {% endif %}
                 }
             }).done(function(data) {
                 var nb = parseInt(data);
@@ -440,18 +441,20 @@
         };
 
         $(document).ready(function() {
-           refresh();
+            refresh();
 
-           $('#all_update').click(function (e) {
-               e.preventDefault();
-               update();
-           });
+            $('#all_update').click(function (e) {
+                e.preventDefault();
+                update();
+            });
 
-           $('#modal_flow').on('hide', function() {
-               refresh();
-           });
+            $('#modal_flow').on('hide', function() {
+                refresh();
+            });
 
-           setTimeout(update, 5000);
+            {% if cron == false %}
+                setTimeout(update, 5000);
+            {% endif %}
 
         });
 

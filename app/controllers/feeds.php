@@ -21,7 +21,8 @@ class ControllersFeeds {
 
         $template = ClassesTwig::getInstance();
         return $template->render("views/flow.twig", array(
-            "tree" => $tree
+            "tree" => $tree,
+            "cron" => is_file(__DIR__."/../cache/cron.txt")
         ));
     }
 

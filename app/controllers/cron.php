@@ -35,6 +35,7 @@ class ControllersCron {
         $report_parse = HelpersCron::parse2();
         echo $report_parse."\n";
 
+        file_put_contents(__DIR__."/../cache/cron.txt", ClassesDate::getInstance()->toSql()." : ".$report_parse."\n", FILE_APPEND);
     }
 
     /**
