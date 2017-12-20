@@ -26,10 +26,13 @@ class HelpersCategory {
         $user_id = get($post, "user_id");
         $color = get($post, "color", "ffffff");
         $del = get($post, "del", 0);
-
         $db = ClassesDb::getInstance();
+
         if ($id) {
             if ($del) {
+                $sql = "UPDATE subscription SET category_id = NULL WHERE category_id = ".$db->quote($id);
+                $db->exec($sql);
+
                 $sql = "DELETE FROM category WHERE id =" . $db->quote($id) . ";";
             }
             else {

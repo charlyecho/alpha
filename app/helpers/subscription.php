@@ -49,6 +49,9 @@ class HelpersSubscription {
         $db = ClassesDb::getInstance();
         if ($id) {
             if ($del) {
+                $sql = "DELETE FROM subscription_item WHERE subscription_id = ".$db->quote($id);
+                $db->exec($sql);
+
                 $sql = "DELETE FROM subscription WHERE id = ".$db->quote($id)." AND user_id = ".$db->quote($user_id);
             }
             else {

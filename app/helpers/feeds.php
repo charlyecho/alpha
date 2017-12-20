@@ -57,7 +57,10 @@ class HelpersFeeds {
         }
         $sql.= " AND si.starred = ".$db->quote((int) $starred);
         $sql .= " ORDER BY date_time DESC";
-        $sql .= " LIMIT 0, 20";
+        if (!$starred) {
+            $sql .= " LIMIT 0, 20";
+        }
+
         $s = $db->prepare($sql);
         $s->execute();
         $data = $s->fetchAll();
