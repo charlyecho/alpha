@@ -126,6 +126,7 @@ class HelpersCron {
         $s = $db->prepare($sql);
         $s->execute();
         $feeds = $s->fetchAll();
+
         $report[] = count($feeds)." subscriptions found";
 
         $multihandler = curl_multi_init();

@@ -137,7 +137,7 @@ class ControllersInstall {
 
 
             try {
-                $sql = "INSER INTO user(name) VALUES('admin');";
+                $sql = "INSERT INTO user(name) VALUES('admin');";
                 if ($db->exec($sql)) {
                     $report[] = array(
                         "type" => "success",
