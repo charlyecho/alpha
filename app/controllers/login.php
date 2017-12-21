@@ -3,32 +3,37 @@
 class ControllersLogin {
     public static function home() {
 
-        if (!empty($_POST)) {
-            $username = $_POST["login"];
-            $password = $_POST["password"];
-            $config = require __DIR__."/../../config.php";
-            if ($config["auth_type"] == "ldap") {
-                $_config = array(
-                    'domain_controllers'    => $config["ldap"]["domain"],
-                    'base_dn'               => $config["ldap"]["base_dn"],
-                    'admin_username'        => $config["ldap"]["user"],
-                    'admin_password'        => $config["ldap"]["password"],
-                );
-                $ad = new \Adldap\Adldap();
-                $ad->addProvider($_config);
-
-                try {
-                    // If a successful connection is made to your server, the provider will be returned.
-                    $provider = $ad->connect();
-                    $results = $provider->search()->find("charly");
-                    trace($results);
-                }
-                catch (\Adldap\Auth\BindException $e) {
-                    trace($e);
-                    die();
-                }
-            }
+        $session = ClassesSession::getInstance();
+        if ($session->get("user_id")) {
+            redirect("/");
         }
+
+        $remote_user = isset($_SERVER["REMOTE_USER"]) ? $_SERVER["REMOTE_USER"] : null;
+
+        if ($remote_user) {
+            $user_id = null;
+            $db = ClassesDb::getInstance();
+            $sql = "SELECT * FROM user WHERE name = ".$db->quote($remote_user);
+            $s = $db->prepare($sql);
+            $s->execute();
+            $user = $s->fetch();
+
+            if (!$user) {
+                // create one
+                $sql = "INSERT INTO user (name) VALUES (".$db->quote($remote_user).")";
+                $s = $db->prepare($sql);
+                $s->execute();
+                $user_id = $db->lastInsertId();
+
+            }
+            else {
+                $user_id = $user->id;
+            }
+
+            $session->set("user_id", $user_id);
+            redirect("/");
+        }
+
 
         $template = ClassesTwig::getInstance();
         return $template->render("views/login.twig");

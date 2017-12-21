@@ -16,7 +16,8 @@ class HelpersFeeds {
 
     public static function getSubList($user_id) {
         $db = ClassesDb::getInstance();
-        $s = $db->prepare("SELECT s.* FROM subscription s WHERE s.user_id = ".$db->quote($user_id));
+        $sql = "SELECT s.* FROM subscription s WHERE s.user_id = ".$db->quote($user_id);
+        $s = $db->prepare($sql);
         $s->execute();
         return $s->fetchAll();
     }

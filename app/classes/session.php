@@ -8,7 +8,7 @@ class ClassesSession
     static $config = array(
         "lifetime" => 31536000,
         "path" => "/",
-        "secret" => "bJfYz2yi2byRbNEHWPXVFNapaze48&etspj1f34?bp)CsFwhUndoJA"
+        "secret" => "zrkgzvzdmvsvdcsasqqd448&etspj1f34?bp)CsFwhUndoJA"
     );
 
 

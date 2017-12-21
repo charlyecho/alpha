@@ -11,7 +11,12 @@ class HelpersUser {
 
     public static function session($id) {
         $session = ClassesSession::getInstance();
-        $session->set("user_id", $id);
+        if ($id) {
+            $session->set("user_id", $id);
+        }
+        else {
+            $session->destroy();
+        }
         redirect("/");
     }
 
@@ -21,8 +26,8 @@ class HelpersUser {
             redirect("/install");
         }
 
-        // session
         $session = ClassesSession::getInstance();
+        // session
         if (!$user_id = $session->get("user_id")) {
             return false;
         }
