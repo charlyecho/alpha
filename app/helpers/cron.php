@@ -121,7 +121,7 @@ class HelpersCron {
             $sql = "SELECT * FROM subscription WHERE id = ".$db->quote($sub_id);
         }
         else {
-            $sql = "SELECT * FROM subscription WHERE is_valid = 1 AND last_check_datetime <= ".$db->quote($a)." ORDER BY last_check_datetime  ASC LIMIT 0,40";
+            $sql = "SELECT * FROM subscription WHERE is_valid = 1 AND (last_check_datetime <= ".$db->quote($a)." OR last_check_datetime IS NULL) ORDER BY last_check_datetime  ASC LIMIT 0,40";
         }
         $s = $db->prepare($sql);
         $s->execute();

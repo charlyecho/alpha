@@ -128,8 +128,30 @@ class ControllersInstall {
                         "type" => "success",
                         "msg" => "Table 'user' created");
                 }
+            }
+            catch (Exception $e) {
+                $report[] = array(
+                    "type" => "danger",
+                    "msg" => "Table 'user' not created : ".$e->getMessage());
+            }
 
-                // category
+
+            try {
+                $sql = "INSER INTO user(name) VALUES('admin');";
+                if ($db->exec($sql)) {
+                    $report[] = array(
+                        "type" => "success",
+                        "msg" => "user admin created");
+                }
+            }
+            catch (Exception $e) {
+                $report[] = array(
+                    "type" => "danger",
+                    "msg" => "user 'admin' not created : ".$e->getMessage());
+            }
+
+            // category
+            try {
                 $sql = "CREATE TABLE category(
               id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
               user_id INTEGER CONSTRAINT category_user_id_fk REFERENCES user (id) ON UPDATE CASCADE ON DELETE CASCADE, 
@@ -140,8 +162,15 @@ class ControllersInstall {
                         "type" => "success",
                         "msg" => "Table 'category' created");
                 }
+            }
+            catch (Exception $e) {
+                $report[] = array(
+                    "type" => "danger",
+                    "msg" => "Table 'category' not created".$e->getMessage());
+            }
 
 
+            try {
                 // subscription
                 $sql = "CREATE TABLE subscription(
               id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
@@ -162,29 +191,42 @@ class ControllersInstall {
                         "type" => "success",
                         "msg" => "Table 'subscription' created");
                 }
+            }
+            catch (Exception $e) {
+                $report[] = array(
+                    "type" => "danger",
+                    "msg" => "Table 'subscription' not created : ".$e->getMessage());
+            }
 
 
+            try {
                 // subscription item
                 $sql = "CREATE TABLE subscription_item (
-              id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
-              subscription_id INTEGER CONSTRAINT subscription_item_subscription_id_fk REFERENCES subscription (id) ON UPDATE CASCADE ON DELETE CASCADE, 
-              local_id VARCHAR, 
-              title VARCHAR, 
-              thumbnail VARCHAR, 
-              content TEXT, 
-              link TEXT, 
-              date_time DATETIME, 
-              read ENUM(0, 1) 
-              DEFAULT 0, 
-              starred ENUM(0,1) 
-              DEFAULT 0);";
+                  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
+                  subscription_id INTEGER CONSTRAINT subscription_item_subscription_id_fk REFERENCES subscription (id) ON UPDATE CASCADE ON DELETE CASCADE, 
+                  local_id VARCHAR, 
+                  title VARCHAR, 
+                  thumbnail VARCHAR, 
+                  content TEXT, 
+                  link TEXT, 
+                  date_time DATETIME, 
+                  read ENUM(0, 1) 
+                  DEFAULT 0, 
+                  starred ENUM(0,1) 
+                  DEFAULT 0);";
                 if ($db->exec($sql)) {
                     $report[] = array(
                         "type" => "success",
                         "msg" => "Table 'subscription_item' created");
                 }
+            }
+            catch (Exception $e) {
+                $report[] = array(
+                    "type" => "danger",
+                    "msg" => "Table 'subscription_item' not created : ".$e->getMessage());
+            }
 
-
+            try {
                 $sql = "DELETE FROM subscription_item;";
                 if ($db->exec($sql)) {
                     $report[] = array(
@@ -193,17 +235,19 @@ class ControllersInstall {
                 }
             }
             catch (Exception $e) {
-                trace($e->getMessage());
+                $report[] = array(
+                    "type" => "danger",
+                    "msg" => "Table 'subscription_item' not cleaned : ".$e->getMessage());
             }
         }
 
 
 
-        $template = ClassesTwig::getInstance();
-        return $template->render("views/install.twig", array(
-            "report" => $report
-        ));
+$template = ClassesTwig::getInstance();
+return $template->render("views/install.twig", array(
+"report" => $report
+));
 
-    }
+}
 
 }
