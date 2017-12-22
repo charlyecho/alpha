@@ -10,10 +10,10 @@ class ControllersInstall {
     public static function home() {
         $report = array();
 
-
         // cache writable
         $writable_icons = is_writable(__DIR__."/../cache/icons/");
         $writable_rss = is_writable(__DIR__."/../cache/rss/");
+        $nb_errors = 0;
 
 
         if (!is_dir(__DIR__."/../cache")) {
@@ -241,13 +241,15 @@ class ControllersInstall {
             }
         }
 
-
-
-$template = ClassesTwig::getInstance();
-return $template->render("views/install.twig", array(
-"report" => $report
-));
-
-}
+        if ($nb_errors) {
+            $template = ClassesTwig::getInstance();
+            return $template->render("views/install.twig", array(
+                "report" => $report
+            ));
+        }
+        else {
+            redirect("/");
+        }
+    }
 
 }

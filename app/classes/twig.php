@@ -20,6 +20,8 @@ class ClassesTwig {
             'cache' => false //'app/cache',
         ));
         $twig->addGlobal('user', HelpersUser::getCurrent());
+        $twig->addGlobal("messages", ClassesSession::getMessages());
+        $twig->addGlobal("ldap", ClassesSession::getInstance()->get("ldap"));
         $twig->addGlobal('prefix', isset($_SERVER["DOCUMENT_URI"]) ? str_replace("/index.php", "", $_SERVER["DOCUMENT_URI"]) : null);
         return self::$template = $twig;
     }

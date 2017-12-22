@@ -19,4 +19,9 @@ class ControllersHome {
 
         redirect("/login");
     }
+
+    public static function preferences() {
+        $template = ClassesTwig::getInstance();
+        return $template->render("views/preferences.twig", array());
+    }
 }

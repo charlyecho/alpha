@@ -1,6 +1,6 @@
 {% extends "base.twig" %}
 
-{% block title %}Home{% endblock %}
+{% block title %}{% endblock %}
 
 {% block content %}
     <div uk-grid>
@@ -161,7 +161,10 @@
         var current_item = null;
         var auto_update = null;
         var current_list = {};
-
+        var title = $(document).find("title").text();
+        if (!title) {
+            title = ' ';
+        }
 
         var config = function() {
             UIkit.modal('#modal_flow').show();
@@ -336,6 +339,7 @@
             });
             $('.cat_all').find('.cat-label').html(total ? total : "");
             $('.cat_starred').find(".cat-label").html(data['starred']);
+            $(document).find("title").text(title+" "+total+" unread");
         };
 
         // on click on categories
@@ -349,7 +353,6 @@
             var cat_id = li.data("cat_id");
             var sub_id = li.data("sub_id");
             var starred = li.data("starred");
-            console.log(parseInt(starred));
             $('#filters_cat_id').val(cat_id);
             $('#filters_sub_id').val(sub_id ? sub_id : null);
             $('#starred').prop('checked', !!parseInt(starred));
@@ -362,29 +365,32 @@
                 url: "{{ prefix }}/update",
                 beforeSend: function() {
                     showAction('<a><div uk-spinner></div></a>');
+                    $(document).find("title").text(title+" updating ...");
                     if (auto_update) {
                         clearInterval(auto_update);
                     }
                 },
                 complete: function() {
                     cleanAction();
+                    $(document).find("title").text(title+" ok");
                     {% if cron == false %}
                         initAutoUpdate();
                     {% endif %}
                 }
             }).done(function(data) {
                 var nb = parseInt(data);
+
                 if (nb) {
                     if (Notification.permission === "granted") {
                         var notification = new Notification(nb+' nouveaux items');
                     }
 
-                    var _nb_item = 0;
-                    for(_i in _nb_item) {
-                        nb = nb+1;
+                    var _nb = 0;
+                    for(_i in current_list) {
+                        _nb = _nb+1;
                     }
 
-                    if (!_nb_item) {
+                    if (!_nb) {
                         refresh();
                     }
                 }

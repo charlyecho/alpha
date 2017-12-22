@@ -1,6 +1,6 @@
 {% extends "base.twig" %}
 
-{% block title %}Feeds{% endblock %}
+{% block title %}Config{% endblock %}
 
 {% block content %}
     <div class="uk-padding">
@@ -95,7 +95,7 @@
                     var category_id = $(this).data("id");
                     var draggable = ui.draggable[0];
                     var subscription_id = $(draggable).data("id");
-                    var _url = "/config/subscription/move/"+subscription_id+"/"+category_id;
+                    var _url = "{{ prefix }}/config/subscription/move/"+subscription_id+"/"+category_id;
                     window.location = _url;
                 }
             });

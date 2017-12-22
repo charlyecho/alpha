@@ -19,6 +19,8 @@ Alpha is a web-based RSS reader
 
 ## todo
 - https proxy
+- tags
+- index database
 
 ## Licence
 - MIT

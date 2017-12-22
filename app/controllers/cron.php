@@ -18,7 +18,7 @@ class ControllersCron {
         $report_1 = HelpersCron::checkLastModification($id);
         $report_2 = HelpersCron::getData($id);
         $report_parse = HelpersCron::parse2($id);
-        return $report_parse."\n";
+        return $report_parse;
     }
 
     public static function cliUpdate() {
@@ -62,7 +62,7 @@ class ControllersCron {
 
         if ($step == 3) {
             $return = HelpersCron::parse2($sub_id);
-            return implode("<br/>", $return);
+            return $return;
         }
 
         return null;

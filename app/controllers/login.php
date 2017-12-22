@@ -31,6 +31,7 @@ class ControllersLogin {
             }
 
             $session->set("user_id", $user_id);
+            $session->set("ldap", 1);
             redirect("/");
         }
 

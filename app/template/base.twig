@@ -3,14 +3,15 @@
         <head>
             <meta name="viewport" content="width=device-width, initial-scale=1"/>
             {% block head %}
-                <title>{% block title %}{% endblock %} - Badin</title>
+                <title>{% block title %}{% endblock %}</title>
             {% endblock %}
+            <meta name="theme-color" content="#688bb9" />
+            <link rel="shortcut icon" type="image/png" href="{{ prefix }}/app/template/style/images/favicon.png" />
         </head>
     <body>
-
         <nav class="uk-navbar-container" uk-navbar uk-sticky style="box-shadow: 0 0 5px grey">
             <div class="uk-navbar-left">
-                <a class="uk-navbar-item uk-logo" href="{{ prefix }}/"><i style="color:#688bb9; text-shadow: 0 0 10px white;" class="icofont icofont-rss-feed"></i></a>
+                <a class="uk-navbar-item uk-logo" href="{{ prefix }}/" title="alpha" style="color:#688bb9; font-size:2em;">𝛂</a>
                 <ul class="uk-navbar-nav">
                     {% if user %}
                         <li><a href="{{ prefix }}/config"><i class="icofont icofont-gears"></i><span class="uk-visible@s">&nbsp;Config</span></a></li>
@@ -25,8 +26,10 @@
             <div class="uk-navbar-right">
                 <ul class="uk-navbar-nav">
                     {% if user %}
-                        <li><a><i class="icofont icofont-user"></i><span class="uk-visible@s">&nbsp;{{ user.name }}</span></a></li>
-                        <li><a href="{{ prefix }}/logout">&nbsp;<i class="icofont icofont-logout"></i></a></li>
+                        <li><a href="{{ prefix }}/preferences"><i class="icofont icofont-user"></i><span class="uk-visible@s">&nbsp;{{ user.name }}</span></a></li>
+                        {% if ldap %}
+                            <li><a href="{{ prefix }}/logout">&nbsp;<i class="icofont icofont-logout"></i></a></li>
+                        {% endif %}
                     {% endif %}
                 </ul>
             </div>
@@ -60,6 +63,18 @@
                     Notification.permission = permission;
                 }
             });
+
+            {% for m in messages %}
+                if (Notification.permission === "granted") {
+                    var notification = new Notification('{{ m }}');
+                }
+
+                UIkit.notification({
+                    message: '{{ m }}',
+                    status: 'primary'
+                });
+            {% endfor %}
+
         </script>
         {% block script %}{% endblock %}
     </body>

@@ -58,6 +58,20 @@ class ClassesSession
         self::$instance[$c] = $this;
     }
 
+    public static function getMessages($reset = true) {
+        $messages = self::getInstance()->get("messages", array());
+        if (count($messages) && $reset) {
+            self::getInstance()->set("messages", array());
+        }
+        return $messages;
+    }
+
+    public static function addMessage($msg, $type = "info") {
+        $messages = self::getInstance()->get("messages", array());
+        $messages[] = $msg;
+        self::getInstance()->set("messages", $messages);
+    }
+
     /**
      * Get session name.
      *

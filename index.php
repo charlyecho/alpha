@@ -30,6 +30,7 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
 
         if (HelpersUser::getCurrent()) {
             $r->addRoute("GET", "/feeds", array("ControllersFeeds", "home"));
+            $r->addRoute("GET", "/preferences", array("ControllersHome", "preferences"));
             $r->addRoute("POST", "/ajax_flow", array("ControllersFeeds", "ajax"));
 
             $r->addGroup('/config', function (FastRoute\RouteCollector $r) {
