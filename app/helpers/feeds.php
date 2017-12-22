@@ -115,7 +115,7 @@ class HelpersFeeds {
 
 
         // bad <br> between 2 <p></p>
-        $regex = "/<\/p>[ \r\n]*<br[ \/]*>[ \r\n]*<p>/im";
+        $regex = '/<\/p>[ \r\n]*<br[ \/]*>[ \r\n]*<p>/im';
         $data->content = preg_replace($regex, "</p><p>", $data->content);
 
         // iframes
