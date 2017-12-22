@@ -220,12 +220,15 @@
             return current_item;
         };
 
-        var openLink = function() {
+        var openLink = function(event) {
             if (current_item) {
                 var href = $("#item_"+current_item+" .uk-text-lead a").prop("href");
-                if (href) {
-                    var tab = window.open(href, '_blank');
-                    //window.focus();
+                var href_encoded = encodeURIComponent(href);
+                var share_link= ""; // domain.tld/a-lot-of-/things/?asdas&url=<uri>
+
+                if (href && share_link) {
+                    share_link = share_link.replace('<uri>', href_encoded);
+                    window.open(share_link, '_blank');
                 }
             }
             return false;
@@ -360,6 +363,7 @@
         });
 
         var update = function() {
+            var _title_before = $(document).find("title").text();
             $.ajax({
                 method: "get",
                 url: "{{ prefix }}/update",
@@ -372,7 +376,7 @@
                 },
                 complete: function() {
                     cleanAction();
-                    $(document).find("title").text(title+" ok");
+                    $(document).find("title").text(_title_before);
                     {% if cron == false %}
                         initAutoUpdate();
                     {% endif %}
@@ -466,7 +470,9 @@
 
         $(document).on('keyup', function(event) {
             if ( event.which === 32 ) { // space : open link
-                openLink();
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                openLink(event);
             }
             if ( event.which === 74 ) { // J
                 next();
