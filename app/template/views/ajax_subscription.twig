@@ -35,6 +35,16 @@
             </p>
 
             <p>
+                Valid feed
+                <label>
+                    <input type="radio" name="is_valid" value="1" {{ subscription.is_valid ? 'checked="checked"' : null }} class="uk-radio" /> Yes
+                </label>
+                <label>
+                    <input type="radio" name="is_valid" value="0" {{ subscription.is_valid == 0 ? 'checked="checked"' : null }} class="uk-radio" /> No
+                </label>
+            </p>
+
+            <p>
                 <label>
                     Category
                     <select name="category_id" class="uk-select">
