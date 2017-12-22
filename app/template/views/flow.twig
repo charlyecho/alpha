@@ -220,7 +220,18 @@
             return current_item;
         };
 
-        var openLink = function(event) {
+        var openLink = function() {
+            if (current_item) {
+                var href = $("#item_"+current_item+" .uk-text-lead a").prop("href");
+
+                if (href) {
+                    window.open(href, '_blank');
+                }
+            }
+            return false;
+        };
+
+        var shareLink = function() {
             if (current_item) {
                 var href = $("#item_"+current_item+" .uk-text-lead a").prop("href");
                 var href_encoded = encodeURIComponent(href);
@@ -469,10 +480,11 @@
         });
 
         $(document).on('keyup', function(event) {
-            if ( event.which === 32 ) { // space : open link
-                event.preventDefault();
-                event.stopImmediatePropagation();
-                openLink(event);
+            if ( event.which === 83 ) { // S
+                shareLink();
+            }
+            if ( event.which === 79 ) { // O
+                openLink();
             }
             if ( event.which === 74 ) { // J
                 next();
@@ -489,6 +501,7 @@
             if ( event.which === 72 ) { // H : all current page read
                 allread();
             }
+            console.log(event.which);
             event.preventDefault();
             event.stopImmediatePropagation();
         });
