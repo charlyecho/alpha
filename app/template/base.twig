@@ -27,7 +27,7 @@
                 <ul class="uk-navbar-nav">
                     {% if user %}
                         <li><a href="{{ prefix }}/preferences"><i class="icofont icofont-user"></i><span class="uk-visible@s">&nbsp;{{ user.name }}</span></a></li>
-                        {% if ldap %}
+                        {% if ldap == null %}
                             <li><a href="{{ prefix }}/logout">&nbsp;<i class="icofont icofont-logout"></i></a></li>
                         {% endif %}
                     {% endif %}
