@@ -395,11 +395,13 @@
             }).done(function(data) {
                 var nb = parseInt(data);
 
-                if (nb) {
-                    if (Notification.permission === "granted") {
-                        var notification = new Notification(nb+' nouveaux items');
+                Notification.requestPermission(function (permission) {
+                    if (permission === "granted") {
+                        new Notification(nb+' nouveaux items');
                     }
+                });
 
+                if (nb) {
                     var _nb = 0;
                     for(_i in current_list) {
                         _nb = _nb+1;

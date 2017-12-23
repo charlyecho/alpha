@@ -76,6 +76,8 @@ class ControllersFeeds {
         $_categories = HelpersFeeds::getCategoryList($user->id);
         $subs = HelpersFeeds::getSubList($user->id);
 
+        ClassesSession::addMessage("test");
+
         // remplissage cats
         $categories = array();
 

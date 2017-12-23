@@ -26,8 +26,39 @@ class HelpersUser {
             redirect("/install");
         }
 
-        $session = ClassesSession::getInstance();
+        if (self::$current_user) {
+            return self::$current_user;
+        }
+
+        // by current_user (server)
+        $remote_user = isset($_SERVER["REMOTE_USER"]) ? $_SERVER["REMOTE_USER"] : null;
+        if ($remote_user) {
+            $db = ClassesDb::getInstance();
+            $sql = "SELECT * FROM user WHERE name = " . $db->quote($remote_user);
+            $s = $db->prepare($sql);
+            $s->execute();
+            $_user = $s->fetch();
+            if ($_user) {
+                self::$current_user = $_user;
+                return self::$current_user;
+            }
+
+            // create one
+            $sql = "INSERT INTO user (name) VALUES (".$db->quote($remote_user).")";
+            $s = $db->prepare($sql);
+            $s->execute();
+            $sql = "SELECT * FROM user WHERE name = " . $db->quote($remote_user);
+            $s = $db->prepare($sql);
+            $s->execute();
+            $_user = $s->fetch();
+            self::$current_user = $_user;
+            return self::$current_user;
+
+        }
+
+
         // session
+        $session = ClassesSession::getInstance();
         if (!$user_id = $session->get("user_id")) {
             return false;
         }
