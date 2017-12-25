@@ -7,6 +7,7 @@
         <div class="uk-width-1-4@s uk-visible@s" id="tree">
             <div uk-sticky="offset:100">
                 <p class="uk-text-center fast_options">
+                    <a href="{{ prefix }}/rss/config"><i class="icofont icofont-gears"></i></a>
                     <a onclick="config();"><i class="icofont icofont-filter"></i></a>
                     <a onclick="toggleStarred();"><i class="icofont icofont-favourite"></i></a>
                     <a onclick="toggleNsfw();"><i class="icofont icofont-key"></i></a>
@@ -423,7 +424,7 @@
                     params = params+"&status["+_id+"][starred]="+current_list[_id].starred;
                 }
                 $.ajax({
-                    url: "{{ prefix }}/ajax_flow",
+                    url: "{{ prefix }}/rss/ajax_flow",
                     method: "post",
                     data: params,
                     beforeSend: function() {

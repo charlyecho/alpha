@@ -11,6 +11,7 @@ class ClassesTwig {
      * @var null|Twig_Environment
      */
     protected static $template = null;
+    public static $route = null;
 
     public function __construct()
     {
@@ -23,6 +24,7 @@ class ClassesTwig {
         $twig->addGlobal("messages", ClassesSession::getMessages());
         $twig->addGlobal("ldap", isset($_SERVER["REMOTE_USER"]) ? $_SERVER["REMOTE_USER"] : null);
         $twig->addGlobal('prefix', isset($_SERVER["DOCUMENT_URI"]) ? str_replace("/index.php", "", $_SERVER["DOCUMENT_URI"]) : null);
+        $twig->addGlobal('route', self::$route);
         return self::$template = $twig;
     }
 

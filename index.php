@@ -22,29 +22,36 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
         $r->addRoute("GET", "/logout", array("ControllersLogin", "logout"));
         $r->addRoute("GET", "/session/{id:\d+}", array("HelpersUser", "session"));//@TODO DELETE THIS !
 
+
         $r->addRoute("GET", "/cron/step1", array("HelpersCron", "checkLastModification"));
         $r->addRoute("GET", "/cron/step2", array("HelpersCron", "getData"));
         $r->addRoute("GET", "/cron/step3", array("HelpersCron", "parse"));
-        $r->addRoute("GET", "/debug/{id:\d+}", array("ControllersCron", "debug"));
         $r->addRoute("GET", "/update", array("ControllersCron", "update"));
 
         if (HelpersUser::getCurrent()) {
-            $r->addRoute("GET", "/feeds", array("ControllersFeeds", "home"));
             $r->addRoute("GET", "/preferences", array("ControllersHome", "preferences"));
-            $r->addRoute("POST", "/ajax_flow", array("ControllersFeeds", "ajax"));
 
-            $r->addGroup('/config', function (FastRoute\RouteCollector $r) {
-                $r->addRoute('GET', '', array("ControllersFeeds", "config"));
-                $r->addRoute('GET', '/export.opml', array("ControllersFeeds", "export"));
-                $r->addRoute('POST', '/import', array("ControllersFeeds", "import"));
-                $r->addGroup('/category', function (FastRoute\RouteCollector $r) {
-                    $r->addRoute("GET", "/edit/[{id}]", array("ControllersFeeds", "ajax_edit_category"));
-                    $r->addRoute("POST", "/edit", array("ControllersFeeds", "ajax_post_category"));
-                });
-                $r->addGroup("/subscription", function (FastRoute\RouteCollector $r) {
-                    $r->addRoute("POST", "/edit", array("ControllersFeeds", "ajax_post_subscription"));
-                    $r->addRoute("GET", "/edit/{sub_id}", array("ControllersFeeds", "edit_subscription"));
-                    $r->addRoute("GET", "/move/{sub_id}/[{cat_id}]", array("ControllersFeeds", "move_subscription"));
+            // RSS
+            $r->addGroup('/rss', function (FastRoute\RouteCollector $r) {
+                $r->addRoute("GET", "", array("ControllersFeeds", "home"));
+                $r->addRoute("GET", "/feeds", array("ControllersFeeds", "home"));
+                $r->addRoute("POST", "/ajax_flow", array("ControllersFeeds", "ajax"));
+                $r->addRoute("GET", "/debug/{id:\d+}", array("ControllersCron", "debug"));
+
+                // Config
+                $r->addGroup('/config', function (FastRoute\RouteCollector $r) {
+                    $r->addRoute('GET', '', array("ControllersFeeds", "config"));
+                    $r->addRoute('GET', '/export.opml', array("ControllersFeeds", "export"));
+                    $r->addRoute('POST', '/import', array("ControllersFeeds", "import"));
+                    $r->addGroup('/category', function (FastRoute\RouteCollector $r) {
+                        $r->addRoute("GET", "/edit/[{id}]", array("ControllersFeeds", "ajax_edit_category"));
+                        $r->addRoute("POST", "/edit", array("ControllersFeeds", "ajax_post_category"));
+                    });
+                    $r->addGroup("/subscription", function (FastRoute\RouteCollector $r) {
+                        $r->addRoute("POST", "/edit", array("ControllersFeeds", "ajax_post_subscription"));
+                        $r->addRoute("GET", "/edit/{sub_id}", array("ControllersFeeds", "edit_subscription"));
+                        $r->addRoute("GET", "/move/{sub_id}/[{cat_id}]", array("ControllersFeeds", "move_subscription"));
+                    });
                 });
             });
         }
@@ -67,6 +74,7 @@ try {
     $routeInfo = $dispatcher->dispatch($httpMethod, $uri);
     if ($routeInfo[0] == FastRoute\Dispatcher::FOUND) {
         $params = null;
+        ClassesTwig::$route = $uri;
         echo call_user_func_array($routeInfo[1], $routeInfo[2]);
     }
     else {

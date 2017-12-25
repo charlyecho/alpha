@@ -19,13 +19,10 @@
     <body>
         <nav class="uk-navbar-container" uk-navbar uk-sticky style="box-shadow: 0 0 5px grey">
             <div class="uk-navbar-left">
-                <a class="uk-navbar-item uk-logo" href="{{ prefix }}/" title="alpha" style="color:#688bb9; font-size:2em;">𝛂</a>
+                <a class="uk-navbar-item uk-logo" href="{{ prefix }}/" title="alpha" style="color:#688bb9; font-size:2.5em;">𝛂</a>
                 <ul class="uk-navbar-nav">
                     {% if user %}
-                        <li><a href="{{ prefix }}/config"><i class="icofont icofont-gears"></i><span class="uk-visible@s">&nbsp;Config</span></a></li>
-                    {% endif %}
-                    {% if user and user.id == 1 %}
-                        <li><a href="{{ prefix }}/update" id="all_update"><i class="icofont icofont-refresh"></i><span class="uk-visible@s">&nbsp;update</span></a></li>
+                        <li {% if route == '/rss' %}class="uk-active"{% endif %}><a href="{{ prefix }}/rss"><i class="icofont icofont-rss-feed"></i><span class="uk-visible@s">&nbsp;RSS</span></a></li>
                     {% endif %}
                     <li id="empty_nav"></li>
                 </ul>
@@ -35,9 +32,7 @@
                 <ul class="uk-navbar-nav">
                     {% if user %}
                         <li><a href="{{ prefix }}/preferences"><i class="icofont icofont-user"></i><span class="uk-visible@s">&nbsp;{{ user.name }}</span></a></li>
-                        {% if ldap == null %}
-                            <li><a href="{{ prefix }}/logout">&nbsp;<i class="icofont icofont-logout"></i></a></li>
-                        {% endif %}
+                        <li><a href="{{ prefix }}/logout">&nbsp;<i class="icofont icofont-logout"></i></a></li>
                     {% endif %}
                 </ul>
             </div>

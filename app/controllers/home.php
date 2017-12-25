@@ -9,7 +9,7 @@
 class ControllersHome {
     public static function home() {
         if ($user = HelpersUser::getCurrent()) {
-            return ControllersFeeds::home();
+            redirect("/rss");
         }
 
         $path_db = __DIR__."/../../app/db/db.sqlite";

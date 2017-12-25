@@ -16,7 +16,8 @@ class ControllersFeeds {
             $nb += count($t->subs);
         }
         if (!$nb) {
-            redirect("/config?empty=1");
+            ClassesSession::addMessage("You don't have any subscription yet");
+            redirect("/config");
         }
 
         $template = ClassesTwig::getInstance();
@@ -76,8 +77,6 @@ class ControllersFeeds {
         $_categories = HelpersFeeds::getCategoryList($user->id);
         $subs = HelpersFeeds::getSubList($user->id);
 
-        ClassesSession::addMessage("test");
-
         // remplissage cats
         $categories = array();
 
@@ -103,8 +102,7 @@ class ControllersFeeds {
 
         $template = ClassesTwig::getInstance();
         return $template->render("views/config.twig", array(
-            "categories" => $categories,
-            "msg" => get($_GET, "empty", 0)
+            "categories" => $categories
         ));
     }
 

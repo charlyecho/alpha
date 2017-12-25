@@ -75,6 +75,7 @@ class HelpersFeeds {
 
 
     public static function cleanSub($data) {
+
         // favicon
         $path = "app/cache/icons/".$data->subscription_id.".png";
         if (is_file($path)) {
@@ -124,7 +125,9 @@ class HelpersFeeds {
 
         // thumbnail
         if ($data->thumbnail && strpos($data->content, $data->thumbnail) === false) {
-            $data->content = "<p><img data-lazy_src='".$data->thumbnail."' alt='' src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==' /></p>".$data->content;
+            if (strpos($data->link, "youtube.com") === false) {
+                $data->content = "<p><img data-lazy_src='".$data->thumbnail."' alt='' src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==' /></p>".$data->content;
+            }
         }
 
         // audio ?
