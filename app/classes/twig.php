@@ -15,7 +15,7 @@ class ClassesTwig {
 
     public function __construct()
     {
-        $path = dirname(__DIR__)."/template";
+        $path = dirname(__DIR__);
         $loader = new Twig_Loader_Filesystem($path);
         $twig = new Twig_Environment($loader, array(
             'cache' => false //'app/cache',

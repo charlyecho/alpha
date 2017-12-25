@@ -6,7 +6,7 @@
  * Time: 13:19
  */
 
-class HelpersItems {
+class RssHelpersItems {
 
     public static function updateStatus(array $status) {
         $db = ClassesDb::getInstance();

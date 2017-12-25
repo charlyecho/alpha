@@ -1,0 +1,37 @@
+{% extends "template/base.twig" %}
+
+{% block title %}Links{% endblock %}
+
+{% block content %}
+<table class="uk-table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>img</th>
+            <th>title</th>
+            <th>is_nsfw</th>
+            <th>is_private</th>
+            <th>creation_date</th>
+            <th>type</th>
+            <th>active</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for l in links %}
+            <tr>
+                <td>{{ l.id }}</td>
+                <td>{% if l.img %}<div uk-lightbox><a href="{{ l.img }}"><img src="{{ l.img }}" alt="" style="height:1em;" /></a></div>{% endif %}</td>
+                <td><a href="{{ l.url }}">{{ l.title }}</a></td>
+                <td>{{ l.is_nsfw }}</td>
+                <td>{{ l.is_private }}</td>
+                <td>{{ l.creation_date }}</td>
+                <td>{{ l.type }}</td>
+                <td>{{ l.active }}</td>
+                <td><a href="/links/edit/{{ l.id }}"><i class="icofont icofont-edit"></i></a></td>
+            </tr>
+        {% endfor %}
+    </tbody>
+
+</table>
+{% endblock %}

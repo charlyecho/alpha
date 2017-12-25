@@ -1,4 +1,4 @@
-{% extends "base.twig" %}
+{% extends "template/base.twig" %}
 
 {% block title %}{% endblock %}
 
@@ -390,7 +390,7 @@
                     cleanAction();
                     $(document).find("title").text(_title_before);
                     {% if cron == false %}
-                        initAutoUpdate();
+                    initAutoUpdate();
                     {% endif %}
                 }
             }).done(function(data) {
@@ -477,7 +477,7 @@
             });
 
             {% if cron == false %}
-                setTimeout(update, 5000);
+            setTimeout(update, 5000);
             {% endif %}
 
         });

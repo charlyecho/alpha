@@ -1,7 +1,7 @@
 <div uk-grid>
     <div>
         <h2>{{ subscription.id ? "Edit Subscription" : "New Subscription" }}</h2>
-        <form method="post" action="{{ prefix }}/config/subscription/edit">
+        <form method="post" action="{{ prefix }}/rss/config/subscription/edit">
             <input type="hidden" name="id" value="{{ subscription.id }}" />
             <input type="hidden" name="user_id" value="{{ subscription.user_id }}" />
             <input type="hidden" name="del" value="0" />

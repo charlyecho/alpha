@@ -6,7 +6,7 @@
  * Time: 15:25
  */
 
-class HelpersSubscription {
+class RssHelpersSubscription {
 
     public static function getItem($id = null) {
         $user = HelpersUser::getCurrent();
@@ -43,7 +43,7 @@ class HelpersSubscription {
         if ($url_site && $id) {
             $_url = "https://www.google.com/s2/favicons?domain=".urlencode($url_site);
             $data = file_get_contents($_url);
-            file_put_contents(__DIR__."/../cache/icons/".$id.".png", $data);
+            file_put_contents(__DIR__ . "/../cache/icons/" .$id.".png", $data);
         }
 
 

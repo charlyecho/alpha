@@ -9,7 +9,7 @@
 class ControllersHome {
     public static function home() {
         if ($user = HelpersUser::getCurrent()) {
-            redirect("/rss");
+            redirect("/rss/home");
         }
 
         $path_db = __DIR__."/../../app/db/db.sqlite";
@@ -22,6 +22,6 @@ class ControllersHome {
 
     public static function preferences() {
         $template = ClassesTwig::getInstance();
-        return $template->render("views/preferences.twig", array());
+        return $template->render("template/views/preferences.twig", array());
     }
 }

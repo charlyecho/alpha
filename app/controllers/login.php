@@ -37,7 +37,7 @@ class ControllersLogin {
 
 
         $template = ClassesTwig::getInstance();
-        return $template->render("views/login.twig");
+        return $template->render("template/views/login.twig");
     }
 
     public static function logout() {

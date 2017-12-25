@@ -33,26 +33,30 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
 
             // RSS
             $r->addGroup('/rss', function (FastRoute\RouteCollector $r) {
-                $r->addRoute("GET", "", array("ControllersFeeds", "home"));
-                $r->addRoute("GET", "/feeds", array("ControllersFeeds", "home"));
-                $r->addRoute("POST", "/ajax_flow", array("ControllersFeeds", "ajax"));
+                $r->addRoute("GET", "/home", array("RssControllersFeeds", "home"));
+                $r->addRoute("GET", "/feeds", array("RssControllersFeeds", "home"));
+                $r->addRoute("POST", "/ajax_flow", array("RssControllersFeeds", "ajax"));
                 $r->addRoute("GET", "/debug/{id:\d+}", array("ControllersCron", "debug"));
 
                 // Config
                 $r->addGroup('/config', function (FastRoute\RouteCollector $r) {
-                    $r->addRoute('GET', '', array("ControllersFeeds", "config"));
-                    $r->addRoute('GET', '/export.opml', array("ControllersFeeds", "export"));
-                    $r->addRoute('POST', '/import', array("ControllersFeeds", "import"));
+                    $r->addRoute('GET', '', array("RssControllersFeeds", "config"));
+                    $r->addRoute('GET', '/export.opml', array("RssControllersFeeds", "export"));
+                    $r->addRoute('POST', '/import', array("RssControllersFeeds", "import"));
                     $r->addGroup('/category', function (FastRoute\RouteCollector $r) {
-                        $r->addRoute("GET", "/edit/[{id}]", array("ControllersFeeds", "ajax_edit_category"));
-                        $r->addRoute("POST", "/edit", array("ControllersFeeds", "ajax_post_category"));
+                        $r->addRoute("GET", "/edit/[{id}]", array("RssControllersFeeds", "ajax_edit_category"));
+                        $r->addRoute("POST", "/edit", array("RssControllersFeeds", "ajax_post_category"));
                     });
                     $r->addGroup("/subscription", function (FastRoute\RouteCollector $r) {
-                        $r->addRoute("POST", "/edit", array("ControllersFeeds", "ajax_post_subscription"));
-                        $r->addRoute("GET", "/edit/{sub_id}", array("ControllersFeeds", "edit_subscription"));
-                        $r->addRoute("GET", "/move/{sub_id}/[{cat_id}]", array("ControllersFeeds", "move_subscription"));
+                        $r->addRoute("POST", "/edit", array("RssControllersFeeds", "ajax_post_subscription"));
+                        $r->addRoute("GET", "/edit/{sub_id}", array("RssControllersFeeds", "edit_subscription"));
+                        $r->addRoute("GET", "/move/{sub_id}/[{cat_id}]", array("RssControllersFeeds", "move_subscription"));
                     });
                 });
+            });
+
+            $r->addGroup("/links", function(FastRoute\RouteCollector $r) {
+                $r->addRoute("GET", "", array("LinksControllersHome", "home"));
             });
         }
     }
@@ -90,7 +94,7 @@ catch (Exception $e) {
     }
     else {
         $template = ClassesTwig::getInstance();
-        echo $template->render("views/error.twig", array(
+        echo $template->render("template/views/error.twig", array(
             "code" => $code,
             "message" => $message
         ));

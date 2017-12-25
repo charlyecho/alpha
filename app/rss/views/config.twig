@@ -1,4 +1,4 @@
-{% extends "base.twig" %}
+{% extends "template/base.twig" %}
 
 {% block title %}Config{% endblock %}
 
@@ -7,7 +7,7 @@
 
         <div uk-grid>
             <div>
-                <form method="post" action="{{ prefix }}/config/subscription/edit">
+                <form method="post" action="{{ prefix }}/rss/config/subscription/edit">
                     <input type="hidden" name="user_id" value="{{ user.id }}"/>
                     <div uk-grid>
                         <div>
@@ -27,14 +27,14 @@
                 </form>
             </div>
             <div>
-                <form method="post" name="import" action="{{ prefix }}/config/import" enctype="multipart/form-data">
+                <form method="post" name="import" action="{{ prefix }}/rss/config/import" enctype="multipart/form-data">
                     <input type="hidden" name="MAX_FILE_SIZE" value="30000" />
                     <div uk-form-custom>
                         <input type="file" name="file" required="required" />
                         <button type="button" class="uk-button uk-button-default"><i class="icofont icofont-files"></i>...</button>
                     </div>
                     <button class="uk-button uk-button-primary" ><i class="icofont icofont-upload"></i> Import</button>
-                    <a class="uk-button uk-button-primary" href="{{ prefix }}/config/export.opml"><i class="icofont icofont-download"></i> Export</a>
+                    <a class="uk-button uk-button-primary" href="{{ prefix }}/rss/config/export.opml"><i class="icofont icofont-download"></i> Export</a>
                 </form>
             </div>
         </div>
@@ -97,7 +97,7 @@
                     var category_id = $(this).data("id");
                     var draggable = ui.draggable[0];
                     var subscription_id = $(draggable).data("id");
-                    var _url = "{{ prefix }}/config/subscription/move/"+subscription_id+"/"+category_id;
+                    var _url = "{{ prefix }}/rss/config/subscription/move/"+subscription_id+"/"+category_id;
                     window.location = _url;
                 }
             });
@@ -140,7 +140,7 @@
 
         var ajaxCategory = function(id) {
             $.ajax({
-                url: "{{ prefix }}/config/category/edit/"+id+"?ajax=1",
+                url: "{{ prefix }}/rss/config/category/edit/"+id+"?ajax=1",
                 method: 'get',
                 success: function(data) {
                     $('#ajax_area').html(data);
@@ -151,7 +151,7 @@
 
         var ajaxSubscription = function(id) {
             $.ajax({
-                url: "{{ prefix }}/config/subscription/edit/"+id+"?ajax=1",
+                url: "{{ prefix }}/rss/config/subscription/edit/"+id+"?ajax=1",
                 method: 'get',
                 success: function(data) {
                     $('#ajax_area').html(data);

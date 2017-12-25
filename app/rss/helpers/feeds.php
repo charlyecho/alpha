@@ -6,7 +6,7 @@
  * Time: 11:14
  */
 
-class HelpersFeeds {
+class RssHelpersFeeds {
     public static function getCategoryList($user_id) {
         $db = ClassesDb::getInstance();
         $s = $db->prepare("SELECT * FROM category WHERE user_id = ".$db->quote($user_id)." ORDER BY name");
@@ -181,7 +181,7 @@ class HelpersFeeds {
         $db = ClassesDb::getInstance();
 
         // cats
-        $_cats = HelpersFeeds::getCategoryList($user_id);
+        $_cats = RssHelpersFeeds::getCategoryList($user_id);
         $cats_name_id = array();
         foreach($_cats as $_cat) {
             $cats_name_id[$_cat->name] = $_cat->id;
@@ -189,7 +189,7 @@ class HelpersFeeds {
         $cats_id_name = array_flip($cats_name_id);
 
         // subs
-        $_subs = HelpersFeeds::getSubList($user_id);
+        $_subs = RssHelpersFeeds::getSubList($user_id);
         $subs_url_id = array();
         foreach($_subs as $s) {
             $subs_url_id[$s->url] = $s->id;

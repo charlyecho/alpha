@@ -114,8 +114,6 @@ class ControllersInstall {
 
         // fill db
         if ($writable) {
-            //$database = new SQLite3($db."db.sqlite", SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);
-
             $db = ClassesDb::getInstance();
 
             // user
@@ -226,6 +224,7 @@ class ControllersInstall {
                     "msg" => "Table 'subscription_item' not created : ".$e->getMessage());
             }
 
+            /*
             try {
                 $sql = "DELETE FROM subscription_item;";
                 if ($db->exec($sql)) {
@@ -239,17 +238,45 @@ class ControllersInstall {
                     "type" => "danger",
                     "msg" => "Table 'subscription_item' not cleaned : ".$e->getMessage());
             }
+            */
+
+            // links
+            try {
+                // subscription item
+                $sql = "CREATE TABLE link (
+                  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
+                  user_id INTEGER CONSTRAINT link_user_id_fk REFERENCES user (id) ON UPDATE CASCADE ON DELETE CASCADE, 
+                  url VARCHAR,
+                  title VARCHAR, 
+                  img VARCHAR, 
+                  content TEXT, 
+                  is_nsfw INTEGER DEFAULT 0, 
+                  is_private INTEGER DEFAULT 0, 
+                  creation_date DATETIME, 
+                  type VARCHAR DEFAULT 'link',
+                  active INTEGER DEFAULT 1
+                  );";
+                if ($db->exec($sql) !== false) {
+                    $report[] = array(
+                        "type" => "success",
+                        "msg" => "Table 'link' created");
+                }
+            }
+            catch (Exception $e) {
+                $report[] = array(
+                    "type" => "danger",
+                    "msg" => "Table 'link' not created : ".$e->getMessage());
+            }
         }
 
-        if ($nb_errors) {
-            $template = ClassesTwig::getInstance();
-            return $template->render("views/install.twig", array(
-                "report" => $report
-            ));
+        if (!$nb_errors) {
+            //redirect("/");
         }
-        else {
-            redirect("/");
-        }
+
+        $template = ClassesTwig::getInstance();
+        return $template->render("template/views/install.twig", array(
+            "report" => $report
+        ));
     }
 
 }

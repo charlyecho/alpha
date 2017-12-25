@@ -1,5 +1,5 @@
 <?php
-class HelpersCategory {
+class RssHelpersCategory {
     public static function getItem($id) {
         $user = HelpersUser::getCurrent();
         if ($id == "new") {

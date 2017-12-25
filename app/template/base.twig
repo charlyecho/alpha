@@ -22,7 +22,8 @@
                 <a class="uk-navbar-item uk-logo" href="{{ prefix }}/" title="alpha" style="color:#688bb9; font-size:2.5em;">𝛂</a>
                 <ul class="uk-navbar-nav">
                     {% if user %}
-                        <li {% if route == '/rss' %}class="uk-active"{% endif %}><a href="{{ prefix }}/rss"><i class="icofont icofont-rss-feed"></i><span class="uk-visible@s">&nbsp;RSS</span></a></li>
+                        <li {% if route == '/rss/home' or route == "/rss/config" %}class="uk-active"{% endif %}><a href="{{ prefix }}/rss/home"><i class="icofont icofont-rss-feed"></i><span class="uk-visible@s">&nbsp;RSS</span></a></li>
+                        <li {% if route == '/links' %}class="uk-active"{% endif %}><a href="{{ prefix }}/links"><i class="icofont icofont-link"></i><span class="uk-visible@s">&nbsp;Links</span></a></li>
                     {% endif %}
                     <li id="empty_nav"></li>
                 </ul>
@@ -31,7 +32,7 @@
             <div class="uk-navbar-right">
                 <ul class="uk-navbar-nav">
                     {% if user %}
-                        <li><a href="{{ prefix }}/preferences"><i class="icofont icofont-user"></i><span class="uk-visible@s">&nbsp;{{ user.name }}</span></a></li>
+                        <li {% if route == '/preferences' %}class="uk-active"{% endif %}><a href="{{ prefix }}/preferences"><i class="icofont icofont-user"></i><span class="uk-visible@s">&nbsp;{{ user.name }}</span></a></li>
                         <li><a href="{{ prefix }}/logout">&nbsp;<i class="icofont icofont-logout"></i></a></li>
                     {% endif %}
                 </ul>
@@ -43,9 +44,9 @@
             {% block content %}{% endblock %}
         </div>
 
-        <link rel="stylesheet" type="text/css" href="app/template/style/css/icofont.css"/>
+        <link rel="stylesheet" type="text/css" href="{{ prefix }}/app/template/style/css/icofont.css"/>
         <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.30/css/uikit.min.css"/>
-        <link rel="stylesheet" type="text/css" href="app/template/style/css/main.css"/>
+        <link rel="stylesheet" type="text/css" href="{{ prefix }}/app/template/style/css/main.css"/>
         {% block css %}{% endblock %}
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.30/js/uikit.min.js"></script>

@@ -18,7 +18,6 @@ function trace($data) {
 
 
 function redirect($target) {
-    $server = $_SERVER["SERVER_NAME"];
     $prefix = isset($_SERVER["DOCUMENT_URI"]) ? str_replace("/index.php", "", $_SERVER["DOCUMENT_URI"]) : null;
     $uri = $prefix.$target;
     header("Location: ".$uri);
@@ -27,28 +26,6 @@ function redirect($target) {
 
 function get($var, $key, $default = null) {
     return isset($var[$key]) ? $var[$key] : $default;
-}
-
-function createDb() {
-    $path = __DIR__.'/db/db.sqlite';
-    $database = new SQLite3($path);
-    $db = ClassesDb::getInstance();
-
-    $script = file_get_contents(__DIR__ . "/db/create_db.txt");
-    $script = str_replace("\n", "", $script);
-    $statements = array_filter(explode(";", $script));
-    foreach($statements as $key => $query) {
-        try {
-            $s = $db->prepare($query);
-            $s->execute();
-        }
-        catch (Exception $e) {
-            trace($e->getMessage()." ".($query));
-            die();
-        }
-    }
-
-    redirect("/");
 }
 
 /**

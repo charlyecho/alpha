@@ -6,22 +6,22 @@
  * Time: 21:32
  */
 
-class ControllersFeeds {
+class RssControllersFeeds {
     public static function home() {
         $user = HelpersUser::getCurrent();
 
-        $tree = HelpersFeeds::getFeedTree($user->id);
+        $tree = RssHelpersFeeds::getFeedTree($user->id);
         $nb = 0;
         foreach($tree as $t) {
             $nb += count($t->subs);
         }
         if (!$nb) {
             ClassesSession::addMessage("You don't have any subscription yet");
-            redirect("/config");
+            redirect("/rss/config");
         }
 
         $template = ClassesTwig::getInstance();
-        return $template->render("views/flow.twig", array(
+        return $template->render("rss/views/home.twig", array(
             "tree" => $tree,
             "cron" => is_file(__DIR__."/../cache/cron.txt")
         ));
@@ -38,13 +38,13 @@ class ControllersFeeds {
         $nsfw = get($_POST, "nsfw", 0);
         $status = get($_POST, "status", array());   // status to update (read, starred)
 
-        HelpersItems::updateStatus($status);
+        RssHelpersItems::updateStatus($status);
 
         // subscriptions count unread
-        $nb = json_encode(HelpersFeeds::getNbSub($user->id), JSON_OBJECT_AS_ARRAY);
+        $nb = json_encode(RssHelpersFeeds::getNbSub($user->id), JSON_OBJECT_AS_ARRAY);
 
         // items
-        $items = HelpersFeeds::getSubItems($user->id, $cat_id, $sub_id, $read, $starred, $nsfw);
+        $items = RssHelpersFeeds::getSubItems($user->id, $cat_id, $sub_id, $read, $starred, $nsfw);
         $_items_json = array();
         foreach($items as $i) {
             $_item = new stdClass();
@@ -56,7 +56,7 @@ class ControllersFeeds {
         $items_json = json_encode($_items_json);
 
         $template = ClassesTwig::getInstance();
-        return $template->render("views/ajax.twig", array(
+        return $template->render("rss/views/ajax.twig", array(
             "count" => $nb,
             "items" => $items,
             "nsfw" => $nsfw,
@@ -74,8 +74,8 @@ class ControllersFeeds {
     public static function config() {
         $user = HelpersUser::getCurrent();
 
-        $_categories = HelpersFeeds::getCategoryList($user->id);
-        $subs = HelpersFeeds::getSubList($user->id);
+        $_categories = RssHelpersFeeds::getCategoryList($user->id);
+        $subs = RssHelpersFeeds::getSubList($user->id);
 
         // remplissage cats
         $categories = array();
@@ -101,7 +101,7 @@ class ControllersFeeds {
         }
 
         $template = ClassesTwig::getInstance();
-        return $template->render("views/config.twig", array(
+        return $template->render("rss/views/config.twig", array(
             "categories" => $categories
         ));
     }
@@ -113,14 +113,14 @@ class ControllersFeeds {
      */
     public static function export() {
         $user = HelpersUser::getCurrent();
-        $tree = HelpersFeeds::getFeedTree($user->id);
+        $tree = RssHelpersFeeds::getFeedTree($user->id);
         $date = ClassesDate::getInstance()->format("Y-m-d_H-i");
 
         header( 'Content-Type: text/xml; charset=UTF-8', true );
         header('Content-Disposition: attachment; filename="'.$date.'_export.opml"');
 
         $template = ClassesTwig::getInstance();
-        return $template->render("views/export.twig", array(
+        return $template->render("rss/views/export.twig", array(
             "tree" => $tree
         ));
     }
@@ -143,46 +143,46 @@ class ControllersFeeds {
         $json = json_encode($xml, JSON_PRETTY_PRINT);
         $std = json_decode($json);
 
-        HelpersFeeds::import($user->id, $std);
+        RssHelpersFeeds::import($user->id, $std);
 
     }
 
     public static function ajax_edit_category($id = null) {
         $user = HelpersUser::getCurrent();
 
-        $category = HelpersCategory::getItem($id);
-        $categories = HelpersFeeds::getCategoryList($user->id);
+        $category = RssHelpersCategory::getItem($id);
+        $categories = RssHelpersFeeds::getCategoryList($user->id);
 
         $template = ClassesTwig::getInstance();
-        return $template->render("views/ajax_category.twig", array(
+        return $template->render("rss/views/ajax_category.twig", array(
             "category" => $category,
             "categories"=> $categories
         ));
     }
 
     public static function ajax_post_category() {
-        $msg = HelpersCategory::editItem($_POST);
-        redirect("/config");
+        $msg = RssHelpersCategory::editItem($_POST);
+        redirect("/rss/config");
     }
 
     public static function ajax_post_subscription() {
-        $msg = HelpersSubscription::editItem($_POST);
-        redirect("/config");
+        $msg = RssHelpersSubscription::editItem($_POST);
+        redirect("/rss/config");
     }
 
     public static function move_subscription($sub_id, $cat_id) {
-        $msg = HelpersSubscription::moveItem($sub_id, $cat_id);
-        redirect("/config");
+        $msg = RssHelpersSubscription::moveItem($sub_id, $cat_id);
+        redirect("/rss/config");
     }
 
     public static function edit_subscription($id = null) {
         $user = HelpersUser::getCurrent();
 
-        $subscription = HelpersSubscription::getItem($id);
-        $categories = HelpersFeeds::getCategoryList($user->id);
+        $subscription = RssHelpersSubscription::getItem($id);
+        $categories = RssHelpersFeeds::getCategoryList($user->id);
 
         $template = ClassesTwig::getInstance();
-        return $template->render("views/ajax_subscription.twig", array(
+        return $template->render("rss/views/ajax_subscription.twig", array(
             "subscription" => $subscription,
             "categories" => $categories
         ));
