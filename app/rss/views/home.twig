@@ -467,10 +467,10 @@
         $(document).ready(function() {
             refresh();
 
+            // height of feed list
             var height = $(document).height();
             var offset = $('#main-nav').offset().top;
             height = height - offset - 50;
-            console.log(height);
             $('#main-nav').css({
                 'height' : height+"px",
                 "overflow-y": 'auto'
