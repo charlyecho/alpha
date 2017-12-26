@@ -18,27 +18,27 @@
         </head>
     <body>
         {% if dialog != 1 %}
-        <nav class="uk-navbar-container" uk-navbar uk-sticky style="box-shadow: 0 0 5px grey">
-            <div class="uk-navbar-left">
-                <a class="uk-navbar-item uk-logo" href="{{ prefix }}/" title="alpha" style="color:#688bb9; font-size:2.5em;">𝛂</a>
-                <ul class="uk-navbar-nav">
-                    {% if user %}
-                        <li {% if route == '/rss/home' or route == "/rss/config" %}class="uk-active"{% endif %}><a href="{{ prefix }}/rss/home"><i class="icofont icofont-rss-feed"></i><span class="uk-visible@s">&nbsp;RSS</span></a></li>
-                        <li {% if route == '/links' %}class="uk-active"{% endif %}><a href="{{ prefix }}/links"><i class="icofont icofont-link"></i><span class="uk-visible@s">&nbsp;Links</span></a></li>
-                    {% endif %}
-                    <li id="empty_nav"></li>
-                </ul>
-            </div>
+            <nav class="uk-navbar-container" uk-navbar uk-sticky style="box-shadow: 0 0 5px grey">
+                <div class="uk-navbar-left">
+                    <a class="uk-navbar-item uk-logo" href="{{ prefix }}/" title="alpha" style="color:#688bb9; font-size:2.5em;">𝛂</a>
+                    <ul class="uk-navbar-nav">
+                        {% if user %}
+                            <li {% if route == '/rss/home' or route == "/rss/config" %}class="uk-active"{% endif %}><a href="{{ prefix }}/rss/home"><i class="icofont icofont-rss-feed"></i><span class="uk-visible@s">&nbsp;RSS</span></a></li>
+                            <li {% if route == '/links' %}class="uk-active"{% endif %}><a href="{{ prefix }}/links"><i class="icofont icofont-link"></i><span class="uk-visible@s">&nbsp;Links</span></a></li>
+                        {% endif %}
+                        <li id="empty_nav"></li>
+                    </ul>
+                </div>
 
-            <div class="uk-navbar-right">
-                <ul class="uk-navbar-nav">
-                    {% if user %}
-                        <li {% if route == '/preferences' %}class="uk-active"{% endif %}><a href="{{ prefix }}/preferences"><i class="icofont icofont-user"></i><span class="uk-visible@s">&nbsp;{{ user.name }}</span></a></li>
-                        <li><a href="{{ prefix }}/logout">&nbsp;<i class="icofont icofont-logout"></i></a></li>
-                    {% endif %}
-                </ul>
-            </div>
-        </nav>
+                <div class="uk-navbar-right">
+                    <ul class="uk-navbar-nav">
+                        {% if user %}
+                            <li {% if route == '/preferences' %}class="uk-active"{% endif %}><a href="{{ prefix }}/preferences"><i class="icofont icofont-user"></i><span class="uk-visible@s">&nbsp;{{ user.name }}</span></a></li>
+                            <li><a href="{{ prefix }}/logout">&nbsp;<i class="icofont icofont-logout"></i></a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </nav>
         {% endif %}
 
 

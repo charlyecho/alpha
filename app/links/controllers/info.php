@@ -16,7 +16,7 @@ class LinksControllersInfo {
         $data->type = "link";
 
         // url
-        $url = $_REQUEST["url"];
+        $url = get($_GET, "url");
         $url = urldecode($url);
         $data->url = $url;
 

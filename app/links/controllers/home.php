@@ -11,7 +11,6 @@ class LinksControllersHome {
         $start = get($_GET, "start", 0);
         $gallery = get($_GET, "gallery", 0);
 
-
         $url = "http://".$_SERVER["HTTP_HOST"].(isset($_SERVER["DOCUMENT_URI"]) ? str_replace("/index.php", "", $_SERVER["DOCUMENT_URI"]) : null);
 
         $list = LinksHelpersLinks::getList($user->id, $search, $type, $nsfw, $private, $gallery, $start*40);

@@ -11,6 +11,8 @@ date_default_timezone_set("UTC");
 require_once __DIR__.'/app/functions.php';
 require_once __DIR__.'/vendor/autoload.php';
 
+// hack for $_GET
+
 // routing
 $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $path_db = __DIR__."/app/db/db.sqlite";
@@ -74,7 +76,20 @@ $prefix = isset($_SERVER["DOCUMENT_URI"]) ? str_replace("/index.php", "", $_SERV
 $pos = strpos($uri, $prefix);
 $uri =  ($pos === 0) ? substr($uri, strlen($prefix)) : $uri;
 
+
 if (false !== $pos = strpos($uri, '?')) {
+
+    // hack for GET
+    $params = substr($uri, $pos+1);
+    if (empty($_GET) && $params) {
+        foreach(explode("&", $params) as $p) {
+            $kv = explode("=", $p);
+            $_GET[$kv[0]] = isset($kv[1]) ? $kv[1] : null;
+            array_filter($_GET);
+        }
+    }
+
+    // uri for Route
     $uri = substr($uri, 0, $pos);
 }
 $uri = rawurldecode($uri);

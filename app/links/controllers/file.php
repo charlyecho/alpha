@@ -53,7 +53,7 @@ class LinksControllersFile {
                 $nb ++;
             }
 
-            if ($nb >= 1000) {
+            if ($nb >= 200) {
                 break;
             }
         }
