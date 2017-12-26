@@ -467,6 +467,15 @@
         $(document).ready(function() {
             refresh();
 
+            var height = $(document).height();
+            var offset = $('#main-nav').offset().top;
+            height = height - offset - 50;
+            console.log(height);
+            $('#main-nav').css({
+                'height' : height+"px",
+                "overflow-y": 'auto'
+            });
+
             $('#all_update').click(function (e) {
                 e.preventDefault();
                 update();
@@ -504,7 +513,7 @@
             if ( event.which === 72 ) { // H : all current page read
                 allread();
             }
-            console.log(event.which);
+            //console.log(event.which);
             event.preventDefault();
             event.stopImmediatePropagation();
         });
