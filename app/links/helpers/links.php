@@ -7,7 +7,7 @@
  */
 
 class LinksHelpersLinks {
-    public static function getList($user_id, $search = null, $type = null, $nsfw = null, $private = null, $start = 0) {
+    public static function getList($user_id, $search = null, $type = null, $nsfw = null, $private = null, $gallery = null, $start = 0) {
         $db = ClassesDb::getInstance();
         $sql = "SELECT * FROM link WHERE user_id = ".$db->quote($user_id);
         if ($search) {
@@ -16,6 +16,9 @@ class LinksHelpersLinks {
         }
         if ($type) {
             $sql .= " AND type = ".$db->quote($type);
+        }
+        if ($gallery) {
+            $sql .= " AND img != ''";
         }
         if ($nsfw == 1) {
             $sql .= " AND is_nsfw = 1";

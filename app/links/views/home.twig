@@ -37,74 +37,79 @@
                     </select>
                 </div>
                 <div class="uk-width-1-5 uk-padding-remove">
-                    <button class="uk-button uk-button-primary">
-                        GO
-                    </button>
-                    <button type="button" class="uk-button uk-button-default" onclick="$('#page').val(parseInt($('#page').val())+1).change();"> > </button>
+                    <button class="uk-button uk-button-primary"><i class="icofont icofont-refresh"></i></button>
                     <button type="button" class="uk-button uk-button-default" onclick="$('#gallery').val(Math.abs(parseInt($('#gallery').val())-1)).change();"> <i class="icofont icofont-image"></i> </button>
-                    <a href="javascript:(function(){var%20url%20=%20location.href;var%20title%20=%20document.title%20||%20url;window.open('{{ url }}/links/edit/?dialog=1&amp;url='%20+%20encodeURIComponent(url)+'&amp;title='%20+%20encodeURIComponent(title)+'&amp;source=bookmarklet','_blank','menubar=no,height=800,width=600,toolbar=no,scrollbars=yes,status=no,dialog=1');})();" class="uk-button uk-button-default"> <i class="icofont icofont-share"></i> </a>
+                    <a href="javascript:(function(){var%20url%20=%20location.href;var%20title%20=%20document.title%20||%20url;window.open('{{ url }}/links/edit/?dialog=1&amp;url='%20+%20encodeURIComponent(url)+'&amp;title='%20+%20encodeURIComponent(title)+'&amp;source=bookmarklet','_blank','menubar=no,height=800,width=600,toolbar=no,scrollbars=yes,status=no,dialog=1');})();" class="uk-button uk-button-default uk-visible@m"> <i class="icofont icofont-share"></i> </a>
                 </div>
             </div>
         </form>
     </div>
 
-    {% if gallery %}
-        <div class="uk-flex uk-flex-center uk-flex-wrap uk-flex-wrap-between">
-            {% for l in links %}
-                <div>
-                    <a target="_blank" href="{{ l.url }}" rel="noopener noreferer nofollow">
-                        <img src="{{ l.img }}" alt="" style="height:200px;" />
-                    </a>
-                </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <table class="uk-table">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th colspan="2"></th>
-                    <th>img</th>
-                    <th>title</th>
-                    <th>com.</th>
-                    <th>creation_date</th>
-                    <th>type</th>
-                    <th>active</th>
-                </tr>
-            </thead>
-            <tbody>
+    <div>
+
+        <p class="uk-text-center">
+            <a class="uk-button uk-button-default" onclick="$('#page').val(parseInt($('#page').val())+1).change();"> > </a>
+        </p>
+
+
+        {% if gallery %}
+            <div class="uk-flex uk-flex-center uk-flex-wrap uk-flex-wrap-between uk-flex-between">
                 {% for l in links %}
-                    <tr class="{{ l.is_nsfw ? "nsfw" : ""}} {{ l.is_private ? "private" : null}}">
-                        <td><a href="/links/edit/{{ l.id }}">{{ l.id }}</a></td>
-                        <td>{{ l.is_nsfw ? "<i class=\"icofont icofont-warning\"></i>" : ""}}</td>
-                        <td>{{ l.is_private ? "<i class=\"icofont icofont-key\"></i>" : null}}</td>
-                        <td>{% if l.img %}<div uk-lightbox><a href="{{ l.img }}"><i class="icofont icofont-image"></i></a></div>{% endif %}</td>
-                        <td><a target="_blank" rel="noopener noreferer nofollow" href="{{ l.url }}">{{ l.title ? l.title : "no_title" }}</a></td>
-                        <td>{{ l.content ? "<i class=\"icofont icofont-comment\"></i>" : null}}</td>
-                        <td>{{ l.creation_date }}</td>
-                        <td>{{ l.type }}</td>
-                        <td>{{ l.active }}</td>
-                    </tr>
+                    <div>
+                        <a target="_blank" href="{{ l.url }}" rel="noopener noreferer nofollow">
+                            <img src="{{ l.img }}" alt="" style="height:200px;" />
+                        </a>
+                    </div>
                 {% endfor %}
-            </tbody>
+            </div>
+        {% else %}
+            <table class="uk-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th colspan="2"></th>
+                        <th>img</th>
+                        <th>title</th>
+                        <th>com.</th>
+                        <th>creation_date</th>
+                        <th>type</th>
+                        <th>active</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for l in links %}
+                        <tr class="{{ l.is_nsfw ? "nsfw" : ""}} {{ l.is_private ? "private" : null}}">
+                            <td><a href="/links/edit/{{ l.id }}">{{ l.id }}</a></td>
+                            <td>{{ l.is_nsfw ? "<i class=\"icofont icofont-warning\"></i>" : ""}}</td>
+                            <td>{{ l.is_private ? "<i class=\"icofont icofont-key\"></i>" : null}}</td>
+                            <td>{% if l.img %}<div uk-lightbox><a href="{{ l.img }}"><i class="icofont icofont-image"></i></a></div>{% endif %}</td>
+                            <td><a target="_blank" rel="noopener noreferer nofollow" href="{{ l.url }}">{{ l.title ? l.title : "no_title" }}</a></td>
+                            <td>{{ l.content ? "<i class=\"icofont icofont-comment\"></i>" : null}}</td>
+                            <td>{{ l.creation_date }}</td>
+                            <td>{{ l.type }}</td>
+                            <td>{{ l.active }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
 
-        </table>
+            </table>
 
-        <style>
-            tbody tr.nsfw.private {
-                background: linear-gradient(to bottom, #ffcaca, #ffebb7);
-            }
+            <style>
+                tbody tr.nsfw.private {
+                    background: linear-gradient(to bottom, #ffcaca, #ffebb7);
+                }
 
-            tbody tr.nsfw {
-                background-color: #ffcaca;
-            }
+                tbody tr.nsfw {
+                    background-color: #ffcaca;
+                }
 
-            tbody tr.private {
-                background-color: #ffebb7;
-            }
+                tbody tr.private {
+                    background-color: #ffebb7;
+                }
 
-        </style>
-    {% endif %}
+            </style>
+        {% endif %}
+    </div>
 {% endblock %}
 
 

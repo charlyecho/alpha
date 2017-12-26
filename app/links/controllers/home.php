@@ -14,7 +14,7 @@ class LinksControllersHome {
 
         $url = "http://".$_SERVER["HTTP_HOST"].(isset($_SERVER["DOCUMENT_URI"]) ? str_replace("/index.php", "", $_SERVER["DOCUMENT_URI"]) : null);
 
-        $list = LinksHelpersLinks::getList($user->id, $search, $type, $nsfw, $private, $start*40);
+        $list = LinksHelpersLinks::getList($user->id, $search, $type, $nsfw, $private, $gallery, $start*40);
 
         $template = ClassesTwig::getInstance();
         return $template->render("links/views/home.twig", array(
