@@ -32,7 +32,8 @@ class LinksControllersFile {
                   is_private, 
                   creation_date, 
                   type, 
-                  active) ";
+                  active,
+                  tags) ";
 
                 $sql .= "VALUES(";
                 $sql .= $db->quote($user->id);
@@ -45,6 +46,7 @@ class LinksControllersFile {
                 $sql .= ", ".$db->quote($a->creation_date);
                 $sql .= ", ".$db->quote($a->type ? $a->type : "link");
                 $sql .= ", ".$db->quote(1);
+                $sql .= ", ".$db->quote($a->tags);
                 $sql .= ")";
                 $db->exec($sql);
                 trace($sql);

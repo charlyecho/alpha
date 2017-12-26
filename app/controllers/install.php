@@ -254,7 +254,8 @@ class ControllersInstall {
                   is_private INTEGER DEFAULT 0, 
                   creation_date DATETIME, 
                   type VARCHAR DEFAULT 'link',
-                  active INTEGER DEFAULT 1
+                  active INTEGER DEFAULT 1,
+                  tags TEXT
                   );";
                 if ($db->exec($sql) !== false) {
                     $report[] = array(
