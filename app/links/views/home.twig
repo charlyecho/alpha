@@ -70,6 +70,7 @@
                         <th colspan="2"></th>
                         <th>img</th>
                         <th>title</th>
+                        <th>tags</th>
                         <th>com.</th>
                         <th>creation_date</th>
                         <th>type</th>
@@ -84,6 +85,7 @@
                             <td>{{ l.is_private ? "<i class=\"icofont icofont-key\"></i>" : null}}</td>
                             <td>{% if l.img %}<div uk-lightbox><a href="{{ l.img }}"><i class="icofont icofont-image"></i></a></div>{% endif %}</td>
                             <td><a target="_blank" rel="noopener noreferer nofollow" href="{{ l.url }}">{{ l.title ? l.title : "no_title" }}</a></td>
+                            <td>{{ l.tags }}</td>
                             <td>{{ l.content ? "<i class=\"icofont icofont-comment\"></i>" : null}}</td>
                             <td>{{ l.creation_date }}</td>
                             <td>{{ l.type }}</td>

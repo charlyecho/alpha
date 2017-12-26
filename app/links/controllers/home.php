@@ -59,7 +59,7 @@ class LinksControllersHome {
             $link->is_private = 0;
             $link->type = 'link';
             $link->active = 1;
-            $link->tag = null;
+            $link->tags = null;
 
             if ($feed_item_id) {
                 //@TODO

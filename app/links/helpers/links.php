@@ -12,7 +12,7 @@ class LinksHelpersLinks {
         $sql = "SELECT * FROM link WHERE user_id = ".$db->quote($user_id);
         if ($search) {
             $like = $db->quote("%".$search."%");
-            $sql .= " AND (title LIKE ".$like." OR url LIKE ".$like." OR tag LIKE ".$like.")";
+            $sql .= " AND (title LIKE ".$like." OR url LIKE ".$like." OR tags LIKE ".$like.")";
         }
         if ($type) {
             $sql .= " AND type = ".$db->quote($type);
@@ -50,7 +50,7 @@ class LinksHelpersLinks {
         $is_nsfw = get($post, "is_nsfw");
         $is_private = get($post, "is_private");
         $type = get($post, "type");
-        $tag = get($post, "tag");
+        $tags = get($post, "tags");
         $del = get($post, "del");
         $dialog = get($post, "dialog");
 
@@ -69,14 +69,14 @@ class LinksHelpersLinks {
                     is_nsfw = ".$db->quote($is_nsfw).",  
                     is_private = ".$db->quote($is_private).",  
                     type = ".$db->quote($type).",  
-                    tag = ".$db->quote($tag)."  
+                    tags = ".$db->quote($tags)."  
                     WHERE id =".$db->quote($id);
                 $db->exec($sql);
             }
         }
         else {
             // insert
-            $sql = "INSERT INTO link (user_id, url, title, img, content, is_nsfw, is_private, type, creation_date, tag) VALUES( 
+            $sql = "INSERT INTO link (user_id, url, title, img, content, is_nsfw, is_private, type, creation_date, tags) VALUES( 
                     ".$db->quote($user_id).",
                     ".$db->quote($url).",
                     ".$db->quote($title).",
@@ -86,7 +86,7 @@ class LinksHelpersLinks {
                     ".$db->quote($is_private).",  
                     ".$db->quote($type).",  
                     ".$db->quote(ClassesDate::getInstance()->toSql()).",
-                    ".$db->quote($tag).");";
+                    ".$db->quote($tags).");";
             $db->exec($sql);
         }
 
