@@ -49,11 +49,10 @@ class LinksControllersFile {
                 $sql .= ", ".$db->quote($a->tags);
                 $sql .= ")";
                 $db->exec($sql);
-                trace($sql);
                 $nb ++;
             }
 
-            if ($nb >= 200) {
+            if ($nb >= 500) {
                 break;
             }
         }
@@ -63,6 +62,6 @@ class LinksControllersFile {
             $db->exec($sql);
         }
 
-        trace(count($array));
+        trace($nb);
     }
 }

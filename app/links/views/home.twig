@@ -80,7 +80,7 @@
                 <tbody>
                     {% for l in links %}
                         <tr class="{{ l.is_nsfw ? "nsfw" : ""}} {{ l.is_private ? "private" : null}}">
-                            <td><a href="/links/edit/{{ l.id }}">{{ l.id }}</a></td>
+                            <td><a href="{{ prefix }}/links/edit/{{ l.id }}">{{ l.id }}</a></td>
                             <td>{{ l.is_nsfw ? "<i class=\"icofont icofont-warning\"></i>" : ""}}</td>
                             <td>{{ l.is_private ? "<i class=\"icofont icofont-key\"></i>" : null}}</td>
                             <td>{% if l.img %}<div uk-lightbox><a href="{{ l.img }}"><i class="icofont icofont-image"></i></a></div>{% endif %}</td>
