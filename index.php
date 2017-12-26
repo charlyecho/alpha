@@ -5,6 +5,7 @@
 ob_start();
 ini_set('default_charset', 'UTF-8');
 ini_set('display_errors', 1);
+ini_set('error_reporting', E_ALL);
 date_default_timezone_set("UTC");
 
 require_once __DIR__.'/app/functions.php';
@@ -57,6 +58,9 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
 
             $r->addGroup("/links", function(FastRoute\RouteCollector $r) {
                 $r->addRoute("GET", "", array("LinksControllersHome", "home"));
+                $r->addRoute(array("GET", "POST"), "/edit/[{id}]", array("LinksControllersHome", "edit"));
+                $r->addRoute("GET", "/import", array("LinksControllersFile", "import"));
+                $r->addRoute("GET", "/info", array("LinksControllersInfo", "info"));
             });
         }
     }
