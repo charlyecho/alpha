@@ -1,0 +1,101 @@
+{% extends "template/base.twig" %}
+
+{% block title %}Links{% endblock %}
+
+{% block content %}
+    <div class="uk-container">
+        <h2>{{ link.id ? "Edit #"~link.id : "Add Link" }} <a onclick="info();"><i class="icofont icofont-refresh"></i></a></h2>
+        <form method="post">
+            <input type="hidden" name="id" value="{{ link.id }}" />
+            <input type="hidden" name="user_id" value="{{ link.user_id }}" />
+            <input type="hidden" name="is_nsfw" value="{{ link.is_nsfw }}" />
+            <input type="hidden" name="is_private" value="{{ link.is_private }}" />
+            <input type="hidden" name="dialog" value="{{ dialog }}" />
+
+            <div uk-grid>
+                <div class="uk-width-1-2">
+                    <div class="uk-margin">
+                        <label>
+                            <span>Title :</span>
+                            <input type="text" name="title" value="{{ link.title }}" class="uk-input" placeholder="Title" />
+                        </label>
+                    </div>
+
+                    <div class="uk-margin">
+                        <label>
+                            <span>Url :</span>
+                            <input required="required" type="text" name="url" value="{{ link.url }}" class="uk-input" placeholder="Url" />
+                        </label>
+                    </div>
+
+                    <div class="uk-margin">
+                        <label>
+                            <span>Img :</span>
+                            <input type="text" name="img" value="{{ link.img }}" onchange="$('#img_link').attr('src', $(this).val());" class="uk-input" placeholder="img link" />
+                        </label>
+                    </div>
+
+                    <div class="uk-margin">
+                        <button type="button" class="uk-button uk-button-{{ link.is_nsfw ? "primary" : "default" }}" onclick="$(this).toggleClass('uk-button-primary', 'uk-button-default'); $('input[name=is_nsfw]').val(Math.abs(parseInt($('input[name=is_nsfw]').val()))-1) ">
+                            <i class="icofont icofont-warning"></i>&nbsp;
+                        </button>
+                        <button type="button" class="uk-button uk-button-{{ link.is_private ? "primary" : "default" }}" onclick="$(this).toggleClass('uk-button-primary', 'uk-button-default'); $('input[name=is_private]').val(Math.abs(parseInt($('input[name=is_private]').val()))-1) ">
+                            <i class="icofont icofont-key"></i>&nbsp;
+                        </button>
+                        <select class="uk-select" name="type" style="width:100px;">
+                            <option value="link" {{ link.type == "link" ? "selected" : null }}>Link</option>
+                            <option value="image" {{ link.type == "image" ? "selected" : null }}>Image</option>
+                            <option value="audio" {{ link.type == "audio" ? "selected" : null }}>Audio</option>
+                            <option value="video" {{ link.type == "video" ? "selected" : null }}>Video</option>
+                            <option value="article" {{ link.type == "article" ? "selected" : null }}>Article</option>
+                        </select>
+                        <input type="text" name="tag" value="{{ link.tag }}" class="uk-input" style="width: 300px;" placeholder="tags ..." />
+                    </div>
+                </div>
+
+                <div class="uk-width-1-2 uk-text-center">
+                    <img src="{{ link.img }}" alt="No img" id="img_link" style="max-width:100%; max-height:200px;" />
+                </div>
+            </div>
+
+            <div class="uk-margin">
+                <label>
+                    <span>Content :</span>
+                    <textarea name="content" class="uk-textarea" rows="{{ dialog ? 2 : 6 }}">{{ link.content }}</textarea>
+                </label>
+            </div>
+
+            <div>
+                <button class="uk-button uk-button-primary">Save</button>
+                {% if link.id %}
+                    <button name="del" onclick="return confirm('Delete this link ?');" value="1" class="uk-button uk-button-danger">delete</button>
+                {% endif %}
+                <a onclick="{{ dialog ? "window.close(); return false;" : "" }}" href="/links" class="uk-button uk-button-default">Close</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        var info = function() {
+            var url = $("input[name=url]").val();
+            $.ajax({
+              url: '{{ prefix }}/links/info?url='+encodeURI(url),
+              success: function(data) {
+                  var _data = JSON.parse(data);
+                  $('input[name=img]').val(_data.img).change();
+                  $('input[name=title]').val(_data.title);
+                  $('select[name=type]').val(_data.type);
+              }
+            });
+            console.log(url);
+        };
+    </script>
+
+    <style>
+        {% if dialog == 1 %}
+        label span {display: none}
+        {% endif %}
+    </style>
+{% endblock %}
+
+

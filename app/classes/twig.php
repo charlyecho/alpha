@@ -25,6 +25,7 @@ class ClassesTwig {
         $twig->addGlobal("ldap", isset($_SERVER["REMOTE_USER"]) ? $_SERVER["REMOTE_USER"] : null);
         $twig->addGlobal('prefix', isset($_SERVER["DOCUMENT_URI"]) ? str_replace("/index.php", "", $_SERVER["DOCUMENT_URI"]) : null);
         $twig->addGlobal('route', self::$route);
+        $twig->addGlobal('dialog', get($_GET, "dialog"));
         return self::$template = $twig;
     }
 

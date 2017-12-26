@@ -17,6 +17,7 @@
 
         </head>
     <body>
+        {% if dialog != 1 %}
         <nav class="uk-navbar-container" uk-navbar uk-sticky style="box-shadow: 0 0 5px grey">
             <div class="uk-navbar-left">
                 <a class="uk-navbar-item uk-logo" href="{{ prefix }}/" title="alpha" style="color:#688bb9; font-size:2.5em;">𝛂</a>
@@ -38,6 +39,7 @@
                 </ul>
             </div>
         </nav>
+        {% endif %}
 
 
         <div id="content">
