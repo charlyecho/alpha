@@ -75,7 +75,6 @@ class RssHelpersFeeds {
 
 
     public static function cleanSub($data) {
-
         // favicon
         $path = "app/cache/icons/".$data->subscription_id.".png";
         if (is_file($path)) {
@@ -116,8 +115,9 @@ class RssHelpersFeeds {
 
 
         // bad <br> between 2 <p></p>
-        $regex = '/<\/p>[ \r\n]*<br[ \/]*>[ \r\n]*<p>/im';
-        $data->content = preg_replace($regex, "</p><p>", $data->content);
+        //$data->content = nl2br($data->content);
+        $regex = '/<br[ \/]*>[ \r\n]*(<p|<blockquote|<div)/';
+        $data->content = preg_replace($regex, "$1", $data->content);
 
         // iframes
         //$data->content = str_replace("<iframe ", "<iframe ", $data->content);
