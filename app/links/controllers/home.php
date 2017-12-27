@@ -33,6 +33,8 @@ class LinksControllersHome {
 
         $feed_item_id = get($_GET, "feed_item_id");
         $url = get($_GET, "url");
+        $db = ClassesDb::getInstance();
+
 
         if (!empty($_POST)) {
             LinksHelpersLinks::edit($_POST);
@@ -40,7 +42,6 @@ class LinksControllersHome {
 
 
         if ($id) {
-            $db = ClassesDb::getInstance();
             $sql = "SELECT * FROM link WHERE id = ".$db->quote($id)." AND user_id = ".$db->quote($user->id);
             $q = $db->prepare($sql);
             $q->execute();
@@ -66,6 +67,13 @@ class LinksControllersHome {
 
             if ($url) {
                 $link->url = urldecode($url);
+                $sql = "SELECT * FROM link WHERE url = ".$db->quote($link->url)." AND user_id = ".$db->quote($user->id);
+                $q = $db->prepare($sql);
+                $q->execute();
+                $_link = $q->fetch();
+                if ($_link) {
+                    $link = $_link;
+                }
             }
         }
 

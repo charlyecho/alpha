@@ -75,21 +75,6 @@
         </form>
     </div>
 
-    <script>
-        var info = function() {
-            var url = $("input[name=url]").val();
-            $.ajax({
-              url: '{{ prefix }}/links/info?url='+encodeURI(url),
-              success: function(data) {
-                  var _data = JSON.parse(data);
-                  $('input[name=img]').val(_data.img).change();
-                  $('input[name=title]').val(_data.title);
-                  $('select[name=type]').val(_data.type);
-              }
-            });
-            console.log(url);
-        };
-    </script>
 
     <style>
         {% if dialog == 1 %}
@@ -99,3 +84,28 @@
 {% endblock %}
 
 
+
+{% block script %}
+    <script>
+        var info = function() {
+            var url = $("input[name=url]").val();
+            $.ajax({
+                url: '{{ prefix }}/links/info?url='+encodeURI(url),
+                success: function(data) {
+                    var _data = JSON.parse(data);
+                    $('input[name=img]').val(_data.img).change();
+                    $('input[name=title]').val(_data.title);
+                    $('select[name=type]').val(_data.type);
+                    UIkit.notification('Blank data filled');
+                }
+            });
+        };
+
+        $(document).ready(function() {
+            {% if link.id == "" and link.url %}
+            info();
+            {% endif %}
+        });
+
+    </script>
+{% endblock %}

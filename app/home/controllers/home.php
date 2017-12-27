@@ -6,7 +6,7 @@
  * Time: 21:32
  */
 
-class ControllersHome {
+class HomeControllersHome {
     public static function home() {
         if ($user = HelpersUser::getCurrent()) {
             redirect("/rss/home");
