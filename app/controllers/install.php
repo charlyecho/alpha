@@ -7,6 +7,25 @@
  */
 
 class ControllersInstall {
+
+    public static function updateVersion($v = null) {
+        $db = ClassesDb::getInstance();
+        $sql = "SELECT val FROM app WHERE param = 'db_version'";
+        $s = $db->prepare($sql);
+        $s->execute();
+        $current_version = $s->fetch(PDO::FETCH_COLUMN);
+
+        if ($v) {
+            $sql = "UPDATE app SET param = 'db_version', val=".$db->quote($v);
+            $s = $db->prepare($sql);
+            $s->execute();
+
+            return $v;
+        }
+
+        return $current_version;
+    }
+
     public static function home() {
         $report = array();
 
@@ -116,158 +135,44 @@ class ControllersInstall {
         if ($writable) {
             $db = ClassesDb::getInstance();
 
-            // user
+            $current_version = "0";
             try {
-                $sql = "CREATE TABLE user(
-              id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
-              name VARCHAR UNIQUE);";
-                if ($db->exec($sql)) {
-                    $report[] = array(
-                        "type" => "success",
-                        "msg" => "Table 'user' created");
+                $sql = "SELECT val FROM app WHERE param = ".$db->quote("db_version");
+                $s = $db->prepare($sql);
+                $s->execute();
+                $db_version = $s->fetch(PDO::FETCH_COLUMN);
+                if ($db_version) {
+                    $current_version = $db_version;
+                }
+            } catch (Exception $e) {}
+
+            $deployment = include(__DIR__."/../tools/deployment.php");
+
+            foreach($deployment as $version => $requests) {
+                if ($current_version >= $version) {
+                    continue;
+                }
+
+                if (count($requests)) {
+                    foreach ($requests as $r) {
+                        try {
+                            $db->exec($r);
+                        } catch (Exception $e) {
+                            $report[] = array(
+                                "type" => "danger",
+                                "msg" => "Error in version $version : ".$e->getMessage()
+                            );
+                            break 2;
+                        }
+                    }
+                    $current_version = self::updateVersion($version);
                 }
             }
-            catch (Exception $e) {
-                $report[] = array(
-                    "type" => "danger",
-                    "msg" => "Table 'user' not created : ".$e->getMessage());
-            }
 
-
-            try {
-                $sql = "INSERT INTO user(name) VALUES('admin');";
-                if ($db->exec($sql)) {
-                    $report[] = array(
-                        "type" => "success",
-                        "msg" => "user admin created");
-                }
-            }
-            catch (Exception $e) {
-                $report[] = array(
-                    "type" => "danger",
-                    "msg" => "user 'admin' not created : ".$e->getMessage());
-            }
-
-            // category
-            try {
-                $sql = "CREATE TABLE category(
-              id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
-              user_id INTEGER CONSTRAINT category_user_id_fk REFERENCES user (id) ON UPDATE CASCADE ON DELETE CASCADE, 
-              name VARCHAR, 
-              color VARCHAR(6));";
-                if ($db->exec($sql)) {
-                    $report[] = array(
-                        "type" => "success",
-                        "msg" => "Table 'category' created");
-                }
-            }
-            catch (Exception $e) {
-                $report[] = array(
-                    "type" => "danger",
-                    "msg" => "Table 'category' not created".$e->getMessage());
-            }
-
-
-            try {
-                // subscription
-                $sql = "CREATE TABLE subscription(
-              id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
-              name VARCHAR, 
-              url TEXT, 
-              user_id INTEGER NOT NULL CONSTRAINT subscription_user_id_fk REFERENCES user (id) ON UPDATE CASCADE ON DELETE CASCADE,  
-              category_id INTEGER CONSTRAINT subscription_category_id_fk REFERENCES category (id), 
-              last_modification_datetime DATETIME, 
-              need_update ENUM(0, 1) DEFAULT 0, 
-              last_check_datetime DATETIME, 
-              recuperation_data_datetime DATETIME, 
-              is_valid ENUM(0, 1) DEFAULT 1, 
-              url_site TEXT,  
-              need_parse ENUM(0, 1) DEFAULT 0 NOT NULL, 
-              is_mature ENUM(0, 1) DEFAULT 0 NOT NULL);";
-                if ($db->exec($sql)) {
-                    $report[] = array(
-                        "type" => "success",
-                        "msg" => "Table 'subscription' created");
-                }
-            }
-            catch (Exception $e) {
-                $report[] = array(
-                    "type" => "danger",
-                    "msg" => "Table 'subscription' not created : ".$e->getMessage());
-            }
-
-
-            try {
-                // subscription item
-                $sql = "CREATE TABLE subscription_item (
-                  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
-                  subscription_id INTEGER CONSTRAINT subscription_item_subscription_id_fk REFERENCES subscription (id) ON UPDATE CASCADE ON DELETE CASCADE, 
-                  local_id VARCHAR, 
-                  title VARCHAR, 
-                  thumbnail VARCHAR, 
-                  content TEXT, 
-                  link TEXT, 
-                  date_time DATETIME, 
-                  read ENUM(0, 1) 
-                  DEFAULT 0, 
-                  starred ENUM(0,1) 
-                  DEFAULT 0);";
-                if ($db->exec($sql)) {
-                    $report[] = array(
-                        "type" => "success",
-                        "msg" => "Table 'subscription_item' created");
-                }
-            }
-            catch (Exception $e) {
-                $report[] = array(
-                    "type" => "danger",
-                    "msg" => "Table 'subscription_item' not created : ".$e->getMessage());
-            }
-
-            /*
-            try {
-                $sql = "DELETE FROM subscription_item;";
-                if ($db->exec($sql)) {
-                    $report[] = array(
-                        "type" => "success",
-                        "msg" => "Table 'subscription_item' cleaned (truncated)");
-                }
-            }
-            catch (Exception $e) {
-                $report[] = array(
-                    "type" => "danger",
-                    "msg" => "Table 'subscription_item' not cleaned : ".$e->getMessage());
-            }
-            */
-
-            // links
-            try {
-                // subscription item
-                $sql = "CREATE TABLE link (
-                  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
-                  user_id INTEGER CONSTRAINT link_user_id_fk REFERENCES user (id) ON UPDATE CASCADE ON DELETE CASCADE, 
-                  url VARCHAR,
-                  title VARCHAR, 
-                  img VARCHAR, 
-                  content TEXT, 
-                  is_nsfw INTEGER DEFAULT 0, 
-                  is_private INTEGER DEFAULT 0, 
-                  creation_date DATETIME, 
-                  type VARCHAR DEFAULT 'link',
-                  active INTEGER DEFAULT 1,
-                  tags TEXT
-                  );";
-                if ($db->exec($sql) !== false) {
-                    $report[] = array(
-                        "type" => "success",
-                        "msg" => "Table 'link' created");
-                }
-            }
-            catch (Exception $e) {
-                $report[] = array(
-                    "type" => "danger",
-                    "msg" => "Table 'link' not created : ".$e->getMessage());
-            }
+            $report[] = array(
+                "type" => "success",
+                "msg" => "DB version : ".$current_version
+            );
         }
 
         if (!$nb_errors) {

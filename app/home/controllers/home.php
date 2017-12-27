@@ -18,7 +18,7 @@ class HomeControllersHome {
             return $template->render("home/views/home.twig", array());
         }
 
-        $path_db = __DIR__."/../../app/db/db.sqlite";
+        $path_db = __DIR__."/../../db/db.sqlite";
         if (!is_file($path_db)) {
             redirect("/install");
         }

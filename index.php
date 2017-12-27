@@ -12,7 +12,7 @@ require_once __DIR__.'/app/functions.php';
 require_once __DIR__.'/vendor/autoload.php';
 
 // routing
-$dispatcher = FastRoute\simpleDispatcher(function(ClassesRoutecollection $r) {
+$dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $path_db = __DIR__."/app/db/db.sqlite";
 
     $r->addRoute("GET", "/", array("HomeControllersHome", "home"));
@@ -33,22 +33,22 @@ $dispatcher = FastRoute\simpleDispatcher(function(ClassesRoutecollection $r) {
             $r->addRoute("GET", "/preferences", array("HomeControllersHome", "preferences"));
 
             // RSS
-            $r->addGroup('/rss', function (ClassesRoutecollection $r) {
+            $r->addGroup('/rss', function (FastRoute\RouteCollector $r) {
                 $r->addRoute("GET", "/home", array("RssControllersFeeds", "home"));
                 $r->addRoute("GET", "/feeds", array("RssControllersFeeds", "home"));
                 $r->addRoute("POST", "/ajax_flow", array("RssControllersFeeds", "ajax"));
                 $r->addRoute("GET", "/debug/{id:\d+}", array("ControllersCron", "debug"));
 
                 // Config
-                $r->addGroup('/config', function (ClassesRoutecollection $r) {
+                $r->addGroup('/config', function (FastRoute\RouteCollector $r) {
                     $r->addRoute('GET', '', array("RssControllersFeeds", "config"));
                     $r->addRoute('GET', '/export.opml', array("RssControllersFeeds", "export"));
                     $r->addRoute('POST', '/import', array("RssControllersFeeds", "import"));
-                    $r->addGroup('/category', function (ClassesRoutecollection $r) {
+                    $r->addGroup('/category', function (FastRoute\RouteCollector $r) {
                         $r->addRoute("GET", "/edit/[{id}]", array("RssControllersFeeds", "ajax_edit_category"));
                         $r->addRoute("POST", "/edit", array("RssControllersFeeds", "ajax_post_category"));
                     });
-                    $r->addGroup("/subscription", function (ClassesRoutecollection $r) {
+                    $r->addGroup("/subscription", function (FastRoute\RouteCollector $r) {
                         $r->addRoute("POST", "/edit", array("RssControllersFeeds", "ajax_post_subscription"));
                         $r->addRoute("GET", "/edit/{sub_id}", array("RssControllersFeeds", "edit_subscription"));
                         $r->addRoute("GET", "/move/{sub_id}/[{cat_id}]", array("RssControllersFeeds", "move_subscription"));
@@ -56,7 +56,7 @@ $dispatcher = FastRoute\simpleDispatcher(function(ClassesRoutecollection $r) {
                 });
             });
 
-            $r->addGroup("/links", function(ClassesRoutecollection $r) {
+            $r->addGroup("/links", function(FastRoute\RouteCollector $r) {
                 $r->addRoute("GET", "", array("LinksControllersHome", "home"));
                 $r->addRoute(array("GET", "POST"), "/edit/[{id}]", array("LinksControllersHome", "edit"));
                 $r->addRoute("GET", "/import", array("LinksControllersFile", "import"));
