@@ -90,6 +90,9 @@ class LinksControllersInfo {
             if (in_array($last_point, array("gif", "mp4"))) {
                 $data->type ="video";
                 $data->title = "Video";
+                if (!$data->img && $last_point == "gif") {
+                    $data->img = $url;
+                }
             }
         }
 
