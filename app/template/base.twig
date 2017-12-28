@@ -23,8 +23,8 @@
                     <a class="uk-navbar-item uk-logo" href="{{ prefix }}/" title="alpha" style="color:#688bb9; font-size:2.5em;">𝛂</a>
                     <ul class="uk-navbar-nav">
                         {% if user %}
-                            <li {% if route == '/rss/home' or route == "/rss/config" %}class="uk-active"{% endif %}><a href="{{ prefix }}/rss/home"><i class="icofont icofont-rss-feed"></i><span class="uk-visible@s">&nbsp;RSS</span></a></li>
-                            <li {% if route == '/links' %}class="uk-active"{% endif %}><a href="{{ prefix }}/links"><i class="icofont icofont-link"></i><span class="uk-visible@s">&nbsp;Links</span></a></li>
+                            <li {% if '/rss' in route %}class="uk-active"{% endif %}><a href="{{ prefix }}/rss/home"><i class="icofont icofont-rss-feed"></i><span class="uk-visible@s">&nbsp;RSS</span></a></li>
+                            <li {% if '/links' in route %}class="uk-active"{% endif %}><a href="{{ prefix }}/links"><i class="icofont icofont-link"></i><span class="uk-visible@s">&nbsp;Links</span></a></li>
                         {% endif %}
                         <li id="empty_nav"></li>
                     </ul>

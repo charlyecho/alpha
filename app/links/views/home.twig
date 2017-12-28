@@ -9,11 +9,11 @@
             <input type="hidden" id="page" name="start" value="{{ start }}" onchange="this.form.submit();" />
             <input type="hidden" id="gallery" name="gallery" value="{{ gallery }}" onchange="this.form.submit();" />
             <div uk-grid>
-                <div class="uk-width-1-5">
+                <div class="uk-width-1-3">
                     <input type="text" name="search" value="{{ search }}" class="uk-input" placeholder="Search for text, tag ..." />
                 </div>
-                <div class="uk-width-1-5 uk-padding-remove">
-                    <select name="type" class="uk-select">
+                <div class="uk-width-1-3 uk-padding-remove">
+                    <select name="type" class="uk-select" style="width:32%;">
                         <option value="">- All types</option>
                         <option value="link" {{ type == "link" ? "selected" : null }}>Link</option>
                         <option value="image" {{ type == "image" ? "selected" : null }}>Image</option>
@@ -21,25 +21,22 @@
                         <option value="video" {{ type == "video" ? "selected" : null }}>Video</option>
                         <option value="article" {{ type == "article" ? "selected" : null }}>Article</option>
                     </select>
-                </div>
-                <div class="uk-width-1-5 uk-padding-remove">
-                    <select name="nsfw" class="uk-select">
-                        <option value="">- Nsfw</option>
-                        <option value="1" {{ nsfw == 1 ? "selected" : null }}>Only NSFW</option>
-                        <option value="2" {{ nsfw == 2 ? "selected" : null }}>Only SFW</option>
+                    <select name="nsfw" class="uk-select" style="width:32%;">
+                        <option value="">NSFW and SFW</option>
+                        <option value="2" {{ nsfw == 2 ? "selected" : null }}>SFW Only</option>
+                        <option value="1" {{ nsfw == 1 ? "selected" : null }}>NSFW Only</option>
                     </select>
-                </div>
-                <div class="uk-width-1-5 uk-padding-remove">
-                    <select name="private" class="uk-select">
+                    <select name="private" class="uk-select" style="width:32%;">
                         <option value="">- Private</option>
                         <option value="1" {{ private == 1 ? "selected" : null }}>Only private</option>
                         <option value="2" {{ private == 2 ? "selected" : null }}>Only public</option>
                     </select>
                 </div>
-                <div class="uk-width-1-5 uk-padding-remove">
+                <div class="uk-width-1-3 uk-padding-remove">
                     <button class="uk-button uk-button-primary"><i class="icofont icofont-refresh"></i></button>
                     <button type="button" class="uk-button uk-button-default" onclick="$('#gallery').val(Math.abs(parseInt($('#gallery').val())-1)).change();"> <i class="icofont icofont-image"></i> </button>
                     <a href="javascript:(function(){var%20url%20=%20location.href;var%20title%20=%20document.title%20||%20url;window.open('{{ url }}/links/edit/?dialog=1&amp;url='%20+%20encodeURIComponent(url)+'&amp;title='%20+%20encodeURIComponent(title)+'&amp;source=bookmarklet','_blank','menubar=no,height=800,width=600,toolbar=no,scrollbars=yes,status=no,dialog=1');})();" class="uk-button uk-button-default uk-visible@m"> <i class="icofont icofont-share"></i> </a>
+                    <a class="uk-button uk-button-default" href="{{ prefix }}/links/edit/"><i class="icofont icofont-plus"></i></a>
                 </div>
             </div>
         </form>
