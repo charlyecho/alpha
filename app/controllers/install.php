@@ -19,7 +19,6 @@ class ControllersInstall {
             $sql = "UPDATE app SET param = 'db_version', val=".$db->quote($v);
             $s = $db->prepare($sql);
             $s->execute();
-
             return $v;
         }
 

@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
-        <head>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1"/>
-            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-            <meta name="theme-color" content="#688bb9" />
-            <link rel="shortcut icon" type="image/png" href="{{ prefix }}/app/template/style/images/favicon.png" />
-            <link rel="apple-touch-icon" href="{{ prefix }}/app/template/style/images/favicon.png" />
-            <meta name="msapplication-config" content="none" />
-            <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="theme-color" content="#688bb9" />
+        <link rel="shortcut icon" type="image/png" href="{{ prefix }}/app/template/style/images/favicon.png" />
+        <link rel="apple-touch-icon" href="{{ prefix }}/app/template/style/images/favicon.png" />
+        <meta name="msapplication-config" content="none" />
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
 
-            {% block head %}
-                <title>{% block title %}{% endblock %}</title>
-            {% endblock %}
+        {% block head %}
+            <title>{% block title %}{% endblock %}</title>
+        {% endblock %}
 
 
-        </head>
+    </head>
     <body>
         {% if dialog != 1 %}
             <nav class="uk-navbar-container" uk-navbar uk-sticky style="box-shadow: 0 0 5px grey">
@@ -42,7 +42,7 @@
         {% endif %}
 
 
-        <div id="content">
+        <div id="content" uk-height-viewport="offset-top: true" class="{% if user and user.background_url %}bg{% endif %}">
             {% block content %}{% endblock %}
         </div>
 
@@ -62,19 +62,35 @@
             };
 
             {% for m in messages %}
-                Notification.requestPermission(function (permission) {
-                    if (Notification.permission === "granted") {
-                        new Notification('{{ m }}');
-                    }
-                });
+            Notification.requestPermission(function (permission) {
+                if (Notification.permission === "granted") {
+                    new Notification('{{ m }}');
+                }
+            });
 
-                UIkit.notification({
-                    message: '{{ m }}',
-                    status: 'primary'
-                });
+            UIkit.notification({
+                message: '{{ m }}',
+                status: 'primary'
+            });
             {% endfor %}
 
         </script>
+
+        {% if user and user.background_url %}
+            <style>
+                #content {
+                    background-image: url('{{ user.background_url }}');
+                    background-size: cover;
+                    background-attachment: fixed;
+                    background-position: center center;
+                }
+
+                #content.bg .uk-container {
+                    background-color: white;
+                }
+            </style>
+        {% endif %}
+
         {% block script %}{% endblock %}
     </body>
 </html>

@@ -74,5 +74,10 @@ return array(
                   active INTEGER DEFAULT 1,
                   tags TEXT
                   );",
+    ),
+    "0.9" => array(
+        "ALTER TABLE user ADD background_url TEXT NULL;
+            ALTER TABLE user ADD use_https_proxy INT NULL;
+            ALTER TABLE user ADD share_link TEXT NULL;",
     )
 );

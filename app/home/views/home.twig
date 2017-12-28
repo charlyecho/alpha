@@ -3,12 +3,37 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-    <div uk-grid>
-        <div class="uk-width-1-4@s uk-visible@s" id="tree">
+    <div class="uk-margin">
+        <div class="uk-flex uk-flex-center uk-flex-row">
             <div>
+                <div class="uk-card uk-card-default">
+                    <div class="uk-card-title uk-text-center">
+                        <h3 class="uk-card-title uk-margin-remove-bottom" style="font-size:2em;">
+                            <a href="{{ prefix }}/links">
+                                <i class="icofont icofont-external-link"></i>
+                            </a>
+                        </h3>
+                    </div>
+                    <div class="uk-card-body">
+                        <p class="uk-text-lead uk-text-center">{{ nb_links|number_format(0,'.', " ") }}</p>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="uk-width-3-4@s uk-width-4-4 uk-padding-remove@s" uk-height-viewport="offset-top: true">
+
+            <div class="uk-margin-left">
+                <div class="uk-card uk-card-default">
+                    <div class="uk-card-title uk-text-center">
+                        <h3 class="uk-card-title uk-margin-remove-bottom" style="font-size:2em;">
+                            <a href="{{ prefix }}/rss/home">
+                                <i class="icofont icofont-rss-feed"></i>
+                            </a>
+                        </h3>
+                    </div>
+                    <div class="uk-card-body">
+                        <p class="uk-text-lead uk-text-center">{{ nb_unread}}</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}
