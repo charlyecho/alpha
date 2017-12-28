@@ -89,8 +89,9 @@
     <script>
         var info = function() {
             var url = $("input[name=url]").val();
+            //@TODO : fix this
             $.ajax({
-                url: '{{ prefix }}/links/info?url='+encodeURI(url),
+                url: '{{ prefix }}/links/info?url='+encodeURIComponent(url),
                 success: function(data) {
                     var _data = JSON.parse(data);
                     $('input[name=img]').val(_data.img).change();

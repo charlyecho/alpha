@@ -23,6 +23,7 @@ class LinksControllersInfo {
         // dom
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_HEADER, 1);
         $response = curl_exec($ch);
 
@@ -46,6 +47,7 @@ class LinksControllersInfo {
             $html = @$domd->loadHTML($body);
             if ($html === true) {
                 // title
+
                 $title = $domd->getElementsByTagName("title")->item(0)->textContent;
                 $data->title = $title;
 
