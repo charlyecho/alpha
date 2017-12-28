@@ -1,0 +1,39 @@
+{% extends "template/base.twig" %}
+
+{% block title %}Preferences{% endblock %}
+
+{% block content %}
+    <div class="uk-container">
+        <form method="post">
+            <h1>Preferences</h1>
+
+            <p>
+                <label>
+                    Background image url
+                    <input type="text" name="background_url" value="{{ user.background_url }}" class="uk-input" placeholder="https:// ... " />
+                </label>
+            </p>
+
+            <p>
+                <label>
+                    <input type="checkbox" name="use_https_proxy" value="1" {{ user.use_https_proxy ? 'checked' : '' }} class="uk-checkbox" />
+                    Proxy HTTPS images
+                </label>
+            </p>
+
+            <p>Menu BG color</p>
+
+            <p>
+                <label>
+                    Share link (use $1 for link url replacement)<br/>
+                    example : https://domain.tpl/sub/test.php?share=1&url=$1
+                    <input type="text" name="share_link" value="{{ user.share_link }}" class="uk-input" placeholder="..." />
+                </label>
+            </p>
+
+            <p class="uk-text-center">
+                <button class="uk-button uk-button-primary">Save</button>
+            </p>
+        </form>
+    </div>
+{% endblock %}

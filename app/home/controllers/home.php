@@ -45,7 +45,18 @@ class HomeControllersHome {
     }
 
     public static function preferences() {
+        $user = HelpersUser::getCurrent();
+
+        if (!empty($_POST)) {
+            $background_url = isset($_POST["background_url"]) ? $_POST["background_url"] : null;
+            $db = ClassesDb::getInstance();
+            $sql = "UPDATE user SET background_url = ".$db->quote($background_url);
+            $sql.= " WHERE id = ".$db->quote($user->id);
+            $s = $db->prepare($sql);
+            $s->execute();
+        }
+
         $template = ClassesTwig::getInstance();
-        return $template->render("template/views/preferences.twig", array());
+        return $template->render("home/views/preferences.twig", array());
     }
 }

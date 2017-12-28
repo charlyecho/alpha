@@ -30,7 +30,7 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
         $r->addRoute("GET", "/update", array("ControllersCron", "update"));
 
         if (HelpersUser::getCurrent()) {
-            $r->addRoute("GET", "/preferences", array("HomeControllersHome", "preferences"));
+            $r->addRoute(array("GET", "POST"), "/preferences", array("HomeControllersHome", "preferences"));
 
             // RSS
             $r->addGroup('/rss', function (FastRoute\RouteCollector $r) {
