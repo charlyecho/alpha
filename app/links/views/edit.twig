@@ -42,7 +42,7 @@
                         <button type="button" class="uk-button uk-button-{{ link.is_private ? "primary" : "default" }}" onclick="$(this).toggleClass('uk-button-primary', 'uk-button-default'); $('input[name=is_private]').val(Math.abs(parseInt($('input[name=is_private]').val()))-1) ">
                             <i class="icofont icofont-key"></i>&nbsp;
                         </button>
-                        <select class="uk-select" name="type" style="width:100px;">
+                        <select class="uk-select" name="type" style="width:100px;" onchange="check();">
                             <option value="link" {{ link.type == "link" ? "selected" : null }}>Link</option>
                             <option value="image" {{ link.type == "image" ? "selected" : null }}>Image</option>
                             <option value="audio" {{ link.type == "audio" ? "selected" : null }}>Audio</option>
@@ -89,23 +89,36 @@
     <script>
         var info = function() {
             var url = $("input[name=url]").val();
-            //@TODO : fix this
             $.ajax({
                 url: '{{ prefix }}/links/info?url='+encodeURIComponent(url),
                 success: function(data) {
                     var _data = JSON.parse(data);
-                    $('input[name=img]').val(_data.img).change();
-                    $('input[name=title]').val(_data.title);
+                    var img = $('input[name=img]');
+                    if (!img.val()) {
+                        img.val(_data.img).change();
+                    }
+                    var title = $('input[name=title]');
+                    if (!title.val()) {
+                        title.val(_data.title);
+                    }
                     $('select[name=type]').val(_data.type);
                     UIkit.notification('Blank data filled');
                 }
             });
         };
 
+        var check = function() {
+            if ($('select[name=type]').val() === "article") {
+                $('textarea').attr('rows', 10);
+            }
+        };
+
         $(document).ready(function() {
             {% if link.id == "" and link.url %}
             info();
             {% endif %}
+
+            check();
         });
 
     </script>

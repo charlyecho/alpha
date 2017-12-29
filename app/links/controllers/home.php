@@ -39,7 +39,6 @@ class LinksControllersHome {
         $url = get($_GET, "url");
         $db = ClassesDb::getInstance();
 
-
         if (!empty($_POST)) {
             LinksHelpersLinks::edit($_POST);
         }
@@ -79,6 +78,11 @@ class LinksControllersHome {
                     $link = $_link;
                 }
             }
+        }
+
+
+        if ($link->type == "article" && $id) {
+            $link->url = "#$id";
         }
 
 
