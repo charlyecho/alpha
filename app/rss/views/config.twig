@@ -41,7 +41,7 @@
 
         <hr/>
 
-        <div>
+        <div class="uk-flex uk-flex-center uk-flex-wrap">
             {% for _cat in categories  %}
                 <div class="cat droppable cat_{{ _cat.id }}" data-id="{{ _cat.id }}">
                     {% if _cat.id %}
@@ -80,6 +80,7 @@
             border:solid 1px #e9e9e9;
             vertical-align:top;
             display: inline-block;
+            background-color: white;
         }
     </style>
 

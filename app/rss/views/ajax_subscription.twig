@@ -66,9 +66,9 @@
         {% if (subscription.id) %}
             <hr/>
             <h3>Debug</h3>
-            <a href="{{ prefix }}/debug/1?id={{ subscription.id }}" onclick="return ajaxTest(this);" class="uk-button uk-button-primary">Need update ?</a>
-            <a href="{{ prefix }}/debug/2?id={{ subscription.id }}" onclick="return ajaxTest(this);" class="uk-button uk-button-primary">get Data</a>
-            <a href="{{ prefix }}/debug/3?id={{ subscription.id }}" onclick="return ajaxTest(this);" class="uk-button uk-button-primary">Parse</a>
+            <a href="{{ prefix }}/rss/debug/1?id={{ subscription.id }}" onclick="return ajaxTest(this);" class="uk-button uk-button-primary">Need update ?</a>
+            <a href="{{ prefix }}/rss/debug/2?id={{ subscription.id }}" onclick="return ajaxTest(this);" class="uk-button uk-button-primary">get Data</a>
+            <a href="{{ prefix }}/rss/debug/3?id={{ subscription.id }}" onclick="return ajaxTest(this);" class="uk-button uk-button-primary">Parse</a>
 
             <div id="result_ajax_sub"></div>
         {% endif %}

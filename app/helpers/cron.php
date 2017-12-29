@@ -498,6 +498,11 @@ class HelpersCron {
                                 $thumbnail = $_enc;
                                 break;
                             }
+                            if (in_array($ext, array("mp3", "ogg", "wav"))) {
+                                if (strpos($_item->text, $_enc) === false) {
+                                    $_item->text .= "<audio style='width:100%;' controls src='".$_enc."'></audio>";
+                                }
+                            }
                         }
                     }
                 }

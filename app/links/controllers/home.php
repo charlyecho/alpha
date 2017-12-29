@@ -15,6 +15,10 @@ class LinksControllersHome {
 
         $list = LinksHelpersLinks::getList($user->id, $search, $type, $nsfw, $private, $gallery, $start*40);
 
+        foreach($list as $l) {
+            $l->_tags = array_filter(explode(" ", $l->tags));
+        }
+
         $template = ClassesTwig::getInstance();
         return $template->render("links/views/home.twig", array(
             "links" => $list,

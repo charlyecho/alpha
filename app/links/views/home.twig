@@ -60,38 +60,13 @@
                     {% endfor %}
                 </div>
             {% else %}
-                <table class="uk-table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th colspan="2"></th>
-                            <th>img</th>
-                            <th>title</th>
-                            <th>tags</th>
-                            <th>com.</th>
-                            <th>creation_date</th>
-                            <th>type</th>
-                            <th>active</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for l in links %}
-                            <tr class="{{ l.is_nsfw ? "nsfw" : ""}} {{ l.is_private ? "private" : null}}">
-                                <td><a href="{{ prefix }}/links/edit/{{ l.id }}">{{ l.id }}</a></td>
-                                <td>{{ l.is_nsfw ? "<i class=\"icofont icofont-warning\"></i>" : ""}}</td>
-                                <td>{{ l.is_private ? "<i class=\"icofont icofont-key\"></i>" : null}}</td>
-                                <td>{% if l.img %}<div uk-lightbox><a href="{{ l.img }}"><i class="icofont icofont-image"></i></a></div>{% endif %}</td>
-                                <td><a target="_blank" rel="noopener noreferer nofollow" href="{{ l.url }}">{{ l.title ? l.title : "no_title" }}</a></td>
-                                <td>{{ l.tags }}</td>
-                                <td>{{ l.content ? "<i class=\"icofont icofont-comment\"></i>" : null}}</td>
-                                <td>{{ l.creation_date }}</td>
-                                <td>{{ l.type }}</td>
-                                <td>{{ l.active }}</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-
-                </table>
+                <ul class="uk-list uk-list-divider">
+                    {% for l in links %}
+                        <li>
+                            <a href="{{ prefix }}/links/edit/{{ l.id }}"><i class="icofont icofont-edit"></i></a> [{{ l.type }}] <a href="{{ l.url }}" target="_blank">{{ l.title ? l.title : "no_title" }}</a> {% for t in l._tags %}<span class="uk-margin-left uk-label">{{ t }}</span>{% endfor %}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
 
                 <style>
                     tbody tr.nsfw.private {
