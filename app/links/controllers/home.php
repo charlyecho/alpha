@@ -7,7 +7,7 @@ class LinksControllersHome {
         $type = get($_GET, "type");
         $nsfw = get($_GET, "nsfw", 2);
         $search = get($_GET, "search");
-        $private = get($_GET, "private", 2);
+        $private = get($_GET, "private", 0);
         $start = get($_GET, "start", 0);
         $gallery = get($_GET, "gallery", 0);
 

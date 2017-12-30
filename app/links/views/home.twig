@@ -21,15 +21,15 @@
                             <option value="video" {{ type == "video" ? "selected" : null }}>Video</option>
                             <option value="article" {{ type == "article" ? "selected" : null }}>Article</option>
                         </select>
+                        <select name="private" class="uk-select" style="width:32%;">
+                            <option value="">Pub & Priv</option>
+                            <option value="1" {{ private == 1 ? "selected" : null }}>Only private</option>
+                            <option value="2" {{ private == 2 ? "selected" : null }}>Only public</option>
+                        </select>
                         <select name="nsfw" class="uk-select" style="width:32%;">
                             <option value="">NSFW and SFW</option>
                             <option value="2" {{ nsfw == 2 ? "selected" : null }}>SFW Only</option>
                             <option value="1" {{ nsfw == 1 ? "selected" : null }}>NSFW Only</option>
-                        </select>
-                        <select name="private" class="uk-select" style="width:32%;">
-                            <option value="">- Private</option>
-                            <option value="1" {{ private == 1 ? "selected" : null }}>Only private</option>
-                            <option value="2" {{ private == 2 ? "selected" : null }}>Only public</option>
                         </select>
                     </div>
                     <div class="uk-width-1-3 uk-padding-remove">
@@ -62,7 +62,7 @@
             {% else %}
                 <ul class="uk-list uk-list-divider">
                     {% for l in links %}
-                        <li>
+                        <li {{ (l.type == "image" or (l.type == "video" and l.url|slice(-3) == "gif")) ? 'uk-lightbox' : '' }}>
                             <a href="{{ prefix }}/links/edit/{{ l.id }}"><i class="icofont icofont-edit"></i></a>
                             {% if l.type == "video" %}
                                 <i class="icofont icofont-video"></i>
@@ -75,7 +75,7 @@
                             {% else %}
                                 <i class="icofont icofont-link"></i>
                             {% endif %}
-                            <a href="{{ l.url }}" target="_blank">{{ l.title ? l.title : "no_title" }}</a> {% for t in l._tags %}<span class="uk-margin-left uk-label">{{ t }}</span>{% endfor %}</a>
+                            <a href="{{ l.url }}" target="_blank">{{ l.title ? l.title : "no_title" }}</a> {% if l.is_nsfw %}<i style="color:#e85cd3;" class="icofont icofont-close-circled"></i>{% endif %} {% if l.is_private %}<i class="icofont icofont-key"></i>{% endif %} {% for t in l._tags %}<span class="uk-margin-left uk-label">{{ t }}</span>{% endfor %}</a>
                         </li>
                     {% endfor %}
                 </ul>
