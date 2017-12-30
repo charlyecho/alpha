@@ -103,8 +103,8 @@
             font-size:2em;
         }
 
-        #results article {
-            box-shadow: 0 0 5px grey;
+        #results article.current {
+            border:solid 1px black;
         }
 
         .status_read i, .status_favorite i {
@@ -183,6 +183,14 @@
             UIkit.modal('#modal_flow').show();
         };
 
+        var scrollAndUpdate = function() {
+            $('#results article').removeClass('current');
+            var element_offset = $("#item_" + current_item).offset().top;
+            $(document).scrollTop(element_offset - 100);
+            $('#item_'+current_item).addClass('current');
+
+        };
+
         var prev = function() {
             if (current_item) {
                 var _current_id = $('#item_'+current_item);
@@ -197,8 +205,7 @@
 
             // scroll to
             if (current_item) {
-                var element_offset = $("#item_" + current_item).offset().top;
-                $(document).scrollTop(element_offset - 100);
+                scrollAndUpdate();
             }
 
             return current_item;
@@ -226,8 +233,7 @@
 
             // scroll to
             if (current_item) {
-                var element_offset = $("#item_" + current_item).offset().top;
-                $(document).scrollTop(element_offset - 100);
+                scrollAndUpdate();
             }
 
             return current_item;

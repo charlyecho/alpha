@@ -63,7 +63,19 @@
                 <ul class="uk-list uk-list-divider">
                     {% for l in links %}
                         <li>
-                            <a href="{{ prefix }}/links/edit/{{ l.id }}"><i class="icofont icofont-edit"></i></a> [{{ l.type }}] <a href="{{ l.url }}" target="_blank">{{ l.title ? l.title : "no_title" }}</a> {% for t in l._tags %}<span class="uk-margin-left uk-label">{{ t }}</span>{% endfor %}</a>
+                            <a href="{{ prefix }}/links/edit/{{ l.id }}"><i class="icofont icofont-edit"></i></a>
+                            {% if l.type == "video" %}
+                                <i class="icofont icofont-video"></i>
+                            {% elseif l.type == "audio" %}
+                                <i class="icofont icofont-audio"></i>
+                            {% elseif l.type == "image" %}
+                                <i class="icofont icofont-picture"></i>
+                            {% elseif l.type == "article" %}
+                                <i class="icofont icofont-pen"></i>
+                            {% else %}
+                                <i class="icofont icofont-link"></i>
+                            {% endif %}
+                            <a href="{{ l.url }}" target="_blank">{{ l.title ? l.title : "no_title" }}</a> {% for t in l._tags %}<span class="uk-margin-left uk-label">{{ t }}</span>{% endfor %}</a>
                         </li>
                     {% endfor %}
                 </ul>
