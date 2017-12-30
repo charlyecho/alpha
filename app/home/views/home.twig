@@ -3,35 +3,33 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-    <div class="uk-margin">
-        <div class="uk-flex uk-flex-center uk-flex-row">
-            <div>
-                <div class="uk-card uk-card-default uk-card-body">
-                    <div class="uk-card-title uk-text-center">
-                        <h3 class="uk-card-title uk-margin-remove-bottom" style="font-size:2em;">
-                            <a href="{{ prefix }}/links">
-                                <i class="icofont icofont-external-link"></i>
-                            </a>
-                        </h3>
-                    </div>
-                    <div class="uk-card-body">
-                        <p class="uk-text-lead uk-text-center">{{ nb_links|number_format(0,'.', " ") }}</p>
-                    </div>
+    <div uk-grid >
+        <div class="uk-margin-top">
+            <div class="uk-card uk-card-default">
+                <div class="uk-card-title uk-text-center">
+                    <h3 class="uk-card-title uk-margin-remove-bottom" style="font-size:2em;">
+                        <a href="{{ prefix }}/rss/home">
+                            <i class="icofont icofont-rss-feed"></i>
+                        </a>
+                    </h3>
+                </div>
+                <div class="uk-card-body">
+                    <p class="uk-text-lead uk-text-center">{{ nb_unread}}</p>
                 </div>
             </div>
+        </div>
 
-            <div class="uk-margin-left">
-                <div class="uk-card uk-card-default uk-card-body">
-                    <div class="uk-card-title uk-text-center">
-                        <h3 class="uk-card-title uk-margin-remove-bottom" style="font-size:2em;">
-                            <a href="{{ prefix }}/rss/home">
-                                <i class="icofont icofont-rss-feed"></i>
-                            </a>
-                        </h3>
-                    </div>
-                    <div class="uk-card-body">
-                        <p class="uk-text-lead uk-text-center">{{ nb_unread}}</p>
-                    </div>
+        <div class="uk-margin-top">
+            <div class="uk-card uk-card-default">
+                <div class="uk-card-title uk-text-center">
+                    <h3 class="uk-card-title uk-margin-remove-bottom" style="font-size:2em;">
+                        <a href="{{ prefix }}/links">
+                            <i class="icofont icofont-external-link"></i>
+                        </a>
+                    </h3>
+                </div>
+                <div class="uk-card-body">
+                    <p class="uk-text-lead uk-text-center">{{ nb_links|number_format(0,'.', " ") }}</p>
                 </div>
             </div>
         </div>
