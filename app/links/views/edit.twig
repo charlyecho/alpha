@@ -73,7 +73,7 @@
                 {% if link.id %}
                     <button name="del" onclick="return confirm('Delete this link ?');" value="1" class="uk-button uk-button-danger">delete</button>
                 {% endif %}
-                <a onclick="{{ dialog ? "window.close(); return false;" : "" }}" href="/links" class="uk-button uk-button-default">Close</a>
+                <a onclick="{{ dialog ? "window.close(); return false;" : "" }}" href="{{ prefix }}/links" class="uk-button uk-button-default">Close</a>
             </div>
         </form>
     </div>

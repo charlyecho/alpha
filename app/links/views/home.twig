@@ -42,6 +42,12 @@
         <div>
 
             <p class="uk-text-center">
+                {% if start > 0 %}
+                    <a class="uk-button uk-button-default" onclick="$('#page').val(0).change();">0</a>
+                    <a class="uk-button uk-button-default" onclick="$('#page').val({{ start-1 }}).change();"> < </a>
+                {% endif %}
+                <a class="uk-button uk-button-primary" onclick="$('#page').val({{ start }}).change();">{{ start }}</a>
+
                 <a class="uk-button uk-button-default" onclick="$('#page').val(parseInt($('#page').val())+1).change();"> > </a>
             </p>
 
@@ -100,7 +106,7 @@
             {% else %}
                 <ul class="uk-list uk-list-divider">
                     {% for l in links %}
-                        <li>
+                        <li id="link_{{ l.id }}">
                             <a href="{{ prefix }}/links/edit/{{ l.id }}"><i class="icofont icofont-edit"></i></a>
                             <span {{ (l.type == "image" or (l.type == "video" and l.url|slice(-3) == "gif")) ? 'uk-lightbox' : '' }}>
                                 {% if l.type == "video" %}
