@@ -83,12 +83,6 @@
                         _img_{{ l.id }}.onload = function() {
                             var _img = $(this);
                             var target = $('#link_{{ l.id }}');
-                            if (!target.css('width')) {
-                                $('#link_{{ l.id }}').css({
-                                    'width':  ((_img.get(0).naturalWidth)*200/_img.get(0).naturalHeight)+'px',
-                                    'height':  '200px'
-                                });
-                            }
 
                             $('#link_{{ l.id }} div').css({
                                 'background-image': 'url('+_img_{{ l.id }}.src+')'
