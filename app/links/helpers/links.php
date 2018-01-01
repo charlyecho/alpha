@@ -109,7 +109,7 @@ class LinksHelpersLinks {
             else {
                 ClassesSession::addMessage("Link succefully edited");
             }
-            redirect("/links");
+            redirect("/links".(($id && !$del) ? "#$id" : null));
         }
 
     }
