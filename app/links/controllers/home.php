@@ -4,16 +4,23 @@ class LinksControllersHome {
     public static function home() {
         $user = HelpersUser::getCurrent();
 
+        $limit = 40;
         $type = get($_GET, "type");
         $nsfw = get($_GET, "nsfw", 2);
         $search = get($_GET, "search");
         $private = get($_GET, "private", 0);
         $start = get($_GET, "start", 0);
         $gallery = get($_GET, "gallery", 0);
+        $_list = get($_GET, "list", "l");
+
+        if (in_array($_list, array("g", "s"))) {
+            $type = "image";
+            $limit = 100;
+        }
 
         $url = "http://".$_SERVER["HTTP_HOST"].(isset($_SERVER["DOCUMENT_URI"]) ? str_replace("/index.php", "", $_SERVER["DOCUMENT_URI"]) : null);
 
-        $list = LinksHelpersLinks::getList($user->id, $search, $type, $nsfw, $private, $gallery, $start*40);
+        $list = LinksHelpersLinks::getList($user->id, $search, $type, $nsfw, $private, $_list, $start*$limit, $limit);
 
         foreach($list as $l) {
             $l->_tags = array_filter(explode(" ", $l->tags));
@@ -27,7 +34,7 @@ class LinksControllersHome {
             "start" => $start,
             "type" => $type,
             "search" => $search,
-            "gallery" => $gallery,
+            "list" => $_list,
             "url" => $url
         ));
     }

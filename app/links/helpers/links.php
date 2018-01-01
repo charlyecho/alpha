@@ -7,7 +7,7 @@
  */
 
 class LinksHelpersLinks {
-    public static function getList($user_id, $search = null, $type = null, $nsfw = null, $private = null, $gallery = null, $start = 0) {
+    public static function getList($user_id, $search = null, $type = null, $nsfw = null, $private = null, $gallery = null, $start = 0, $limit = 40) {
         $db = ClassesDb::getInstance();
         $sql = "SELECT * FROM link WHERE user_id = ".$db->quote($user_id);
         if ($search) {
@@ -17,7 +17,7 @@ class LinksHelpersLinks {
         if ($type) {
             $sql .= " AND type = ".$db->quote($type);
         }
-        if ($gallery) {
+        if (in_array($gallery, array("g", "s"))) {
             $sql .= " AND img != ''";
         }
         if ($nsfw == 1) {
@@ -32,7 +32,7 @@ class LinksHelpersLinks {
         if ($private == 2) {
             $sql .= " AND is_private = 0";
         }
-        $sql .= " ORDER BY creation_date DESC LIMIT ".(int) $start.", 40";
+        $sql .= " ORDER BY creation_date DESC LIMIT ".(int) $start.", $limit";
         $s = $db->prepare($sql);
         $s->execute();
         return $s->fetchAll();

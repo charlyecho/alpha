@@ -7,37 +7,34 @@
         <div uk-sticky="offset:80">
             <form method="get">
                 <input type="hidden" id="page" name="start" value="{{ start }}" onchange="this.form.submit();" />
-                <input type="hidden" id="gallery" name="gallery" value="{{ gallery }}" onchange="this.form.submit();" />
-                <div uk-grid>
-                    <div class="uk-width-1-3">
-                        <input type="text" name="search" value="{{ search }}" class="uk-input" placeholder="Search for text, tag ..." />
-                    </div>
-                    <div class="uk-width-1-3 uk-padding-remove">
-                        <select name="type" class="uk-select" style="width:32%;">
-                            <option value="">- All types</option>
-                            <option value="link" {{ type == "link" ? "selected" : null }}>Link</option>
-                            <option value="image" {{ type == "image" ? "selected" : null }}>Image</option>
-                            <option value="audio" {{ type == "audio" ? "selected" : null }}>Audio</option>
-                            <option value="video" {{ type == "video" ? "selected" : null }}>Video</option>
-                            <option value="article" {{ type == "article" ? "selected" : null }}>Article</option>
-                        </select>
-                        <select name="private" class="uk-select" style="width:32%;">
-                            <option value="">Pub & Priv</option>
-                            <option value="1" {{ private == 1 ? "selected" : null }}>Only private</option>
-                            <option value="2" {{ private == 2 ? "selected" : null }}>Only public</option>
-                        </select>
-                        <select name="nsfw" class="uk-select" style="width:32%;">
-                            <option value="">NSFW and SFW</option>
-                            <option value="2" {{ nsfw == 2 ? "selected" : null }}>SFW Only</option>
-                            <option value="1" {{ nsfw == 1 ? "selected" : null }}>NSFW Only</option>
-                        </select>
-                    </div>
-                    <div class="uk-width-1-3 uk-padding-remove">
-                        <button class="uk-button uk-button-primary"><i class="icofont icofont-refresh"></i></button>
-                        <button type="button" class="uk-button uk-button-default" onclick="$('#gallery').val(Math.abs(parseInt($('#gallery').val())-1)).change();"> <i class="icofont icofont-image"></i> </button>
-                        <a href="javascript:(function(){var%20url%20=%20location.href;var%20title%20=%20document.title%20||%20url;window.open('{{ url }}/links/edit/?dialog=1&amp;url='%20+%20encodeURIComponent(url)+'&amp;title='%20+%20encodeURIComponent(title)+'&amp;source=bookmarklet','_blank','menubar=no,height=800,width=600,toolbar=no,scrollbars=yes,status=no,dialog=1');})();" class="uk-button uk-button-default uk-visible@m"> <i class="icofont icofont-share"></i> </a>
-                        <a class="uk-button uk-button-default" href="{{ prefix }}/links/edit/"><i class="icofont icofont-plus"></i></a>
-                    </div>
+                <div>
+                    <input type="text" name="search" value="{{ search }}" class="uk-input" placeholder="Search for text, tag ..." style="width:100px;" />
+                    <select name="type" class="uk-select" style="width:100px;">
+                        <option value="">- All types</option>
+                        <option value="link" {{ type == "link" ? "selected" : null }}>Link</option>
+                        <option value="image" {{ type == "image" ? "selected" : null }}>Image</option>
+                        <option value="audio" {{ type == "audio" ? "selected" : null }}>Audio</option>
+                        <option value="video" {{ type == "video" ? "selected" : null }}>Video</option>
+                        <option value="article" {{ type == "article" ? "selected" : null }}>Article</option>
+                    </select>
+                    <select name="private" class="uk-select" style="width:100px;">
+                        <option value="">Pub & Priv</option>
+                        <option value="1" {{ private == 1 ? "selected" : null }}>Only private</option>
+                        <option value="2" {{ private == 2 ? "selected" : null }}>Only public</option>
+                    </select>
+                    <select name="nsfw" class="uk-select" style="width:100px;">
+                        <option value="">NSFW and SFW</option>
+                        <option value="2" {{ nsfw == 2 ? "selected" : null }}>SFW Only</option>
+                        <option value="1" {{ nsfw == 1 ? "selected" : null }}>NSFW Only</option>
+                    </select>
+                    <select name="list" class="uk-select" style="width:100px;">
+                        <option value="l" {{ list == 'l' ? "selected" : null }}>List</option>
+                        <option value="g" {{ list == 'g' ? "selected" : null }}>Gallery</option>
+                        <option value="s" {{ list == 's' ? "selected" : null }}>Slideshow</option>
+                    </select>
+                    <button class="uk-button uk-button-primary"><i class="icofont icofont-refresh"></i></button>
+                    <a href="javascript:(function(){var%20url%20=%20location.href;var%20title%20=%20document.title%20||%20url;window.open('{{ url }}/links/edit/?dialog=1&amp;url='%20+%20encodeURIComponent(url)+'&amp;title='%20+%20encodeURIComponent(title)+'&amp;source=bookmarklet','_blank','menubar=no,height=800,width=600,toolbar=no,scrollbars=yes,status=no,dialog=1');})();" class="uk-button uk-button-default uk-visible@m"> <i class="icofont icofont-share"></i> </a>
+                    <a class="uk-button uk-button-default" href="{{ prefix }}/links/edit/"><i class="icofont icofont-plus"></i></a>
                 </div>
             </form>
         </div>
@@ -49,7 +46,7 @@
             </p>
 
 
-            {% if gallery %}
+            {% if list == "g" %}
                 <div class="uk-flex uk-flex-center uk-flex-wrap uk-flex-wrap-between uk-flex-between">
                     {% for l in links %}
                         <div>
@@ -59,11 +56,18 @@
                         </div>
                     {% endfor %}
                 </div>
+            {% elseif list == "s" %}
+                <ul uk-lightbox id="lb">
+                    {% for l in links %}
+                        <li><a data-caption="{% for t in l._tags %}{{ t }} {% endfor %}" href="{{ l.img }}">- {{ l.title }}</a></li>
+                    {% endfor %}
+                </ul>
             {% else %}
                 <ul class="uk-list uk-list-divider">
                     {% for l in links %}
-                        <li {{ (l.type == "image" or (l.type == "video" and l.url|slice(-3) == "gif")) ? 'uk-lightbox' : '' }}>
+                        <li>
                             <a href="{{ prefix }}/links/edit/{{ l.id }}"><i class="icofont icofont-edit"></i></a>
+                            <span {{ (l.type == "image" or (l.type == "video" and l.url|slice(-3) == "gif")) ? 'uk-lightbox' : '' }}>
                             {% if l.type == "video" %}
                                 <i class="icofont icofont-video"></i>
                             {% elseif l.type == "audio" %}
@@ -75,7 +79,8 @@
                             {% else %}
                                 <i class="icofont icofont-link"></i>
                             {% endif %}
-                            <a href="{{ l.url }}" target="_blank">{{ l.title ? l.title : "no_title" }}</a> {% if l.is_nsfw %}<i style="color:#e85cd3;" class="icofont icofont-close-circled"></i>{% endif %} {% if l.is_private %}<i class="icofont icofont-key"></i>{% endif %} {% for t in l._tags %}<span class="uk-margin-left uk-label">{{ t }}</span>{% endfor %}</a>
+                                <a href="{{ l.url }}" target="_blank">{{ l.title ? l.title : "no_title" }}</a> {% if l.is_nsfw %}<i style="color:#e85cd3;" class="icofont icofont-close-circled"></i>{% endif %} {% if l.is_private %}<i class="icofont icofont-key"></i>{% endif %} {% for t in l._tags %}<span class="uk-margin-left uk-label">{{ t }}</span>{% endfor %}</a>
+                            </span>
                         </li>
                     {% endfor %}
                 </ul>
@@ -99,4 +104,10 @@
     </div>
 {% endblock %}
 
-
+{% if list == "s" %}
+    {% block script %}
+        <script>
+            UIkit.lightbox('#lb').show(0);
+        </script>
+    {% endblock %}
+{% endif %}
