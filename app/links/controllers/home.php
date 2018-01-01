@@ -30,6 +30,7 @@ class LinksControllersHome {
         $url = "http://".$_SERVER["HTTP_HOST"].(isset($_SERVER["DOCUMENT_URI"]) ? str_replace("/index.php", "", $_SERVER["DOCUMENT_URI"]) : null);
 
         $list = LinksHelpersLinks::getList($user->id, $search, $type, $nsfw, $private, $_list, $start*$limit, $limit);
+        $total = LinksHelpersLinks::getTotal($user->id, $search, $type, $nsfw, $private, $_list, $start*$limit, $limit);
 
         foreach($list as $l) {
             $l->_tags = array_filter(explode(" ", $l->tags));
@@ -38,6 +39,7 @@ class LinksControllersHome {
         $template = ClassesTwig::getInstance();
         return $template->render("links/views/home.twig", array(
             "links" => $list,
+            "total" => floor($total/$limit),
             "nsfw" => $nsfw,
             "private" => $private,
             "start" => $start,

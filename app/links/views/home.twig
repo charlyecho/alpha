@@ -41,16 +41,31 @@
 
         <div>
 
-            <p class="uk-text-center">
-                {% if start > 0 %}
-                    <a class="uk-button uk-button-default" onclick="$('#page').val(0).change();">0</a>
-                    <a class="uk-button uk-button-default" onclick="$('#page').val({{ start-1 }}).change();"> < </a>
+            <ul class="uk-pagination uk-flex-center uk-margin-top">
+                <li><a onclick="{% if start > 0 %}$('#page').val({{ start-1 }}).change();{% endif %}"><span uk-pagination-previous></span></a></li>
+
+                {% if start > 2 %}
+                    <li><a onclick="$('#page').val(0).change();">0</a></li>
+                    <li><a>...</a></li>
                 {% endif %}
-                <a class="uk-button uk-button-primary" onclick="$('#page').val({{ start }}).change();">{{ start }}</a>
 
-                <a class="uk-button uk-button-default" onclick="$('#page').val(parseInt($('#page').val())+1).change();"> > </a>
-            </p>
+                {% if start > 0 %}
+                    <li><a onclick="$('#page').val(parseInt($('#page').val())-1).change();">{{ start-1 }}</a></li>
+                {% endif %}
+                <li class="uk-active"><a onclick="$('#page').val({{ start }}).change();">{{ start }}</a></li>
+                {% if start < total %}
+                <li><a onclick="$('#page').val(parseInt($('#page').val())+1).change();">{{ start+1 }}</a></li>
+                {% endif %}
 
+                {% if total - start > 1 %}
+
+                <li><a>...</a></li>
+                <li><a onclick="$('#page').val({{ total }}).change();">{{ total }}</a></li>
+                {% endif %}
+
+
+                <li><a onclick="$('#page').val(parseInt($('#page').val())+1).change();"><span uk-pagination-next></span></a></li>
+            </ul>
 
             {% if list == "g" %}
                 <div class="uk-flex uk-flex-center uk-flex-wrap uk-flex-wrap-between uk-flex-between" id="flex_gallery" uk-scrollspy="cls: uk-animation-fade;">
@@ -79,19 +94,19 @@
 
                 <script>
                     {% for l in links %}
-                        var _img_{{ l.id }} = new Image();
-                        _img_{{ l.id }}.onload = function() {
-                            var _img = $(this);
-                            var target = $('#link_{{ l.id }}');
+                    var _img_{{ l.id }} = new Image();
+                    _img_{{ l.id }}.onload = function() {
+                        var _img = $(this);
+                        var target = $('#link_{{ l.id }}');
 
-                            $('#link_{{ l.id }} div').css({
-                                'background-image': 'url('+_img_{{ l.id }}.src+')'
-                            }).fadeIn();
-                        };
-                        _img_{{ l.id }}.src = '{{ l.img}}';
+                        $('#link_{{ l.id }} div').css({
+                            'background-image': 'url('+_img_{{ l.id }}.src+')'
+                        }).fadeIn();
+                    };
+                    _img_{{ l.id }}.src = '{{ l.img}}';
                     {% endfor %}
                 </script>
-            {% elseif list == "s" %}
+                {% elseif list == "s" %}
                 <ul uk-lightbox id="lb">
                     {% for l in links %}
                         <li><a data-caption="{% for t in l._tags %}{{ t }} {% endfor %}" href="{{ l.img }}">- {{ l.title }}</a></li>
@@ -121,6 +136,11 @@
                 </ul>
 
                 <style>
+
+                    li:target {
+                        background-color: #ffa;
+                    }
+
                     tbody tr.nsfw.private {
                         background: linear-gradient(to bottom, #ffcaca, #ffebb7);
                     }
@@ -139,10 +159,22 @@
     </div>
 {% endblock %}
 
-{% if list == "s" %}
-    {% block script %}
+{% block script %}
+    {% if list == "s" %}
         <script>
             UIkit.lightbox('#lb').show(0);
         </script>
-    {% endblock %}
-{% endif %}
+    {% elseif list == "l" %}
+        <script>
+            $(document).ready(function() {
+                if (location.hash) {
+                    setTimeout(function() {
+                        var elt = $(location.hash);
+                        console.log(elt);
+                        UIkit.scroll(elt);
+                    }, 5000);
+                }
+            });
+        </script>
+    {% endif %}
+{% endblock %}

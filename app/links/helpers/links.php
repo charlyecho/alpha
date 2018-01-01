@@ -7,6 +7,39 @@
  */
 
 class LinksHelpersLinks {
+
+    public static function getTotal($user_id, $search = null, $type = null, $nsfw = null, $private = null, $gallery = null, $start = 0, $limit = 40) {
+        $db = ClassesDb::getInstance();
+
+        $sql = "SELECT COUNT(*) FROM link WHERE user_id = ".$db->quote($user_id);
+        if ($search) {
+            $like = $db->quote("%".$search."%");
+            $sql .= " AND (title LIKE ".$like." OR url LIKE ".$like." OR tags LIKE ".$like.")";
+        }
+        if ($type) {
+            $sql .= " AND type = ".$db->quote($type);
+        }
+        if (in_array($gallery, array("g", "s"))) {
+            $sql .= " AND img != ''";
+        }
+        if ($nsfw == 1) {
+            $sql .= " AND is_nsfw = 1";
+        }
+        if ($nsfw == 2) {
+            $sql .= " AND is_nsfw = 0";
+        }
+        if ($private == 1) {
+            $sql .= " AND is_private = 1";
+        }
+        if ($private == 2) {
+            $sql .= " AND is_private = 0";
+        }
+        $s = $db->prepare($sql);
+        $s->execute();
+        return $s->fetch(PDO::FETCH_COLUMN);
+
+    }
+
     public static function getList($user_id, $search = null, $type = null, $nsfw = null, $private = null, $gallery = null, $start = 0, $limit = 40) {
         $db = ClassesDb::getInstance();
         $sql = "SELECT * FROM link WHERE user_id = ".$db->quote($user_id);
