@@ -64,6 +64,8 @@ class LinksControllersHome {
             $link->title = null;
             $link->url = null;
             $link->img = null;
+            $link->width = null;
+            $link->height = null;
             $link->content = null;
             $link->is_nsfw = 0;
             $link->is_private = 0;

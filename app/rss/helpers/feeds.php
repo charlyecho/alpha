@@ -103,7 +103,7 @@ class RssHelpersFeeds {
                         $_data = str_replace("src=", "", $_data);
                         $_data = trim($_data, "\"'<>");
                         if (strpos($_data, ".gif") !== false) {
-                            $attr .= " uk-gif";
+                            //$attr .= " uk-gif";
                         }
                         $new_string = "<img data-lazy_src=\"$_data\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" alt=\"\" $attr />";
 

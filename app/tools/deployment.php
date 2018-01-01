@@ -79,5 +79,9 @@ return array(
         "ALTER TABLE user ADD background_url TEXT NULL;
             ALTER TABLE user ADD use_https_proxy INT NULL;
             ALTER TABLE user ADD share_link TEXT NULL;",
+    ),
+    "1.0" => array(
+        "ALTER TABLE link ADD width INTEGER NULL;
+        ALTER TABLE link ADD height INTEGER NULL;"
     )
 );

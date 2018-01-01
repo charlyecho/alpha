@@ -414,13 +414,13 @@
             }).done(function(data) {
                 var nb = parseInt(data);
 
-                Notification.requestPermission(function (permission) {
-                    if (permission === "granted") {
-                        new Notification(nb+' nouveaux items');
-                    }
-                });
-
                 if (nb) {
+                    Notification.requestPermission(function (permission) {
+                        if (permission === "granted") {
+                            new Notification(nb+' nouveaux items');
+                        }
+                    });
+
                     var _nb = 0;
                     for(_i in current_list) {
                         _nb = _nb+1;

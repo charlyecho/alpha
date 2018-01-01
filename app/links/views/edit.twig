@@ -4,13 +4,15 @@
 
 {% block content %}
     <div class="uk-container">
-        <h2>{{ link.id ? "Edit #"~link.id : "Add Link" }} <a onclick="info();"><i class="icofont icofont-refresh"></i></a></h2>
+        <h2>{{ link.id ? "Edit #"~link.id : "Add Link" }} <a onclick="info();"><i class="icofont icofont-refresh"></i></a> {{ link.width }}x{{ link.height }}</h2>
         <form method="post">
             <input type="hidden" name="id" value="{{ link.id }}" />
             <input type="hidden" name="user_id" value="{{ link.user_id }}" />
             <input type="hidden" name="is_nsfw" value="{{ link.is_nsfw }}" />
             <input type="hidden" name="is_private" value="{{ link.is_private }}" />
             <input type="hidden" name="dialog" value="{{ dialog }}" />
+            <input type="hidden" name="width" value="{{ link.width }}" />
+            <input type="hidden" name="height" value="{{ link.height }}" />
 
             <div uk-grid>
                 <div class="uk-width-1-2">
@@ -31,7 +33,7 @@
                     <div class="uk-margin">
                         <label>
                             <span>Img :</span>
-                            <input type="text" name="img" value="{{ link.img }}" onchange="$('#img_link').attr('src', $(this).val());" class="uk-input" placeholder="img link" />
+                            <input type="text" name="img" value="{{ link.img }}" onchange="$('#img_link').attr('src', $(this).val()).change();" class="uk-input" placeholder="img link" />
                         </label>
                     </div>
 
@@ -54,7 +56,7 @@
                 </div>
 
                 <div class="uk-width-1-2 uk-text-center">
-                    <img src="{{ link.img }}" alt="No img" id="img_link" style="max-width:100%; max-height:200px;" />
+                    <img src="{{ link.img }}" onchange="checkImg()" alt="No img" id="img_link" style="max-width:100%; max-height:200px;" />
                 </div>
             </div>
 
@@ -102,9 +104,22 @@
                         title.val(_data.title);
                     }
                     $('select[name=type]').val(_data.type);
-                    UIkit.notification('Blank data filled');
                 }
+            }).done(function() {
+                checkImg();
             });
+        };
+
+        var checkImg = function() {
+            var img = $('#img_link');
+            if (img.attr('src')) {
+                var width = img.get(0).naturalWidth;
+                var height = img.get(0).naturalHeight;
+                if (width && height) {
+                    $('input[name=width]').val(width);
+                    $('input[name=height]').val(height);
+                }
+            }
         };
 
         var check = function() {

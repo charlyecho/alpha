@@ -46,6 +46,8 @@ class LinksHelpersLinks {
         $title = get($post, "title");
         $url = get($post, "url");
         $img = get($post, "img");
+        $width = get($post, "width");
+        $height = get($post, "height");
         $content = get($post, "content");
         $is_nsfw = get($post, "is_nsfw");
         $is_private = get($post, "is_private");
@@ -65,6 +67,8 @@ class LinksHelpersLinks {
                     title = ".$db->quote($title).",
                     url = ".$db->quote($url).",
                     img = ".$db->quote($img).",
+                    width = ".$db->quote($width).",
+                    height = ".$db->quote($height).",
                     content = ".$db->quote($content).",  
                     is_nsfw = ".$db->quote($is_nsfw).",  
                     is_private = ".$db->quote($is_private).",  
@@ -76,11 +80,13 @@ class LinksHelpersLinks {
         }
         else {
             // insert
-            $sql = "INSERT INTO link (user_id, url, title, img, content, is_nsfw, is_private, type, creation_date, tags) VALUES( 
+            $sql = "INSERT INTO link (user_id, url, title, img, width, height, content, is_nsfw, is_private, type, creation_date, tags) VALUES( 
                     ".$db->quote($user_id).",
                     ".$db->quote($url).",
                     ".$db->quote($title).",
                     ".$db->quote($img).",
+                    ".$db->quote($width).",
+                    ".$db->quote($height).",
                     ".$db->quote($content).",  
                     ".$db->quote($is_nsfw).",  
                     ".$db->quote($is_private).",  
