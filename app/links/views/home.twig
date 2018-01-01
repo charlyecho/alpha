@@ -47,15 +47,50 @@
 
 
             {% if list == "g" %}
-                <div class="uk-flex uk-flex-center uk-flex-wrap uk-flex-wrap-between uk-flex-between">
+                <div class="uk-flex uk-flex-center uk-flex-wrap uk-flex-wrap-between uk-flex-between" id="flex_gallery" uk-scrollspy="cls: uk-animation-fade;">
                     {% for l in links %}
-                        <div>
-                            <a target="_blank" href="{{ l.url }}" rel="noopener noreferer nofollow">
-                                <img src="{{ l.img }}" alt="" style="height:200px;" />
-                            </a>
-                        </div>
+                        <a id="link_{{ l.id }}" href="{{ l.url }}" target="_blank" rel="noopener noreferer nofollow" style="{% if l.width and l.height %} height:200px; width:{{ l.width*200/l.height }}px; {% endif %}">
+                            <div></div>
+                        </a>
                     {% endfor %}
                 </div>
+
+                <style>
+                    #flex_gallery a {
+                        margin-top:20px;
+                        display: block;
+                    }
+
+                    #flex_gallery a div {
+                        display: none;
+                        width:100%;
+                        height:100%;
+                        background-color: #b5b5b5;
+                        background-size: cover;
+                    }
+                </style>
+
+
+                <script>
+                    {% for l in links %}
+                        var _img_{{ l.id }} = new Image();
+                        _img_{{ l.id }}.onload = function() {
+                            var _img = $(this);
+                            var target = $('#link_{{ l.id }}');
+                            if (!target.css('width')) {
+                                $('#link_{{ l.id }}').css({
+                                    'width':  ((_img.get(0).naturalWidth)*200/_img.get(0).naturalHeight)+'px',
+                                    'height':  '200px'
+                                });
+                            }
+
+                            $('#link_{{ l.id }} div').css({
+                                'background-image': 'url('+_img_{{ l.id }}.src+')'
+                            }).fadeIn();
+                        };
+                        _img_{{ l.id }}.src = '{{ l.img}}';
+                    {% endfor %}
+                </script>
             {% elseif list == "s" %}
                 <ul uk-lightbox id="lb">
                     {% for l in links %}
@@ -68,18 +103,18 @@
                         <li>
                             <a href="{{ prefix }}/links/edit/{{ l.id }}"><i class="icofont icofont-edit"></i></a>
                             <span {{ (l.type == "image" or (l.type == "video" and l.url|slice(-3) == "gif")) ? 'uk-lightbox' : '' }}>
-                            {% if l.type == "video" %}
-                                <i class="icofont icofont-video"></i>
-                            {% elseif l.type == "audio" %}
-                                <i class="icofont icofont-audio"></i>
-                            {% elseif l.type == "image" %}
-                                <i class="icofont icofont-picture"></i>
-                            {% elseif l.type == "article" %}
-                                <i class="icofont icofont-pen"></i>
-                            {% else %}
-                                <i class="icofont icofont-link"></i>
-                            {% endif %}
-                                <a href="{{ l.url }}" target="_blank">{{ l.title ? l.title : "no_title" }}</a> {% if l.is_nsfw %}<i style="color:#e85cd3;" class="icofont icofont-close-circled"></i>{% endif %} {% if l.is_private %}<i class="icofont icofont-key"></i>{% endif %} {% for t in l._tags %}<span class="uk-margin-left uk-label">{{ t }}</span>{% endfor %}</a>
+                                {% if l.type == "video" %}
+                                    <i class="icofont icofont-video"></i>
+                                {% elseif l.type == "audio" %}
+                                    <i class="icofont icofont-audio"></i>
+                                {% elseif l.type == "image" %}
+                                    <i class="icofont icofont-picture"></i>
+                                {% elseif l.type == "article" %}
+                                    <i class="icofont icofont-pen"></i>
+                                {% else %}
+                                    <i class="icofont icofont-link"></i>
+                                {% endif %}
+                                <a href="{{ l.url }}" target="_blank">{{ l.title ? l.title : "no_title" }}</a> {% if l.is_nsfw %}<i style="color:#e85cd3;" class="icofont icofont-close-circled"></i>{% endif %} {% if l.is_private %}<i class="icofont icofont-key"></i>{% endif %} {% if (l.type == "image" or (l.type == "video" and l.url|slice(-3) == "gif")) %}{{ l.width }}x{{ l.height }}{% endif %}   {% for t in l._tags %}<span class="uk-margin-left uk-label">{{ t }}</span>{% endfor %}</a>
                             </span>
                         </li>
                     {% endfor %}

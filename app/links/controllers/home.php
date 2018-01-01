@@ -4,14 +4,23 @@ class LinksControllersHome {
     public static function home() {
         $user = HelpersUser::getCurrent();
 
+        $session = ClassesSession::getInstance();
+
         $limit = 40;
-        $type = get($_GET, "type");
-        $nsfw = get($_GET, "nsfw", 2);
-        $search = get($_GET, "search");
-        $private = get($_GET, "private", 0);
-        $start = get($_GET, "start", 0);
-        $gallery = get($_GET, "gallery", 0);
-        $_list = get($_GET, "list", "l");
+        $type = get($_GET, "type", $session->get("link.filter.type"));
+        $search = get($_GET, "search", $session->get("link.filter.search"));
+        $nsfw = get($_GET, "nsfw", $session->get("link.filter.nsfw", "2"));
+        $private = get($_GET, "private", $session->get("link.filter.private", "0"));
+        $start = get($_GET, "start", $session->get("link.filter.start", "0"));
+        $_list = get($_GET, "list", $session->get("link.filter.list", "l"));
+
+        // session
+        $session->set("link.filter.type", $type);
+        $session->set("link.filter.search", $search);
+        $session->set("link.filter.nsfw", $nsfw);
+        $session->set("link.filter.private", $private);
+        $session->set("link.filter.start", $start);
+        $session->set("link.filter.list", $_list);
 
         if (in_array($_list, array("g", "s"))) {
             $type = "image";

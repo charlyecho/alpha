@@ -4,15 +4,13 @@
 
 {% block content %}
     <div class="uk-container">
-        <h2>{{ link.id ? "Edit #"~link.id : "Add Link" }} <a onclick="info();"><i class="icofont icofont-refresh"></i></a> {{ link.width }}x{{ link.height }}</h2>
+        <h2>{{ link.id ? "Edit #"~link.id : "Add Link" }} <a onclick="info();"><i class="icofont icofont-refresh"></i></a></h2>
         <form method="post">
             <input type="hidden" name="id" value="{{ link.id }}" />
             <input type="hidden" name="user_id" value="{{ link.user_id }}" />
             <input type="hidden" name="is_nsfw" value="{{ link.is_nsfw }}" />
             <input type="hidden" name="is_private" value="{{ link.is_private }}" />
             <input type="hidden" name="dialog" value="{{ dialog }}" />
-            <input type="hidden" name="width" value="{{ link.width }}" />
-            <input type="hidden" name="height" value="{{ link.height }}" />
 
             <div uk-grid>
                 <div class="uk-width-1-2">
@@ -57,6 +55,9 @@
 
                 <div class="uk-width-1-2 uk-text-center">
                     <img src="{{ link.img }}" onchange="checkImg()" alt="No img" id="img_link" style="max-width:100%; max-height:200px;" />
+                    <br/>
+                    <input type="text" name="width" value="{{ link.width }}" class="uk-input" style="width:80px; text-align: right" />px&nbsp;&nbsp;
+                    <input type="text" name="height" value="{{ link.height }}" class="uk-input" style="width:80px; text-align: right" />px
                 </div>
             </div>
 
@@ -91,23 +92,26 @@
     <script>
         var info = function() {
             var url = $("input[name=url]").val();
-            $.ajax({
-                url: '{{ prefix }}/links/info?url='+encodeURIComponent(url),
-                success: function(data) {
-                    var _data = JSON.parse(data);
-                    var img = $('input[name=img]');
-                    if (!img.val()) {
-                        img.val(_data.img).change();
+            checkImg();
+
+            var img = $('input[name=img]');
+            var title = $('input[name=title]');
+
+            if (!img.val() || !title.val()) {
+                $.ajax({
+                    url: '{{ prefix }}/links/info?url='+encodeURIComponent(url),
+                    success: function(data) {
+                        var _data = JSON.parse(data);
+                        if (!img.val()) {
+                            img.val(_data.img).change();
+                        }
+                        if (!title.val()) {
+                            title.val(_data.title);
+                        }
+                        $('select[name=type]').val(_data.type);
                     }
-                    var title = $('input[name=title]');
-                    if (!title.val()) {
-                        title.val(_data.title);
-                    }
-                    $('select[name=type]').val(_data.type);
-                }
-            }).done(function() {
-                checkImg();
-            });
+                });
+            }
         };
 
         var checkImg = function() {
@@ -134,6 +138,10 @@
             {% endif %}
 
             check();
+
+            {% if link.img and link.width == "" and link.height == "" %}
+            checkImg();
+            {% endif %}
         });
 
     </script>
