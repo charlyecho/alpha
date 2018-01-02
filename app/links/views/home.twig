@@ -103,13 +103,13 @@
                             'background-image': 'url('+_img_{{ l.id }}.src+')'
                         }).fadeIn();
                     };
-                    _img_{{ l.id }}.src = '{{ l.img}}';
+                    _img_{{ l.id }}.src = '{{ l._img}}';
                     {% endfor %}
                 </script>
-                {% elseif list == "s" %}
+            {% elseif list == "s" %}
                 <ul uk-lightbox id="lb">
                     {% for l in links %}
-                        <li><a data-caption="{% for t in l._tags %}{{ t }} {% endfor %}" href="{{ l.img }}">- {{ l.title }}</a></li>
+                        <li><a data-caption="{% for t in l._tags %}{{ t }} {% endfor %}" href="{{ l._img }}">{{ l._img }}</a></li>
                     {% endfor %}
                 </ul>
             {% else %}
@@ -162,7 +162,7 @@
 {% block script %}
     {% if list == "s" %}
         <script>
-            UIkit.lightbox('#lb').show(0);
+            UIkit.lightbox('#lb').show();
         </script>
     {% elseif list == "l" %}
         <script>

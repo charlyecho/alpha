@@ -34,6 +34,7 @@ class LinksControllersHome {
 
         foreach($list as $l) {
             $l->_tags = array_filter(explode(" ", $l->tags));
+            $l->_img = "//images.weserv.nl/?url=".urlencode(str_replace(array("http://", "https://"), "", $l->img));
         }
 
         $template = ClassesTwig::getInstance();
