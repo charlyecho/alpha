@@ -178,6 +178,7 @@ class ControllersInstall {
             //redirect("/");
         }
 
+
         $template = ClassesTwig::getInstance();
         return $template->render("template/views/install.twig", array(
             "report" => $report

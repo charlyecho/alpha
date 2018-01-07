@@ -18,13 +18,24 @@
     </head>
     <body>
         {% if dialog != 1 %}
-            <nav class="uk-navbar-container" uk-navbar uk-sticky style="box-shadow: 0 0 5px grey">
+            <nav class="uk-navbar-container" uk-navbar uk-sticky>
                 <div class="uk-navbar-left">
                     <a class="uk-navbar-item uk-logo" href="{{ prefix }}/" title="alpha" style="color:#688bb9; font-size:2.5em;">𝛂</a>
                     <ul class="uk-navbar-nav">
                         {% if user %}
                             <li {% if '/rss' in route %}class="uk-active"{% endif %}><a href="{{ prefix }}/rss/home"><i class="icofont icofont-rss-feed"></i><span class="uk-visible@s">&nbsp;RSS</span></a></li>
                             <li {% if '/links' in route %}class="uk-active"{% endif %}><a href="{{ prefix }}/links"><i class="icofont icofont-link"></i><span class="uk-visible@s">&nbsp;Links</span></a></li>
+                            <li {% if '/pro' in route %}class="uk-active"{% endif %}>
+                                <a href="#">
+                                    <i class="icofont icofont-chair"></i><span class="uk-visible@s">&nbsp;Pro</span>
+                                </a>
+                                <div class="uk-navbar-dropdown">
+                                    <ul class="uk-nav uk-navbar-dropdown-nav">
+                                        <li {% if route == '/pro' %}class="uk-active"{% endif %}><a href="{{ prefix }}/pro">Home</a></li>
+                                        <li {% if route == '/pro/clients' %}class="uk-active"{% endif %}><a href="{{ prefix }}/pro/clients">Clients</a></li>
+                                    </ul>
+                                </div>
+                            </li>
                         {% endif %}
                         <li id="empty_nav"></li>
                     </ul>

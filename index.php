@@ -62,6 +62,11 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
                 $r->addRoute("GET", "/import", array("LinksControllersFile", "import"));
                 $r->addRoute("GET", "/info", array("LinksControllersInfo", "info"));
             });
+
+            $r->addGroup("/pro", function(FastRoute\RouteCollector $r) {
+                $r->addRoute("GET", "", array("ProControllersKanban", "home"));
+                $r->addRoute("GET", "/clients", array("ProControllersClients", "home"));
+            });
         }
     }
 });

@@ -1,0 +1,65 @@
+{% extends "template/base.twig" %}
+
+{% block title %}Pro{% endblock %}
+
+{% block content %}
+    <a href="#add" class="uk-button uk-button-primary">Add Task</a>
+    <div uk-grid class="uk-child-width-expand" style="min-height: 80%;">
+
+        {% for k, v in kanban %}
+            <div>
+                <p><i class="icofont icofont-{{ v.icon }}"></i> {{ k }}</p>
+                <div class="droppable" data-type="backlog">
+                    {% for l in v.list %}
+                        <div class="item draggable" data-id="{{ l.id }}">
+                            <span style="color:{{ l.organisation_color }}; float:right">{{ l.organisation_name }}</span>
+                            {{ l.title }}
+                            <progress id="js-progressbar" class="uk-progress" value="10" max="100"></progress>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <style>
+        .droppable {
+            border:dashed 1px #adadad;
+            min-height:80%;
+        }
+
+        .item {
+            border-radius: 3px;
+            margin:5px; padding:5px;
+            background-color: white;
+            border:solid 1px #646464;
+        }
+
+        .item:hover {
+            cursor:move;
+            cursor: grab;
+        }
+
+        .item.ui-draggable-dragging {
+            cursor: grabbing;
+            box-shadow: 9px 9px 3px #e0e0e0;
+        }
+    </style>
+{% endblock %}
+
+{% block script %}
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $(".draggable").draggable({});
+            $(".droppable").droppable({
+                drop: function (event, ui) {
+                    console.log(this);
+                    console.log(event);
+                }
+            });
+        });
+    </script>
+{% endblock %}

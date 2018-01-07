@@ -1,0 +1,18 @@
+{% extends "template/base.twig" %}
+
+{% block title %}Pro{% endblock %}
+
+{% block content %}
+    <div class="uk-container">
+        <h2>Clients</h2>
+        <div class="uk-list uk-list-striped">
+            {% for l in list %}
+                <li>
+                    <a href="{{ prefix }}/pro/clients/{{ l.id }}">
+                        <i class="icofont icofont-ui-press" style="color: {{ l.color }}"></i> {{ l.name }}
+                    </a>
+                </li>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

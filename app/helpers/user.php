@@ -23,7 +23,9 @@ class HelpersUser {
     public static function getCurrent() {
         if (!is_file(__DIR__."/../db/db.sqlite")) {
             ClassesSession::getInstance()->delete("user_id");
-            redirect("/install");
+            if (ClassesTwig::$route != "/install") {
+                redirect("/install");
+            }
         }
 
         if (self::$current_user) {

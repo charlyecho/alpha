@@ -83,5 +83,20 @@ return array(
     "1.0" => array(
         "ALTER TABLE link ADD width INTEGER NULL;
         ALTER TABLE link ADD height INTEGER NULL;"
+    ),
+    "1.1" => array(
+        "CREATE TABLE organisation (
+          id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+          user_id INTEGER CONSTRAINT organisation_user_id_fk REFERENCES user (id) ON UPDATE CASCADE ON DELETE CASCADE,
+          name VARCHAR,
+          color VARCHAR DEFAULT '#000000' NOT NULL,
+          comment TEXT
+        );",
+        "CREATE TABLE task (
+          id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+          user_id INTEGER CONSTRAINT task_user_id_fk REFERENCES user (id) ON UPDATE CASCADE ON DELETE CASCADE,
+          organisation_id INTEGER CONSTRAINT task_organisation_id_fk REFERENCES organisation (id) ON UPDATE CASCADE ON DELETE CASCADE,
+          title VARCHAR
+        );"
     )
 );
