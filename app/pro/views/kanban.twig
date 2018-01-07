@@ -3,24 +3,35 @@
 {% block title %}Pro{% endblock %}
 
 {% block content %}
-    <a href="#add" class="uk-button uk-button-primary">Add Task</a>
-    <div uk-grid class="uk-child-width-expand" style="min-height: 80%;">
 
-        {% for k, v in kanban %}
-            <div>
-                <p><i class="icofont icofont-{{ v.icon }}"></i> {{ k }}</p>
-                <div class="droppable" data-type="backlog">
-                    {% for l in v.list %}
-                        <div class="item draggable" data-id="{{ l.id }}">
-                            <span style="color:{{ l.organisation_color }}; float:right">{{ l.organisation_name }}</span>
-                            {{ l.title }}
-                            <progress id="js-progressbar" class="uk-progress" value="10" max="100"></progress>
+    <a href="#add" class="uk-button uk-button-primary">Add Task</a>
+
+
+    <div uk-grid style="height:100%;">
+        <div class="uk-width-4-5">
+            <div uk-grid class="uk-child-width-expand" style="min-height: 80%;">
+
+                {% for k, v in kanban %}
+                    <div>
+                        <p><i class="icofont icofont-{{ v.icon }}"></i> {{ k }}</p>
+                        <div class="droppable" data-type="backlog">
+                            {% for l in v.list %}
+                                <div class="item draggable" data-id="{{ l.id }}">
+                                    <span style="color:{{ l.organisation_color }}; float:right">{{ l.organisation_name }}</span>
+                                    {{ l.title }}
+                                    {% if l.nb_subtask %}
+                                        <progress class="uk-progress" value="{{ l.nb_finished }}" max="{{ l.nb_subtask }}"></progress>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
                         </div>
-                    {% endfor %}
-                </div>
+                    </div>
+                {% endfor %}
             </div>
-        {% endfor %}
+        </div>
+        <div class="uk-width-1-5" id="result"></div>
     </div>
+
 
     <style>
         .droppable {
@@ -60,6 +71,10 @@
                     console.log(event);
                 }
             });
+        });
+
+        $('div.item').on('click', function() {
+           console.log('test');
         });
     </script>
 {% endblock %}

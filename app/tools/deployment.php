@@ -96,7 +96,14 @@ return array(
           id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
           user_id INTEGER CONSTRAINT task_user_id_fk REFERENCES user (id) ON UPDATE CASCADE ON DELETE CASCADE,
           organisation_id INTEGER CONSTRAINT task_organisation_id_fk REFERENCES organisation (id) ON UPDATE CASCADE ON DELETE CASCADE,
-          title VARCHAR
+          title VARCHAR,
+          comment TEXT
+        );",
+        "CREATE TABLE subtask (
+          id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+          task_id INTEGER CONSTRAINT subtask_task_id_fk REFERENCES task (id) ON UPDATE CASCADE ON DELETE CASCADE,
+          title VARCHAR,
+          finished INTEGER DEFAULT 0
         );"
     )
 );
