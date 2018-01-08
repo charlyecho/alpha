@@ -51,4 +51,24 @@ class ProHelpersTask {
 
         return $types;
     }
+
+    public static function getItem($id, $user_id) {
+        $db = ClassesDb::getInstance();
+        $sql = "SELECT t.*, o.name as organisation_name, o.color as organisation_color FROM task t LEFT JOIN organisation o ON t.organisation_id = o.id WHERE t.id = ".$db->quote($id)." AND t.user_id = ".$db->quote($user_id);
+        $s = $db->prepare($sql);
+        $s->execute();
+        return $s->fetch();
+    }
+
+    public static function getSubTask($id = null) {
+        if (!$id) {
+            return array();
+        }
+
+        $db = ClassesDb::getInstance();
+        $sql = "SELECT * FROM subtask WHERE task_id = ".$db->quote($id);
+        $s = $db->prepare($sql);
+        $s->execute();
+        return $s->fetchAll();
+    }
 }

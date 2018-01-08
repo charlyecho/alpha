@@ -3,12 +3,9 @@
 {% block title %}Pro{% endblock %}
 
 {% block content %}
-
-    <a href="#add" class="uk-button uk-button-primary">Add Task</a>
-
-
     <div uk-grid style="height:100%;">
         <div class="uk-width-4-5">
+            <a href="#add" class="uk-button uk-button-primary">Add Task</a>
             <div uk-grid class="uk-child-width-expand" style="min-height: 80%;">
 
                 {% for k, v in kanban %}
@@ -16,7 +13,7 @@
                         <p><i class="icofont icofont-{{ v.icon }}"></i> {{ k }}</p>
                         <div class="droppable" data-type="backlog">
                             {% for l in v.list %}
-                                <div class="item draggable" data-id="{{ l.id }}">
+                                <div id="task_{{ l.id }}" class="item draggable" data-id="{{ l.id }}">
                                     <span style="color:{{ l.organisation_color }}; float:right">{{ l.organisation_name }}</span>
                                     {{ l.title }}
                                     {% if l.nb_subtask %}
@@ -29,7 +26,7 @@
                 {% endfor %}
             </div>
         </div>
-        <div class="uk-width-1-5" id="result"></div>
+        <div class="uk-width-1-5 uk-padding" id="result"></div>
     </div>
 
 
@@ -46,6 +43,10 @@
             border:solid 1px #646464;
         }
 
+        .item.active {
+            border-color:#1e87f0;
+        }
+
         .item:hover {
             cursor:move;
             cursor: grab;
@@ -53,7 +54,7 @@
 
         .item.ui-draggable-dragging {
             cursor: grabbing;
-            box-shadow: 9px 9px 3px #e0e0e0;
+            box-shadow: 9px 9px 3px rgba(150,150,150, .5);
         }
     </style>
 {% endblock %}
@@ -74,7 +75,36 @@
         });
 
         $('div.item').on('click', function() {
-           console.log('test');
+            var id = $(this).data("id");
+            refreshTask(id);
         });
+
+        var refreshTask = function(id) {
+            $.ajax({
+                url: '{{ prefix }}/pro/task/'+id,
+                method : 'get',
+                beforeSend : function() {
+                    $('#result').html('loading');
+                    $('.item').removeClass('active');
+                },
+                success: function(data) {
+                    $('#result').html(data);
+                }
+            });
+        };
+
+        var updateTask = function(form) {
+            var id = $(form).data("id");
+            $.ajax({
+                url: '{{ prefix }}/pro/task/edit',
+                method: 'post',
+                data: $(form).serialize(),
+                success: function(data) {
+                    refreshTask(id);
+                }
+
+            });
+            return false;
+        };
     </script>
 {% endblock %}
