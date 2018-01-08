@@ -66,7 +66,7 @@ class ProHelpersTask {
         }
 
         $db = ClassesDb::getInstance();
-        $sql = "SELECT * FROM subtask WHERE task_id = ".$db->quote($id);
+        $sql = "SELECT * FROM subtask WHERE task_id = ".$db->quote($id)." ORDER BY title";
         $s = $db->prepare($sql);
         $s->execute();
         return $s->fetchAll();

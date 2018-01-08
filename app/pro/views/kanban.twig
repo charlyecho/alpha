@@ -14,7 +14,7 @@
                         <div class="droppable" data-type="{{ k }}">
                             {% for l in v.list %}
                                 <div id="task_{{ l.id }}" class="item draggable" data-id="{{ l.id }}">
-                                    <span style="color:{{ l.organisation_color }}; float:right">{{ l.organisation_name }}</span>
+                                    <span style="color:{{ l.organisation_color }}; float:right" title="{{ l.organisation_name }}"><i class="icofont icofont-ui-press"></i></span>
                                     {{ l.title }}
                                     {% if l.nb_subtask %}
                                         <progress class="uk-progress" value="{{ l.nb_finished }}" max="{{ l.nb_subtask }}"></progress>

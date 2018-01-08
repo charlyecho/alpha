@@ -42,7 +42,7 @@
     <script>
         $('.item').removeClass('active');
         var dom = '';
-        dom = dom + '<span style="color:{{ task.organisation_color }}; float:right">{{ task.organisation_name }}</span>\n';
+        dom = dom + '<span style="color:{{ task.organisation_color }}; float:right" title="{{ task.organisation_name }}"><i class="icofont icofont-ui-press"></i></span>\n';
         dom = dom+'{{ task.title }}';
         {% if task.subtask|length %}
         dom = dom+'<progress class="uk-progress" value="{{ task.nb_finished }}" max="{{ task.subtask|length }}"></progress>';
