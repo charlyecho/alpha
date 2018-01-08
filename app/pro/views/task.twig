@@ -7,6 +7,15 @@
             <input type="text" name="title" value="{{ task.title }}" class="uk-input"/>
         </p>
 
+        <p>
+            <select name="organisation_id" class="uk-select">
+                <option value="">&mdash; none</option>
+                {% for o in organisations %}
+                    <option value="{{ o.id }}" {% if o.id == task.organisation_id %}selected{% endif %}>{{ o.name }}</option>
+                {% endfor %}
+            </select>
+        </p>
+
         <textarea name="comment" class="uk-textarea" rows="5">{{ task.comment|raw }}</textarea>
 
         <p>

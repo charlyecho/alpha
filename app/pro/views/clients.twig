@@ -7,12 +7,53 @@
         <h2>Clients</h2>
         <div class="uk-list uk-list-striped">
             {% for l in list %}
-                <li>
-                    <a href="{{ prefix }}/pro/clients/{{ l.id }}">
-                        <i class="icofont icofont-ui-press" style="color: {{ l.color }}"></i> {{ l.name }}
-                    </a>
+                <li data-id="{{ l.id }}">
+                    <input type="color" style="display: none" value="{{ l.color }}" data-id="{{ l.id }}"/>
+                    <i class="icofont icofont-ui-press" style="color: {{ l.color }}" onclick="$(this).prev().click();"></i>
+                    <a onclick="$(this).parent().find('.toggler').toggle();" class="toggler">{{ l.name }}</a>
+                    <input type="text" name="name" data-id="{{ l.id }}" value="{{ l.name }}" class="uk-input toggler" style="width:70%; display: none" />
                 </li>
             {% endfor %}
+            <li>
+                <form method="post">
+                    <input type="text" name="name" value="" required="required" class="uk-input" placeholder="New client" style="width:80%" />
+                    <button class="uk-button uk-button-primary">Add</button>
+                </form>
+            </li>
         </div>
     </div>
+{% endblock %}
+
+{% block script %}
+<script>
+    $(document).ready(function() {
+        $('input[type=color]').on('change', function() {
+            var val = $(this).val();
+            var id = $(this).data("id");
+            $(this).next().css({color: val});
+
+            $.ajax({
+                method: 'post',
+                url : "{{ prefix }}/pro/clients/update",
+                data: "color="+val+"&id="+id
+            });
+        });
+
+        $('div.uk-list input[type=text]').on('change', function() {
+            var val = $(this).val();
+            var id = $(this).data("id");
+            var elt = $(this);
+
+            $.ajax({
+                method: 'post',
+                url : "{{ prefix }}/pro/clients/update",
+                data: "text="+val+"&id="+id,
+                success: function() {
+                    $(elt).parent().find('.toggler').toggle();
+                    $(elt).parent().find('a').html(val);
+                }
+            });
+        });
+    });
+</script>
 {% endblock %}

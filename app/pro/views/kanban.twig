@@ -5,13 +5,13 @@
 {% block content %}
     <div uk-grid style="height:100%;">
         <div class="uk-width-4-5">
-            <a href="#add" class="uk-button uk-button-primary">Add Task</a>
+            <a onclick="addTask();" class="uk-button uk-button-primary">Add Task</a>
             <div uk-grid class="uk-child-width-expand" style="min-height: 80%;">
 
                 {% for k, v in kanban %}
-                    <div>
+                    <div id="k_{{ k }}">
                         <p><i class="icofont icofont-{{ v.icon }}"></i> {{ k }}</p>
-                        <div class="droppable" data-type="backlog">
+                        <div class="droppable" data-type="{{ k }}">
                             {% for l in v.list %}
                                 <div id="task_{{ l.id }}" class="item draggable" data-id="{{ l.id }}">
                                     <span style="color:{{ l.organisation_color }}; float:right">{{ l.organisation_name }}</span>
@@ -26,7 +26,7 @@
                 {% endfor %}
             </div>
         </div>
-        <div class="uk-width-1-5 uk-padding" id="result"></div>
+        <div class="uk-width-1-5 uk-padding uk-padding-remove-top" id="result"></div>
     </div>
 
 
@@ -107,15 +107,21 @@
             });
         };
 
-        var addSubtask = function(task_id) {
-            var name = prompt('Title');
+        var addTask = function() {
+            var name = prompt("title");
             if (name) {
                 $.ajax({
-                    url: '{{ prefix }}/pro/subtask/add',
+                    url: '{{ prefix }}/pro/task/add',
                     method: 'post',
-                    data: 'id='+task_id+'&name='+name,
-                    success: function(data) {
-                        refreshTask(task_id);
+                    data: 'name=' + name,
+                    beforeSend: function () {
+                        $('.item').removeClass('active');
+                    },
+                    success: function (data) {
+                        var dom = $('<div id="task_' + data + '" class="item draggable" data-id="' + data + '"></div>');
+                        dom.prependTo('#k_backlog div.droppable');
+                        $(dom).draggable({});
+                        refreshTask(data);
                     }
                 });
             }
@@ -134,5 +140,21 @@
             });
             return false;
         };
+
+        var addSubtask = function(task_id) {
+            var name = prompt('Title');
+            if (name) {
+                $.ajax({
+                    url: '{{ prefix }}/pro/subtask/add',
+                    method: 'post',
+                    data: 'id='+task_id+'&name='+name,
+                    success: function(data) {
+                        refreshTask(task_id);
+                    }
+                });
+            }
+        };
+
+
     </script>
 {% endblock %}

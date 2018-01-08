@@ -65,8 +65,10 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
 
             $r->addGroup("/pro", function(FastRoute\RouteCollector $r) {
                 $r->addRoute("GET", "", array("ProControllersKanban", "home"));
-                $r->addRoute("GET", "/clients", array("ProControllersClients", "home"));
+                $r->addRoute(array("GET", "POST"), "/clients", array("ProControllersClients", "home"));
+                $r->addRoute("POST", "/clients/update", array("ProControllersClients", "update"));
                 $r->addRoute("POST", "/task/edit", array("ProControllersTask", "editItem"));
+                $r->addRoute("POST", "/task/add", array("ProControllersTask", "addItem"));
                 $r->addRoute("GET", "/task/{task_id}", array("ProControllersTask", "view"));
                 $r->addRoute("POST", "/subtask", array("ProControllersTask", "editSub"));
                 $r->addRoute("POST", "/subtask/add", array("ProControllersTask", "addSub"));
