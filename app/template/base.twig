@@ -26,7 +26,7 @@
                             <li {% if '/rss' in route %}class="uk-active"{% endif %}><a href="{{ prefix }}/rss/home"><i class="icofont icofont-rss-feed"></i><span class="uk-visible@s">&nbsp;RSS</span></a></li>
                             <li {% if '/links' in route %}class="uk-active"{% endif %}><a href="{{ prefix }}/links"><i class="icofont icofont-link"></i><span class="uk-visible@s">&nbsp;Links</span></a></li>
                             <li {% if '/pro' in route %}class="uk-active"{% endif %}>
-                                <a href="#">
+                                <a href="{{ prefix }}/pro">
                                     <i class="icofont icofont-chair"></i><span class="uk-visible@s">&nbsp;Pro</span>
                                 </a>
                                 <div class="uk-navbar-dropdown">
