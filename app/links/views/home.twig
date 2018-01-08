@@ -107,7 +107,7 @@
                     {% endfor %}
                 </script>
             {% elseif list == "s" %}
-                <ul uk-lightbox id="lb">
+                <ul uk-lightbox="autoplay:1000" id="lb">
                     {% for l in links %}
                         <li><a data-caption="{% for t in l._tags %}{{ t }} {% endfor %}" href="{{ l._img }}">{{ l._img }}</a></li>
                     {% endfor %}
@@ -160,11 +160,7 @@
 {% endblock %}
 
 {% block script %}
-    {% if list == "s" %}
-        <script>
-            UIkit.lightbox('#lb').show();
-        </script>
-    {% elseif list == "l" %}
+    {% if list == "l" %}
         <script>
             $(document).ready(function() {
                 if (location.hash) {

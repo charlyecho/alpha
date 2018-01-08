@@ -14,8 +14,7 @@ class ProHelpersTask {
             LEFT JOIN subtask st ON st.task_id = t.id
             LEFT JOIN organisation o ON t.organisation_id = o.id 
             WHERE t.user_id = ".$db->quote($user_id)." 
-            GROUP BY t.id 
-            ORDER BY t.priority DESC";
+            GROUP BY t.id ";
         $q = $db->prepare($sql);
         $q->execute();
         $tasks = $q->fetchAll();

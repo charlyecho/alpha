@@ -54,7 +54,7 @@
                 </div>
 
                 <div class="uk-width-1-2 uk-text-center">
-                    <img src="{{ link.img }}" onchange="checkImg()" alt="No img" id="img_link" style="max-width:100%; max-height:200px;" />
+                    <img src="{{ link.img }}" onchange="checkImg()" onload="checkImg()" alt="No img" id="img_link" style="max-width:100%; max-height:200px;" />
                     <br/>
                     <input type="text" name="width" value="{{ link.width }}" class="uk-input" style="width:80px; text-align: right" />px&nbsp;&nbsp;
                     <input type="text" name="height" value="{{ link.height }}" class="uk-input" style="width:80px; text-align: right" />px
