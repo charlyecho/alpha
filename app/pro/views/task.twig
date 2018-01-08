@@ -1,41 +1,48 @@
-<form onsubmit="return updateTask(this)" method="post" data-id="{{ task.id }}">
-    <input type="hidden" name="id" value="{{ task.id }}" />
+{% if task %}
+    <form onsubmit="return updateTask(this)" method="post" data-id="{{ task.id }}">
+        <input type="hidden" name="id" value="{{ task.id }}" />
+        <input type="hidden" name="del" value="0" id="del_task" />
 
-    <p style="font-size:1.3em;">
-        <input type="text" name="title" value="{{ task.title }}" class="uk-input"/>
-    </p>
+        <p style="font-size:1.3em;">
+            <input type="text" name="title" value="{{ task.title }}" class="uk-input"/>
+        </p>
 
-    <textarea name="comment" class="uk-textarea" rows="5">{{ task.comment|raw }}</textarea>
+        <textarea name="comment" class="uk-textarea" rows="5">{{ task.comment|raw }}</textarea>
 
-    <p>
-        <button class="uk-button uk-button-primary">Save</button>
-    </p>
-</form>
+        <p>
+            <button class="uk-button uk-button-primary">Save</button>
+            <button class="uk-button uk-button-secondary" onclick="$('#del_task').val('1');">Delete</button>
+        </p>
+    </form>
 
-<h3>Tasks</h3>
-<ul class="uk-list" id="list_subtask">
-    {% for s in task.subtask %}
+    <h3>Tasks</h3>
+    <ul class="uk-list" id="list_subtask">
+        {% for s in task.subtask %}
+            <li>
+                <label>
+                    <input type="checkbox" data-id="{{ task.id }}" name="{{ s.id }}" value="1" class="uk-checkbox" {{ s.finished ? "checked" : "" }} />
+                    {{ s.title }}
+                </label>
+            </li>
+        {% endfor %}
         <li>
-            <label>
-                <input type="checkbox" class="uk-checkbox" {{ s.finished ? "checked" : "" }} />
-                {{ s.title }}
-            </label>
+            <a href="#" onclick="addSubtask({{ task.id }})">New</a>
         </li>
-    {% endfor %}
-</ul>
+    </ul>
 
-<script>
-    $('.item').removeClass('active');
-    var dom = '';
-    dom = dom + '<span style="color:{{ task.organisation_color }}; float:right">{{ task.organisation_name }}</span>\n';
-    dom = dom+'{{ task.title }}';
-    {% if task.subtask|length %}
-        dom = dom+'<progress class="uk-progress" value="1" max="{{ task.subtask|length }}"></progress>';
-    {% endif %}
-    $('#task_{{ task.id }}').html(dom).addClass('active');
-
-    $('#list_subtask').find('input').on('change', function() {
-       //@TODO
-        alert('test');
-    });
-</script>
+    <script>
+        $('.item').removeClass('active');
+        var dom = '';
+        dom = dom + '<span style="color:{{ task.organisation_color }}; float:right">{{ task.organisation_name }}</span>\n';
+        dom = dom+'{{ task.title }}';
+        {% if task.subtask|length %}
+        dom = dom+'<progress class="uk-progress" value="{{ task.nb_finished }}" max="{{ task.subtask|length }}"></progress>';
+        {% endif %}
+        $('#task_{{ task.id }}').html(dom).addClass('active');
+    </script>
+{% else %}
+    <script>
+        $('#result').html('');
+        $('#task_{{ id }}').remove();
+    </script>
+{% endif %}

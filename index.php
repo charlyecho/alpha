@@ -68,6 +68,8 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
                 $r->addRoute("GET", "/clients", array("ProControllersClients", "home"));
                 $r->addRoute("POST", "/task/edit", array("ProControllersTask", "editItem"));
                 $r->addRoute("GET", "/task/{task_id}", array("ProControllersTask", "view"));
+                $r->addRoute("POST", "/subtask", array("ProControllersTask", "editSub"));
+                $r->addRoute("POST", "/subtask/add", array("ProControllersTask", "addSub"));
             });
         }
     }

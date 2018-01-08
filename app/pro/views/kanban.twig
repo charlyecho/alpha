@@ -72,6 +72,21 @@
                     console.log(event);
                 }
             });
+
+            $('#result').on('change', 'input[type=checkbox]', function() {
+                var id = $(this).attr('name');
+                var checked = $(this).is(':checked');
+                var _id = $(this).data("id");
+
+                $.ajax({
+                    url : '{{ prefix }}/pro/subtask',
+                    method : 'post',
+                    data: 'id='+id+'&val='+(checked ? 1 : 0),
+                    success: function() {
+                        refreshTask(_id);
+                    }
+                });
+            });
         });
 
         $('div.item').on('click', function() {
@@ -84,7 +99,6 @@
                 url: '{{ prefix }}/pro/task/'+id,
                 method : 'get',
                 beforeSend : function() {
-                    $('#result').html('loading');
                     $('.item').removeClass('active');
                 },
                 success: function(data) {
@@ -93,8 +107,23 @@
             });
         };
 
+        var addSubtask = function(task_id) {
+            var name = prompt('Title');
+            if (name) {
+                $.ajax({
+                    url: '{{ prefix }}/pro/subtask/add',
+                    method: 'post',
+                    data: 'id='+task_id+'&name='+name,
+                    success: function(data) {
+                        refreshTask(task_id);
+                    }
+                });
+            }
+        };
+
         var updateTask = function(form) {
             var id = $(form).data("id");
+            var del = $(form).find('input[name=del]').val();
             $.ajax({
                 url: '{{ prefix }}/pro/task/edit',
                 method: 'post',
@@ -102,7 +131,6 @@
                 success: function(data) {
                     refreshTask(id);
                 }
-
             });
             return false;
         };
