@@ -9,6 +9,7 @@
 class ProHelpersTask {
     public static function getList($user_id) {
         $db = ClassesDb::getInstance();
+
         $sql = "SELECT t.*, o.color as organisation_color, o.name as organisation_name, SUM(st.finished) as nb_finished, count(st.id) as nb_subtask
             FROM task t 
             LEFT JOIN subtask st ON st.task_id = t.id
@@ -45,6 +46,9 @@ class ProHelpersTask {
             )
         );
         foreach($list as $t) {
+            if (!in_array($t->kanban, array_keys($types))) {
+                $t->kanban = "backlog";
+            }
             $types[$t->kanban]["list"][] = $t;
         }
 

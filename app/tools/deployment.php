@@ -97,6 +97,7 @@ return array(
           user_id INTEGER CONSTRAINT task_user_id_fk REFERENCES user (id) ON UPDATE CASCADE ON DELETE CASCADE,
           organisation_id INTEGER CONSTRAINT task_organisation_id_fk REFERENCES organisation (id) ON UPDATE CASCADE ON DELETE CASCADE,
           title VARCHAR,
+          kanban VARCHAR DEFAULT 'backlog',
           comment TEXT
         );",
         "CREATE TABLE subtask (
