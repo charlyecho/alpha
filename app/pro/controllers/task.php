@@ -65,6 +65,16 @@ class ProControllersTask {
         return $db->lastInsertId();
     }
 
+    public static function move() {
+        $id = get($_POST, "id");
+        $type = get($_POST, "type");
+
+        $db = ClassesDb::getInstance();
+        $sql = "UPDATE task SET kanban = :type WHERE id = :id";
+        $s = $db->prepare($sql);
+        $s->execute(array(":type" => $type, ":id" => $id));
+    }
+
     public static function editSub() {
         $id = get($_POST, "id");
         $val = get($_POST, "val");

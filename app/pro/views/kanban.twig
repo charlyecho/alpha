@@ -68,8 +68,19 @@
             $(".draggable").draggable({});
             $(".droppable").droppable({
                 drop: function (event, ui) {
-                    console.log(this);
-                    console.log(event);
+                    var target_type = $(this).data("type");
+                    var element = ui.draggable;
+                    console.log(element);
+                    var id = element.data("id");
+                    $.ajax({
+                        method: 'post',
+                        url : '{{ prefix }}/pro/task/move',
+                        data: 'id='+id+'&type='+target_type,
+                        success: function() {
+                            $('#k_'+target_type).find('div.droppable').append(element);
+                            element.css({left: '0', top: '0'});
+                        }
+                    });
                 }
             });
 
