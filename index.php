@@ -65,14 +65,29 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
 
             $r->addGroup("/pro", function(FastRoute\RouteCollector $r) {
                 $r->addRoute("GET", "", array("ProControllersKanban", "home"));
-                $r->addRoute(array("GET", "POST"), "/clients", array("ProControllersClients", "home"));
-                $r->addRoute("POST", "/clients/update", array("ProControllersClients", "update"));
-                $r->addRoute("POST", "/task/edit", array("ProControllersTask", "editItem"));
-                $r->addRoute("POST", "/task/move", array("ProControllersTask", "move"));
-                $r->addRoute("POST", "/task/add", array("ProControllersTask", "addItem"));
-                $r->addRoute("GET", "/task/{task_id}", array("ProControllersTask", "view"));
-                $r->addRoute("POST", "/subtask", array("ProControllersTask", "editSub"));
-                $r->addRoute("POST", "/subtask/add", array("ProControllersTask", "addSub"));
+
+                $r->addGroup("/clients", function(FastRoute\RouteCollector $r) {
+                    $r->addRoute(array("GET", "POST"), "", array("ProControllersClients", "home"));
+                    $r->addRoute("POST", "/update", array("ProControllersClients", "update"));
+                });
+
+                $r->addGroup("/task", function(FastRoute\RouteCollector $r) {
+                    $r->addRoute("POST", "/edit", array("ProControllersTask", "editItem"));
+                    $r->addRoute("POST", "/move", array("ProControllersTask", "move"));
+                    $r->addRoute("POST", "/add", array("ProControllersTask", "addItem"));
+                    $r->addRoute("GET", "/{task_id}", array("ProControllersTask", "view"));
+                });
+
+                $r->addGroup("/subtask", function(FastRoute\RouteCollector $r) {
+                    $r->addRoute("POST", "", array("ProControllersTask", "editSub"));
+                    $r->addRoute("POST", "/add", array("ProControllersTask", "addSub"));
+                });
+
+
+                $r->addGroup("/factures", function(FastRoute\RouteCollector $r) {
+                    $r->addRoute("GET", "", array("ProControllersFacture", "home"));
+                    $r->addRoute("GET", "/{id}/pdf", array("ProControllersFacture", "pdf"));
+                });
             });
         }
     }

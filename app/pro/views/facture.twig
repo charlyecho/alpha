@@ -1,0 +1,74 @@
+{% extends "template/base.twig" %}
+
+{% block title %}Factures{% endblock %}
+
+{% block content %}
+    <div class="uk-container">
+        <table class="uk-table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Client</th>
+                    <th>Montant</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for f in factures %}
+                    <tr>
+                        <td><a href="{{ prefix }}/pro/factures/{{ f.id }}/pdf">{{ f.title }}</a></td>
+                        <td>{{ f.organisation_name }}</td>
+                        <td>{{ f.total }} €</td>
+                        <td>
+                            {% if f.date_payment_received %}
+                                <span style="color:#00ff00;">Reçu <i class="icofont icofont-check"></i></span>
+                            {% elseif f.date_send %}
+                                <span style="color:orange;">Envoyée</span>
+                            {% elseif f.date_creation %}
+                                <span style="color:red;">créé</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <hr/>
+
+        <div id="chart" style="">
+            <canvas id="canvas" style="height:200px;width:100%"></canvas>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            window.myBar = new Chart($("#canvas"), {
+                type: 'bar',
+                data: {
+                    labels: {{ stat.abs|raw }},
+                    datasets: [{
+                        label: 'Reçu',
+                        borderWidth: 1,
+                        data: {{ stat.data|raw }}
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    legend: {
+                        display: false,
+                        position: 'top'
+                    },
+                    title: {
+                        display: false,
+                        text: 'Amount received'
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}

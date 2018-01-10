@@ -106,5 +106,23 @@ return array(
           title VARCHAR,
           finished INTEGER DEFAULT 0
         );"
+    ),
+    "1.2" => array(
+        "CREATE TABLE facture (
+          id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+          user_id INTEGER CONSTRAINT facture_user_id_fk REFERENCES user (id) ON UPDATE CASCADE ON DELETE CASCADE,
+          organisation_id INTEGER CONSTRAINT facture_organisation_id_fk REFERENCES organisation (id) ON UPDATE CASCADE ON DELETE CASCADE,
+          title VARCHAR,
+          date_creation DATETIME NOT NULL,
+          date_send DATETIME DEFAULT NULL,
+          date_payment_received DATETIME DEFAULT NULL
+        )",
+        "CREATE TABLE facture_line (
+          id INTEGER NOT NULL,
+          facture_id INTEGER CONSTRAINT facture_line_facture_id_fk REFERENCES facture (id) ON UPDATE CASCADE ON DELETE CASCADE,
+          title VARCHAR NOT NULL,
+          nb_hour DOUBLE NOT NULL,
+          montant DOUBLE NOT NULL
+        )"
     )
 );

@@ -242,7 +242,7 @@ class HelpersCron {
             $sql = "SELECT id, url FROM subscription WHERE id = ".$db->quote($sub_id);
         }
         else {
-            $sql = "SELECT id, url FROM subscription WHERE is_valid = '1' AND need_update = '1' ORDER BY id";
+            $sql = "SELECT id, url FROM subscription WHERE /*is_valid = '1' AND*/ need_update = '1' ORDER BY id";
         }
         $s = $db->prepare($sql);
         $s->execute();
