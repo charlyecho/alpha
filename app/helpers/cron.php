@@ -106,6 +106,16 @@ class HelpersCron {
         }
     }
 
+
+    public static function cleanOld() {
+        $date = ClassesDate::getInstance()->modify("-41 DAYS")->toSql();
+        $db = ClassesDb::getInstance();
+
+        $sql = "DELETE FROM subscription_item WHERE date_time <= '$date'";
+        $s = $db->prepare($sql);
+        $s->execute();
+    }
+
     /**
      * get update for the subscription by getting the head (STEP 1)
      */
