@@ -3,35 +3,53 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-    <div uk-grid >
+    <div uk-grid class="content_">
         <div class="uk-margin-top">
-            <div class="uk-card uk-card-default">
-                <div class="uk-card-title uk-text-center">
-                    <h3 class="uk-card-title uk-margin-remove-bottom" style="font-size:2em;">
-                        <a href="{{ prefix }}/rss/home">
-                            <i class="icofont icofont-rss-feed"></i>
-                        </a>
-                    </h3>
-                </div>
-                <div class="uk-card-body">
-                    <p class="uk-text-lead uk-text-center">{{ nb_unread}}</p>
-                </div>
-            </div>
+            <a href="{{ prefix }}/rss/home">
+                <i class="icofont icofont-rss-feed"></i><br/>
+                <span>{{ nb_unread}}</span>
+            </a>
         </div>
 
         <div class="uk-margin-top">
-            <div class="uk-card uk-card-default">
-                <div class="uk-card-title uk-text-center">
-                    <h3 class="uk-card-title uk-margin-remove-bottom" style="font-size:2em;">
-                        <a href="{{ prefix }}/links">
-                            <i class="icofont icofont-external-link"></i>
-                        </a>
-                    </h3>
-                </div>
-                <div class="uk-card-body">
-                    <p class="uk-text-lead uk-text-center">{{ nb_links|number_format(0,'.', " ") }}</p>
-                </div>
-            </div>
+            <a href="{{ prefix }}/links">
+                <i class="icofont icofont-external-link"></i><br/>
+                <span>{{ nb_links|number_format(0,'.', " ") }}</span>
+            </a>
         </div>
     </div>
+
+    <style>
+        .content_ {
+            text-align: center;
+        }
+
+        .content_ a {
+            text-decoration: none;
+        }
+
+        .content_ a:hover {
+            text-decoration: none;
+        }
+
+        .content_ span {
+            font-weight: bold;
+            font-size:1.2em;
+        }
+
+        .content_ i {
+            font-size:5em;
+            transition-duration: 300ms;
+        }
+
+        .content_ a:hover i {
+            text-shadow:#D1F3FF 0 -1px 0,
+            #0099FA 2px 2px 0,
+            #005B94 4px 4px 0,
+            #003D63 6px 6px 0.5px,
+            #97A9AD 8px 11px 10px;
+            color:#009CFF;
+        }
+    </style>
+
 {% endblock %}
