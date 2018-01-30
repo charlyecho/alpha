@@ -22,6 +22,9 @@ class LinksHelpersLinks {
         if (in_array($gallery, array("g", "s"))) {
             $sql .= " AND img != ''";
         }
+        if ($gallery == "g") {
+            $sql .= " AND width != ''";
+        }
         if ($nsfw == 1) {
             $sql .= " AND is_nsfw = 1";
         }
@@ -52,6 +55,9 @@ class LinksHelpersLinks {
         }
         if (in_array($gallery, array("g", "s"))) {
             $sql .= " AND img != ''";
+        }
+        if ($gallery == "g") {
+            $sql .= " AND width != ''";
         }
         if ($nsfw == 1) {
             $sql .= " AND is_nsfw = 1";

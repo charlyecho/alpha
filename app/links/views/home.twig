@@ -91,21 +91,6 @@
                     }
                 </style>
 
-
-                <script>
-                    {% for l in links %}
-                    var _img_{{ l.id }} = new Image();
-                    _img_{{ l.id }}.onload = function() {
-                        var _img = $(this);
-                        var target = $('#link_{{ l.id }}');
-
-                        $('#link_{{ l.id }} div').css({
-                            'background-image': 'url('+_img_{{ l.id }}.src+')'
-                        }).fadeIn();
-                    };
-                    _img_{{ l.id }}.src = '{{ l._img}}';
-                    {% endfor %}
-                </script>
             {% elseif list == "s" %}
                 <ul uk-lightbox="autoplay:1000" id="lb">
                     {% for l in links %}
@@ -171,6 +156,24 @@
                     }, 5000);
                 }
             });
+        </script>
+    {% endif %}
+
+
+    {% if list == "g" %}
+        <script>
+            {% for l in links %}
+            var _img_{{ l.id }} = new Image();
+            _img_{{ l.id }}.onload = function() {
+                var _img = $(this);
+                var target = $('#link_{{ l.id }}');
+
+                $('#link_{{ l.id }} div').css({
+                    'background-image': 'url('+_img_{{ l.id }}.src+')'
+                }).fadeIn();
+            };
+            _img_{{ l.id }}.src = '{{ l._img|raw}}';
+            {% endfor %}
         </script>
     {% endif %}
 {% endblock %}
