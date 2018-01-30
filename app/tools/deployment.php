@@ -124,5 +124,11 @@ return array(
           nb_hour DOUBLE NOT NULL,
           montant DOUBLE NOT NULL
         )"
+    ),
+    "1.3" => array(
+        "ALTER TABLE user ADD fullname TEXT NULL; ALTER TABLE user ADD siret TEXT NULL; ALTER TABLE user ADD address TEXT NULL; ALTER TABLE user ADD logo TEXT NULL"
+    ),
+    "1.4" => array(
+        "ALTER TABLE organisation ADD siret TEXT NULL; ALTER TABLE organisation ADD address TEXT NULL; ALTER TABLE organisation ADD logo TEXT NULL"
     )
 );
